@@ -3,19 +3,49 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { sequelize } from "./config/db.js";
 import mainRoute from "./routes/index.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
 let PORT = process.env.PORT || 3000
 let app = express();
 
-app.use(express.json());
+const options = {
+   definition: {
+      openapi: "3.1.0",
+      info: {
+         title: "Exam-project",
+         version: "0.1.0",
+         description:
+            "This is a simple CRUD API application made with Express and documented with Swagger",
+      }, 
+      servers: [
+         {
+            url: "http://localhost:4000/",
+         },
+      ],
+   },
+   apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJSDoc(options);
+
+
 app.use(
    cors({
       origin: "*",
+      methods: "GET,POST,PUT,DELETE",
+      allowedHeaders: "Content-Type,Authorization",
    })
 );
+
 app.use("/api", mainRoute);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+
+app.use("/*", (req, res) => {
+   res.status(400).json({ message: "Not found route." });
+});
 
 async function bootstrapt() {
    try {
