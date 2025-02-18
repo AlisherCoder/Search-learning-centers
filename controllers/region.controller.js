@@ -16,10 +16,12 @@ async function findAll(req, res) {
     const page = value.page || 1;
     const limit = value.limit || 10;
     const offset = (page - 1) * limit;
+    const sortOrder = value.sortOrder || "ASC";
     let allItems = await Region.findAll({
       limit: limit,
       offset: offset,
       include: [Center],
+      order: [["name", sortOrder]]
     });
     if (allItems) {
       res.status(200).json({ date: allItems, total: total.length });
@@ -59,6 +61,7 @@ async function findBySearch(req, res) {
     const page = value.page || 1;
     const limit = value.limit || 10;
     const offset = (page - 1) * limit;
+    const sortOrder = value.sortOrder || "ASC";
 
     const { name } = req.query;
     let filters = {};
@@ -77,6 +80,7 @@ async function findBySearch(req, res) {
       limit: limit,
       offset: offset,
       include: [Center],
+      order: [["name", sortOrder]],
     });
     if (currentItems) {
       res.status(200).json({ data: currentItems, total: allItems.length });
