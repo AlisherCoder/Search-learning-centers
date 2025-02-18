@@ -23,14 +23,12 @@ async function findAll(req, res) {
 
     let total = await Category.findAll();
     if (allItems) {
-      res.status(200).json({ date: allItems, total: total.length });
+      res.status(200).json({ data: allItems, total: total.length });
     } else {
       res.status(404).json({ message: "Category not found!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
