@@ -1,5 +1,5 @@
 
-
+CREATE DATABASE if Not EXISTS fullstackexam;
 SHOW tables;
 
 CREATE TABLE users (
