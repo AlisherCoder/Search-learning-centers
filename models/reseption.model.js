@@ -37,6 +37,7 @@ const Reception = sequelize.define("receptions", {
    status: {
       type: DataTypes.ENUM("pending", "study", "finished"),
       allowNull: false,
+      defaultValue: "pending",
    },
 });
 

@@ -5,7 +5,7 @@ import { sequelize } from "./config/db.js";
 import mainRoute from "./routes/index.js";
 dotenv.config();
 
-let port = process.env.PORT;
+let port = process.env.PORT || 3000
 let app = express();
 
 app.use(express.json());
