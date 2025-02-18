@@ -39,19 +39,19 @@ const Major = sequelize.define(
    {
       timestamps: false,
       validate: {
-         eitherFieldOrSubject() {
+         FieldOrSubject() {
             if (!this.fieldId && !this.subjectId) {
-               throw new Error("Either fieldId or subjectId must be provided.");
+               throw new Error("Subject Or fiend id ");
             }
          },
       },
    }
 );
 
-Field.hasMany(Major, { foreignKey: "typeId" });
-Major.belongsTo(Field, { foreignKey: "typeId" });
+Field.hasMany(Major, { foreignKey: "fieldId" });
+Major.belongsTo(Field, { foreignKey: "fieldId" });
 
-Subject.hasMany(Major, { foreignKey: "typeId" });
-Major.belongsTo(Subject, { foreignKey: "typeId" });
+Subject.hasMany(Major, { foreignKey: "subjectId" });
+Major.belongsTo(Subject, { foreignKey: "subjectId" });
 
 export default Major;
