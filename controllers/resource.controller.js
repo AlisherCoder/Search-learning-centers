@@ -16,11 +16,13 @@ async function findAll(req, res) {
     let page = value.page || 1;
     let limit = value.limit || 10;
     let offset = (page - 1) * limit;
+    const sortOrder = value.sortOrder || "ASC";
 
     let allItems = await Resource.findAll({
       limit: limit,
       offset: offset,
       include: [User, Category],
+      order: [["name", sortOrder]]
     });
 
     let allItemsCount = await Resource.findAll();
@@ -65,6 +67,7 @@ async function findBySearch(req, res) {
     const page = value.page || 1;
     const limit = value.limit || 10;
     const offset = (page - 1) * limit;
+    const sortOrder = value.sortOrder || "ASC";
 
     let filters = {};
 
@@ -79,6 +82,7 @@ async function findBySearch(req, res) {
       limit: limit,
       offset: offset,
       include: [User, Category],
+      order: [["name", sortOrder]]
     });
 
     const totalCount = await Resource.findAll({where: filters});

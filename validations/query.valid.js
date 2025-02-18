@@ -6,7 +6,10 @@ const queryValid = Joi.object({
     limit: Joi.number().integer().min(1).max(500),
     search: Joi.string().trim().max(255),
     priceMin: Joi.number().min(0),
-    priceMax: Joi.number().greater(Joi.ref('priceMin'))
+    priceMax: Joi.number().greater(Joi.ref('priceMin')),
+    min: Joi.number().min(0),
+    max: Joi.number().greater(Joi.ref('min')).max(5),
+    sortOrder: Joi.string().valid("ASC", "DESC")
 });
 
 export default queryValid;
