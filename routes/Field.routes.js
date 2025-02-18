@@ -1,4 +1,4 @@
-import {Router} from "express"
+import {Router} from "express";
 import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/field.controller.js"
 
 

@@ -39,9 +39,9 @@ const Major = sequelize.define(
    {
       timestamps: false,
       validate: {
-         eitherFieldOrSubject() {
+         FieldOrSubject() {
             if (!this.fieldId && !this.subjectId) {
-               throw new Error("Either fieldId or subjectId must be provided.");
+               throw new Error("Subject yo fiend id bo'lishi kerak");
             }
          },
       },

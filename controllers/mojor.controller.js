@@ -46,42 +46,31 @@ export async function findOne (req,res){
         res.status(500).json({message: e.message})
     }
 };
-export async function findBySorted (req,res) {
-    try{
-        let {limit, offset, asc, desc, ...ress} = req.query;
-        
-        let query = {}
+export async function findBySorted(req, res) {
+    try {
+        let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
 
-        query.limit = limit ? parseInt(limit) : 10;
-        query.offset = offset ? parseInt((offset) - 1) * query.limit : 0;
-        if(asc){
-            let val = Object.values(asc);
-            if([val]){
-                query.order = [[`${val}`, "ASC"]];
-            }
-        }
-        else if(desc){
-            let val = Object.values(desc);
-            if([val]){
-                query.order = [[`${val}`, "DESC"]];
-            }
-        }
-        if(ress.sort){
-            let val = Object.values(ress.sort);
-            if([val]){
-                query.sort = {[Op.like]: `%${val}%`}
-            }
-        }
-        let data = await Major.findAll(query);
-        if(data.length == 0){
-            return res.status(404).json({message: "Limit yetarliy emas"})
-        }
-        res.status(200).json({data});
+        limit = parseInt(limit);
+        offset = Math.max(0, (parseInt(offset) - 1) * limit);
 
-    }catch(e){
-        res.status(500).json({message: e.message});
+        let query = {limit, offset};
+        if (sort === "asc" || sort === "desc") {
+            query.order = [[column, sort.toUpperCase()]];
+        }
+        let where = {};
+        if (search) {
+            where[column] = { [Op.like]: `%${search}%` };
+        }
+        let data = await Major.findAll({ ...query, where });
+
+        if (!data.length) {
+            return res.status(404).json({ message: "Not Found" });
+        }
+        res.status(200).json({ data });
+    } catch (e) {
+        res.status(500).json({ message: e.message });
     }
-}
+};
 export async function create (req,res) {
     try{
         let {error, value} = MojorPOST.validate(req.body);

@@ -11,5 +11,6 @@ export const ReceptionPOST = Joi.object({
 export const ReceptionPATCH = Joi.object({
     userId: Joi.number().optional(),
     filialId: Joi.number().optional(),
-    majorId: Joi.number().optional()
+    majorId: Joi.number().optional(),
+    status: Joi.string().valid("pending", "study", "finished").required()
 });
