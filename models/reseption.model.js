@@ -20,7 +20,7 @@ const Reception = sequelize.define("receptions", {
    },
    filialId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
          model: Filial,
          key: "id",
@@ -36,7 +36,7 @@ const Reception = sequelize.define("receptions", {
    },
    status: {
       type: DataTypes.ENUM("pending", "study", "finished"),
-      allowNull: false,
+      allowNull: true,
       defaultValue: "pending",
    },
 });

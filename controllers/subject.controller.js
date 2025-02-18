@@ -27,20 +27,33 @@ export async function findOne (req,res){
 };
 export async function findBySorted (req,res) {
     try{
-        let {limit, offset, asc, desc} = req.query;
+        let {limit, offset, asc, desc, ...ress} = req.query;
         let query = {}
 
         query.limit = limit ? parseInt(limit) : 10;
-        query.offset = offset ? parseInt(offset) * query.limit : 0;
+        query.offset = offset ? parseInt((offset) - 1) * query.limit : 0;
         if(asc){
             let val = Object.values(asc);
-            query.order = [[`${val}`, "ASC"]];
+            if([val]){
+                query.order = [[`${val}`, "ASC"]];
+            }
         }
         else if(desc){
             let val = Object.values(desc);
-            query.order = [[`${val}`, "DESC"]];
+            if([val]){
+                query.order = [[`${val}`, "DESC"]];
+            }
+        }
+        if(ress.sort){
+            let val = Object.values(ress.sort);
+            if([val]){
+                query.sort = {[Op.like]: `%${val}%`}
+            }
         }
         let data = await Subject.findAll(query);
+        if(data.length == 0){
+            return res.status(404).json({message: "Limit yetarliy emas"})
+        }
         res.status(200).json({data});
 
     }catch(e){
