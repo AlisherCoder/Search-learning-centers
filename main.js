@@ -60,16 +60,3 @@ async function bootstrapt() {
    }
 }
 bootstrapt();
-
-
-
-
-// Status Code	Ma’nosi	Qachon ishlatiladi?
-// 200	OK	Ma’lumot muvaffaqiyatli yangilandi va qaytarildi
-// 204	No Content	Ma’lumot muvaffaqiyatli yangilandi, lekin javobda hech narsa yo‘q
-// 400	Bad Request	Noto‘g‘ri yoki noto‘liq ma’lumot yuborilgan
-// 401	Unauthorized	Foydalanuvchiga yangilash uchun ruxsat yo‘q
-// 403	Forbidden	Yangilashga ruxsat berilmagan (masalan, boshqa foydalanuvchining ma’lumotlarini o‘zgartirishga urinish)
-// 404	Not Found	Yangilanmoqchi bo‘lgan resurs topilmadi
-// 409	Conflict	Ma’lumotlar to‘qnashuvi (masalan, allaqachon mavjud bo‘lgan qiymat bilan yangilashga urinish)
-// 500	Internal Server Error	Server ichki xatolikka uchradi
