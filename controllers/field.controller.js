@@ -55,7 +55,7 @@ export async function create (req,res) {
     try{
         let {error, value} = ValidationPOST.validate(req.body);
         if(error){
-            return res.status(401).json({message: error.message});
+            return res.status(400).json({message: error.message});
         }
         let data = await Field.create(value);
         res.status(201).json({data})
@@ -68,14 +68,14 @@ export async function update (req,res) {
         let {id} = req.params;
         let {error, value} = ValidationPATCH.validate(req.body);
         if(error){
-            return res.status(401).json({message: error.message})
+            return res.status(400).json({message: error.message})
         }
         let data = await Field.findByPk(id);
         if(!data){
             return res.status(404).json({message: "Not Fount By id"})
         }
         await Field.update(value, {where: {id}});
-        res.status(200).json({message: "Update"})
+        res.status(204).json({message: "Update"})
     }catch(e){
         res.status(500).json({message:e.message});
     }

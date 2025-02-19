@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 import Subject from "../models/subject.model.js";
 import {ValidationPOST, ValidationPATCH} from "../validations/subjectANDfield.validation.js";
 
@@ -83,13 +83,14 @@ export async function update (req,res) {
 export async function remove (req,res) {
     try{
         let {id} = req.params;
-        let data = await Field.findByPk(id);
+        let data = await Subject.findByPk(id);
         if(!data){
             return res.status(404).json({message: "Not Found filed"})
         }
-        await Subject.destroy({where: { id }});
+        await Subject.destroy({where: {id}});
         res.status(200).json({message: "delete"})
     }catch(e){
+        console.log(e);
         res.status(500).json({message: e.message});
     }
 };

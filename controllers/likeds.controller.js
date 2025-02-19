@@ -77,7 +77,7 @@ export async function update (req,res) {
         let {id} = req.params;
         let {error, value} = LikedsPATCH.validate(req.body);
         if(error){
-            return res.status(401).json({message: error.message})
+            return res.status(400).json({message: error.message})
         }
         let data = await Like.findByPk(id);
         if(!data){

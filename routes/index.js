@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import fieldRouter from "./Field.routes.js";
 import subjectRouter from "./subject.routes.js";
-import mojorRouter from "./mojor.routes.js";
+import mojorRouter from "./major.routes.js";
 import reseptionRouter from "./resaption.routes.js";
 import likedRouter from "./liked.routes.js";
 import categoryRoute from "./category.routes.js";

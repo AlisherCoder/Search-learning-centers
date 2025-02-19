@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { findAll, findBySorted, findOne, create, update ,remove} from "../controllers/likeds.controller.js";
+import { findAll, findBySorted, findOne, create, update ,remove} from "../controllers/mojor.controller.js";
 
-const likedRouter = Router();
+const mojorRouter = Router();
 
-likedRouter.get("/", findAll);
-likedRouter.get("/query", findBySorted);
-likedRouter.get("/:id", findOne);
-likedRouter.post("/", create);
-likedRouter.patch("/:id", update);
-likedRouter.delete("/:id", remove);
+mojorRouter.get("/", findAll);
+mojorRouter.get("/query", findBySorted);
+mojorRouter.get("/:id", findOne);
+mojorRouter.post("/", create);
+mojorRouter.patch("/:id", update);
+mojorRouter.delete("/:id", remove);
 
-export default likedRouter
+export default mojorRouter
 
 
 
@@ -18,19 +18,19 @@ export default likedRouter
 /**
  * @swagger
  * tags:
- *   name: Liked
- *   description: liked management endpoints
+ *   name: Major
+ *   description: major management endpoints
  */
 
 /**
  * @swagger
- * /api/liked:
+ * /api/major:
  *   get:
- *     summary: Get all Liked
- *     tags: [Liked]
+ *     summary: Get all Major
+ *     tags: [Major]
  *     responses:
  *       200:
- *         description: All Liked
+ *         description: All Major
  *       404:
  *         description: Not 
  *       500:
@@ -41,18 +41,18 @@ export default likedRouter
 
 /**
  * @swagger
- * /api/liked/query:
+ * /api/major/query:
  *   get:
- *     summary: "Get all Liked"
- *     tags: [Liked]
+ *     summary: "Get all Major"
+ *     tags: [Major]
  *     description: "Query orqali filter, sort va pagination bilan"
  *     parameters:
  *       - in: query
  *         name: column
  *         schema:
  *           type: string
- *           enum: [createdAt]
- *         description: "liked bo‘yicha filtr"
+ *           enum: [name]
+ *         description: "major bo‘yicha filtr"
  *       - in: query
  *         name: search
  *         schema:
@@ -74,12 +74,6 @@ export default likedRouter
  *         schema:
  *           type: integer
  *         description: "Nechanchi natijadan boshlash (pagination)"
- *       - in: query
- *         name: dey
- *         schema:
- *           type: integer
- *           example: 10
- *         description: "dey liked"
  *     responses:
  *       200:
  *         description: "data"
@@ -93,10 +87,10 @@ export default likedRouter
 
 /**
  * @swagger
- * /api/liked/{id}:
+ * /api/major/{id}:
  *   get:
- *     summary: Get one Liked
- *     tags: [Liked]
+ *     summary: Get one Major
+ *     tags: [Major]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -105,7 +99,7 @@ export default likedRouter
  *         schema:
  *           type: integer
  *         required: true
- *         description: Liked ID
+ *         description: Major ID
  *     responses:
  *       200:
  *         description: data
@@ -119,10 +113,10 @@ export default likedRouter
 
 /**
  * @swagger
- * /api/liked:
+ * /api/major:
  *   post:
- *     summary: Liked
- *     tags: [Liked]
+ *     summary: Major
+ *     tags: [Major]
  *     requestBody:
  *       required: true
  *       content:
@@ -130,15 +124,23 @@ export default likedRouter
  *           schema:
  *             type: object
  *             required:
- *               - userId
- *               - centerId
+ *               - name
+ *               - image
+ *               - fieldId
+ *               - subjectId
  *             properties:
- *               userId:
+ *               name:
+ *                 type: string
+ *                 example: "optional"
+ *               image:
+ *                 type: string
+ *                 example: "linke"
+ *               fieldId:
  *                 type: integer
  *                 example: 2
- *               centerId:
+ *               subjectId:
  *                 type: integer
- *                 example: 1
+ *                 example: 4
  *     responses:
  *       201:
  *         description: Created successfully
@@ -152,40 +154,43 @@ export default likedRouter
 
 /**
  * @swagger
- * /api/liked/{id}:
+ * /api/major/{id}:
  *   patch:
- *     summary: Update a reception
- *     tags: [Liked]
+ *     summary: Update a Field
+ *     tags: [Major]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the liked to update
+ *         description: The ID of the field to update
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               userId:
+ *               name:
+ *                 type: string
+ *                 example: "updated name"
+ *               image:
+ *                 type: string
+ *                 example: "updated link"
+ *               fieldId:
  *                 type: integer
- *                 example: 2
- *               centerId:
+ *                 example: 5
+ *               subjectId:
  *                 type: integer
- *                 example: 1
- *             optional:
- *               - userId
- *               - centerId
+ *                 example: 5
  *     responses:
- *       200:
- *         description: Reception updated successfully
+ *       204:
+ *         description: Field updated successfully
  *       400:
  *         description: Invalid request data
  *       404:
- *         description: Reception not found
+ *         description: Field not found
  *       500:
  *         description: Server error
  */
@@ -194,10 +199,10 @@ export default likedRouter
 
 /**
  * @swagger
- * /api/liked/{id}:
+ * /api/major/{id}:
  *   delete:
- *     summary: Get one Liked
- *     tags: [Liked]
+ *     summary: Get one Major
+ *     tags: [Major]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -206,7 +211,7 @@ export default likedRouter
  *         schema:
  *           type: integer
  *         required: true
- *         description: Liked ID
+ *         description: Major ID
  *     responses:
  *       200:
  *         description: delete
