@@ -10,19 +10,22 @@ let app = express();
 
 app.use(express.json());
 app.use(
-   cors({
+   cors({ 
       origin: "*",
    })
 );
 app.use("/api", mainRoute);
+app.use("/*", (req, res) => {
+   res.status(400).json({ message: "Invalid route." });
+});
 
 async function bootstrapt() {
-   try {
+   try { 
       await sequelize.authenticate();
       // await sequelize.sync({force: true});
 
-      console.log("Db connected successfully ✅");
-      app.listen(port, () => console.log("Server started on port", port));
+      console.log("Db connected successfully. ✅");
+      app.listen(port, () => console.log("Server started on port =>", port));
    } catch (error) {
       console.log(error.message);
    }
