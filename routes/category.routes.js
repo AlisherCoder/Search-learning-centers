@@ -209,6 +209,8 @@ export default categoryRoute;
  *         description: delete
  *       404:
  *         description: Not Found category
+ *       400:
+ *         description: validation error
  *       500:
  *         description: Server error
  */
