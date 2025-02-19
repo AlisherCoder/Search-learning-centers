@@ -1,4 +1,3 @@
-import { message } from "telegraf/filters";
 import { Op } from "sequelize";
 import Resource from "../models/resource.model.js";
 import Category from "../models/category.model.js";
@@ -71,7 +70,7 @@ async function findBySearch(req, res) {
       };
     }
 
-    let allItems = await Category.findAll({where: filters});
+    let total = await Category.count({where: filters});
 
 
     let currentItems = await Category.findAll({
@@ -82,14 +81,12 @@ async function findBySearch(req, res) {
       order: [["name", sortOrder]],
     });
     if (currentItems) {
-      res.status(200).json({ data: currentItems, total: allItems.length });
+      res.status(200).json({ data: currentItems, total: total });
     } else {
       res.status(404).json({ message: "Category not found by search!" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-    
+    res.status(500).json({ message: error.message });    
   }
 }
 
@@ -103,8 +100,6 @@ async function create(req, res) {
     res.status(201).json({ data: currentItem });
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
@@ -125,20 +120,13 @@ async function update(req, res) {
       res.status(404).json({message: "Category not found which has the ID"});
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-    
+    res.status(500).json({ message: error.message });    
   }
 }
 
 async function remove(req, res) {
   try {
     let {id} = req.params;
-    let { error, value } = categoryValid.validate(req.body);
-
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
     let currentItem = await Category.findByPk(id);
 
     if(currentItem) {
@@ -149,8 +137,6 @@ async function remove(req, res) {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
