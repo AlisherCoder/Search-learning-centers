@@ -1,29 +1,13 @@
 import { userPatchValid, SearchValid } from "../validations/user.valid.js";
 import Center from "../models/center.model.js";
 import User from "../models/user.model.js";
-import { Op } from "sequelize";
+import { Op} from "sequelize";
 import path from "path";
 import fs from "fs";
 
 export async function findAll(req, res) {
    try {
-      let query = {};
-      for (let [key, value] of Object.entries(req.query)) {
-         if (value) {
-            query[key] = value;
-         }
-      }
-
-      let { error, value } = SearchValid.validate(query);
-      if (error) {
-         return res.status(422).json({ message: error.details[0].message });
-      }
-
-      if(value.role == "user" || value.role == "admin"){
-         return res.status(401).json({message: "Not allowed."})
-      }
-
-      let { take = 5, page, sortBy, sortOrder, ...queries } = value;
+      let { take = 5, page, sortBy, sortOrder } = req.query;
       let sort = sortBy || "firstName";
       let order = sortOrder || "ASC";
 
@@ -32,17 +16,10 @@ export async function findAll(req, res) {
          skip = (page - 1) * take;
       }
 
-      query = { role: "seo" };
-      for (let [key, val] of Object.entries(queries)) {
-         if (typeof val != "boolean") {
-            query[key] = { [Op.substring]: `%${val}%` };
-         } else {
-            query[key] = val;
-         }
-      }
+      skip = JSON.parse(skip);
+      take = JSON.parse(take);
 
       let users = await User.findAll({
-         where: query,
          limit: take,
          offset: skip,
          order: [[sort, order]],
@@ -185,6 +162,75 @@ export async function getBySearch(req, res) {
       }
 
       res.status(200).json({ data: users });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export async function getAllSeos(req, res) {
+   try {
+      let query = {};
+      for (let [key, value] of Object.entries(req.query)) {
+         if (value) {
+            query[key] = value;
+         }
+      }
+
+      let { error, value } = SearchValid.validate(query);
+      if (error) {
+         return res.status(422).json({ message: error.details[0].message });
+      }
+
+      let { take = 5, page, sortBy, sortOrder, ...queries } = value;
+      let sort = sortBy || "firstName";
+      let order = sortOrder || "ASC";
+
+      let skip = 0;
+      if (page) {
+         skip = (page - 1) * take;
+      }
+
+      query = {};
+      for (let [key, val] of Object.entries(queries)) {
+         if (typeof val != "boolean") {
+            query[key] = { [Op.substring]: `%${val}%` };
+         } else {
+            query[key] = val;
+         }
+      }
+
+      query.role = "seo";
+      let users = await User.findAll({
+         where: query,
+         limit: take,
+         offset: skip,
+         order: [[sort, order]],
+         include: Center,
+      });
+
+      if (!users.length) {
+         return res.status(404).json({ message: "Not found users." });
+      }
+
+      res.status(200).json({ data: users });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export async function getOneSeo(req, res) {
+   try {
+      let { id } = req.params;
+
+      let user = await User.findOne({
+         where: { [Op.and]: [{ id }, { role: "seo" }] },
+      });
+
+      if (!user) {
+         return res.status(404).json({ message: "Not found data." });
+      }
+
+      res.status(200).json({ data: user });
    } catch (error) {
       res.status(500).json({ message: error.message });
    }

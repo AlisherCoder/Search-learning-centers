@@ -11,6 +11,7 @@ import fs from "fs";
 import { Op } from "sequelize";
 import Region from "../models/region.model.js";
 import User from "../models/user.model.js";
+import Filial from "../models/filial.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -42,7 +43,7 @@ export async function findAll(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: [Major, Region, User],
+         include: [Major, Region, User, Filial],
       });
 
       if (!centers.length) {

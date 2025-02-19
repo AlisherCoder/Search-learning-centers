@@ -33,4 +33,4 @@ VALUES ("fullstack", "web.jpg", 1), ("marketing", "smm.jpg", 1);
 
 INSERT INTO regions (name) VALUES("Tashkent");
 
-SELECT * FROM majoritems;
+SELECT * FROM regions;

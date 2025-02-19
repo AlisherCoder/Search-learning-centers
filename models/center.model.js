@@ -51,3 +51,4 @@ User.hasMany(Center, { foreignKey: "seoId" });
 Center.belongsTo(User, { foreignKey: "seoId" });
 
 export default Center;
+

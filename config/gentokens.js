@@ -6,7 +6,7 @@ const accessKey = process.env.accessKey;
 const refreshKey = process.env.refreshKey;
 
 export function genAccessToken(payload) {
-   const token = jwt.sign(payload, accessKey, { expiresIn: "1d" });
+   const token = jwt.sign(payload, accessKey, { expiresIn: "1h" });
    return token;
 }
 
