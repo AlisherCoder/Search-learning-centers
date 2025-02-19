@@ -127,11 +127,7 @@ async function update(req, res) {
 async function remove(req, res) {
   try {
     let {id} = req.params;
-    let { error, value } = regionValid.validate(req.body);
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
     let currentItem = await Region.findByPk(id);
 
     if(currentItem) {

@@ -1,42 +1,36 @@
-import { Router } from "express";
-import {
-  create,
-  findAll,
-  findBySearch,
-  findOne,
-  remove,
-  update,
-} from "../controllers/category.controller.js";
+import {Router} from "express"
+import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/reception.controller.js"
 
-const categoryRoute = Router();
 
-categoryRoute.get("/", findAll);
-categoryRoute.get("/query", findBySearch);
-categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", create);
-categoryRoute.patch("/:id", update);
-categoryRoute.delete("/:id", remove);
+const reseptionRouter = Router()
 
-export default categoryRoute;
+reseptionRouter.get("/", findAll);
+reseptionRouter.get("/query", findBySorted);
+reseptionRouter.get("/:id", findOne);
+reseptionRouter.post("/", create);
+reseptionRouter.patch("/:id", update);
+reseptionRouter.delete("/:id", remove);
+
+export default reseptionRouter
 
 
 
 /**
  * @swagger
  * tags:
- *   name: Categories
- *   description: categories management endpoints
+ *   name: Reseption
+ *   description: reseption management endpoints
  */
 
 /**
  * @swagger
- * /api/categories:
+ * /api/reseption:
  *   get:
- *     summary: Get all categories
- *     tags: [Categories]
+ *     summary: Get all Reseption
+ *     tags: [Reseption]
  *     responses:
  *       200:
- *         description: All categories
+ *         description: All Reseption
  *       404:
  *         description: Not 
  *       500:
@@ -47,18 +41,18 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/query:
+ * /api/reseption/query:
  *   get:
- *     summary: "Get all categories"
- *     tags: [Categories]
+ *     summary: "Get all Reseption"
+ *     tags: [Reseption]
  *     description: "Query orqali filter, sort va pagination bilan"
  *     parameters:
  *       - in: query
  *         name: column
  *         schema:
  *           type: string
- *           enum: [name]
- *         description: "categories bo‘yicha filtr"
+ *           enum: [status]
+ *         description: "reseption bo‘yicha filtr"
  *       - in: query
  *         name: search
  *         schema:
@@ -93,10 +87,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/reseption/{id}:
  *   get:
- *     summary: Get one categories
- *     tags: [Categories]
+ *     summary: Get one Reseption
+ *     tags: [Reseption]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -105,7 +99,7 @@ export default categoryRoute;
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: Reseption ID
  *     responses:
  *       200:
  *         description: data
@@ -119,10 +113,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories:
+ * /api/reseption:
  *   post:
- *     summary: categories
- *     tags: [Categories]
+ *     summary: Reseption
+ *     tags: [Reseption]
  *     requestBody:
  *       required: true
  *       content:
@@ -130,15 +124,19 @@ export default categoryRoute;
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - image
+ *               - userId
+ *               - filialId
+ *               - majorId
  *             properties:
- *               name:
- *                 type: string
- *                 example: "optional"
- *               image:
- *                 type: string
- *                 example: "linke"
+ *               userId:
+ *                 type: integer
+ *                 example: 2
+ *               filialId:
+ *                 type: integer
+ *                 example: 1
+ *               major:
+ *                 type: integer
+ *                 example: 5
  *     responses:
  *       201:
  *         description: Created successfully
@@ -152,37 +150,49 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/reseption/{id}:
  *   patch:
- *     summary: Update a Field
- *     tags: [Categories]
+ *     summary: Update a reception
+ *     tags: [Reseption]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the category to update
+ *         description: The ID of the reception to update
  *     requestBody:
- *       required: false
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               userId:
+ *                 type: integer
+ *                 example: 2
+ *               filialId:
+ *                 type: integer
+ *                 example: 1
+ *               majorId:
+ *                 type: integer
+ *                 example: 5
+ *               status:
  *                 type: string
- *                 example: "updated name"
- *               image:
- *                 type: string
- *                 example: "updated link"
+ *                 enum: ["pending", "study", "finished"]
+ *                 example: "pending"
+ *             optional:
+ *               - userId
+ *               - filialId
+ *               - majorId
+ *               - status
  *     responses:
- *       204:
- *         description: Field updated successfully
+ *       200:
+ *         description: Reception updated successfully
  *       400:
  *         description: Invalid request data
  *       404:
- *         description: Field not found
+ *         description: Reception not found
  *       500:
  *         description: Server error
  */
@@ -191,10 +201,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/reseption/{id}:
  *   delete:
- *     summary: Get one categories
- *     tags: [Categories]
+ *     summary: Get one Reseption
+ *     tags: [Reseption]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -203,13 +213,12 @@ export default categoryRoute;
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: Reseption ID
  *     responses:
  *       200:
  *         description: delete
  *       404:
- *         description: Not Found category
+ *         description: Not Found filed
  *       500:
  *         description: Server error
  */
-

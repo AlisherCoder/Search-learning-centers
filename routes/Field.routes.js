@@ -1,42 +1,35 @@
-import { Router } from "express";
-import {
-  create,
-  findAll,
-  findBySearch,
-  findOne,
-  remove,
-  update,
-} from "../controllers/category.controller.js";
+import {Router} from "express";
+import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/field.controller.js"
 
-const categoryRoute = Router();
 
-categoryRoute.get("/", findAll);
-categoryRoute.get("/query", findBySearch);
-categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", create);
-categoryRoute.patch("/:id", update);
-categoryRoute.delete("/:id", remove);
+const fieldRouter = Router()
 
-export default categoryRoute;
+fieldRouter.get("/", findAll);
+fieldRouter.get("/query", findBySorted);
+fieldRouter.get("/:id", findOne);
+fieldRouter.post("/", create);
+fieldRouter.patch("/:id", update);
+fieldRouter.delete("/:id", remove);
 
+export default fieldRouter
 
 
 /**
  * @swagger
  * tags:
- *   name: Categories
- *   description: categories management endpoints
+ *   name: Fields
+ *   description: fields management endpoints
  */
 
 /**
  * @swagger
- * /api/categories:
+ * /api/fields:
  *   get:
- *     summary: Get all categories
- *     tags: [Categories]
+ *     summary: Get all Fields
+ *     tags: [Fields]
  *     responses:
  *       200:
- *         description: All categories
+ *         description: All Fields
  *       404:
  *         description: Not 
  *       500:
@@ -47,10 +40,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/query:
+ * /api/fields/query:
  *   get:
- *     summary: "Get all categories"
- *     tags: [Categories]
+ *     summary: "Get all Fields"
+ *     tags: [Fields]
  *     description: "Query orqali filter, sort va pagination bilan"
  *     parameters:
  *       - in: query
@@ -58,7 +51,7 @@ export default categoryRoute;
  *         schema:
  *           type: string
  *           enum: [name]
- *         description: "categories bo‘yicha filtr"
+ *         description: "fields bo‘yicha filtr"
  *       - in: query
  *         name: search
  *         schema:
@@ -93,10 +86,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/fields/{id}:
  *   get:
- *     summary: Get one categories
- *     tags: [Categories]
+ *     summary: Get one Fields
+ *     tags: [Fields]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -105,7 +98,7 @@ export default categoryRoute;
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: Fields ID
  *     responses:
  *       200:
  *         description: data
@@ -119,10 +112,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories:
+ * /api/fields:
  *   post:
- *     summary: categories
- *     tags: [Categories]
+ *     summary: Fields
+ *     tags: [Fields]
  *     requestBody:
  *       required: true
  *       content:
@@ -152,17 +145,17 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/fields/{id}:
  *   patch:
  *     summary: Update a Field
- *     tags: [Categories]
+ *     tags: [Fields]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the category to update
+ *         description: The ID of the field to update
  *     requestBody:
  *       required: false
  *       content:
@@ -177,7 +170,7 @@ export default categoryRoute;
  *                 type: string
  *                 example: "updated link"
  *     responses:
- *       204:
+ *       200:
  *         description: Field updated successfully
  *       400:
  *         description: Invalid request data
@@ -191,10 +184,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/fields/{id}:
  *   delete:
- *     summary: Get one categories
- *     tags: [Categories]
+ *     summary: Get one Fields
+ *     tags: [Fields]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -203,13 +196,12 @@ export default categoryRoute;
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: Fields ID
  *     responses:
  *       200:
  *         description: delete
  *       404:
- *         description: Not Found category
+ *         description: Not Found filed
  *       500:
  *         description: Server error
  */
-

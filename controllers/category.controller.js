@@ -11,23 +11,22 @@ async function findAll(req, res) {
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
-    const page = value.page || 1;
-    const limit = value.limit || 10;
-    const offset = (page - 1) * limit;
-    const sortOrder = value.sortOrder || "ASC";
-    let allItems = await Category.findAll({
-      limit: limit,
-      offset: offset,
-      include: [Resource],
-      order: [["name", sortOrder]],
-    });
+    let {limit = 10, offset = 0, sort, column = "name"} = value;
 
-    let total = await Category.findAll();
-    if (allItems) {
-      res.status(200).json({ data: allItems, total: total.length });
-    } else {
-      res.status(404).json({ message: "Category not found!" });
+    limit = parseInt(limit);
+    offset = Math.max(0, (parseInt(offset) - 1) * limit);
+
+    let query = {limit, offset};
+    if (sort === "asc" || sort === "desc") {
+        query.order = [[column, sort.toUpperCase()]];
     }
+
+    let data = await Category.findAll({ ...query});
+
+    if (!data.length) {
+        return res.status(404).json({ message: "Not Found" });
+    }
+    res.status(200).json({ data });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -51,26 +50,21 @@ async function findOne(req, res) {
 
 async function findBySearch(req, res) {
   try {
-    let { error, value } = queryValid.validate(req.query);
+    let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
+    limit = parseInt(limit);
+    offset = Math.max(0, (parseInt(offset) - 1) * limit);
+
+    let query = {limit, offset};
+    if (sort === "asc" || sort === "desc") {
+        query.order = [[column, sort.toUpperCase()]];
+    }
+    let where = {};
+    if (search) {
+        where[column] = { [Op.like]: `%${search}%` };
     }
 
-    const page = value.page || 1;
-    const limit = value.limit || 10;
-    const offset = (page - 1) * limit;
-    const sortOrder = value.sortOrder || "ASC";
-
-    const { name } = req.query;
-    let filters = {};
-    if (name) {
-      filters.name = {
-        [Op.like]: `%${name}%`,
-      };
-    }
-
-    let total = await Category.count({where: filters});
+    let allItems = await Category.findAll({where: filters});
 
 
     let currentItems = await Category.findAll({
@@ -81,14 +75,16 @@ async function findBySearch(req, res) {
       order: [["name", sortOrder]],
     });
     if (currentItems) {
-      res.status(200).json({ data: currentItems, total: total });
+      res.status(200).json({ data: currentItems, total: allItems.length });
     } else {
       res.status(404).json({ message: "Category not found by search!" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });    
+    res.status(500).json({ message: error.message });
+    console.log(error);
+    
   }
-}
+};
 
 async function create(req, res) {
   try {

@@ -1,42 +1,36 @@
 import { Router } from "express";
-import {
-  create,
-  findAll,
-  findBySearch,
-  findOne,
-  remove,
-  update,
-} from "../controllers/category.controller.js";
+import { findAll, findBySorted, findOne, create, update ,remove} from "../controllers/major.controller.js";
 
-const categoryRoute = Router();
+const mojorRouter = Router();
 
-categoryRoute.get("/", findAll);
-categoryRoute.get("/query", findBySearch);
-categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", create);
-categoryRoute.patch("/:id", update);
-categoryRoute.delete("/:id", remove);
+mojorRouter.get("/", findAll);
+mojorRouter.get("/query", findBySorted);
+mojorRouter.get("/:id", findOne);
+mojorRouter.post("/", create);
+mojorRouter.patch("/:id", update);
+mojorRouter.delete("/:id", remove);
 
-export default categoryRoute;
+export default mojorRouter
+
 
 
 
 /**
  * @swagger
  * tags:
- *   name: Categories
- *   description: categories management endpoints
+ *   name: Major
+ *   description: major management endpoints
  */
 
 /**
  * @swagger
- * /api/categories:
+ * /api/major:
  *   get:
- *     summary: Get all categories
- *     tags: [Categories]
+ *     summary: Get all Major
+ *     tags: [Major]
  *     responses:
  *       200:
- *         description: All categories
+ *         description: All Major
  *       404:
  *         description: Not 
  *       500:
@@ -47,10 +41,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/query:
+ * /api/major/query:
  *   get:
- *     summary: "Get all categories"
- *     tags: [Categories]
+ *     summary: "Get all Major"
+ *     tags: [Major]
  *     description: "Query orqali filter, sort va pagination bilan"
  *     parameters:
  *       - in: query
@@ -58,7 +52,7 @@ export default categoryRoute;
  *         schema:
  *           type: string
  *           enum: [name]
- *         description: "categories bo‘yicha filtr"
+ *         description: "major bo‘yicha filtr"
  *       - in: query
  *         name: search
  *         schema:
@@ -93,10 +87,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/major/{id}:
  *   get:
- *     summary: Get one categories
- *     tags: [Categories]
+ *     summary: Get one Major
+ *     tags: [Major]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -105,7 +99,7 @@ export default categoryRoute;
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: Major ID
  *     responses:
  *       200:
  *         description: data
@@ -119,10 +113,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories:
+ * /api/major:
  *   post:
- *     summary: categories
- *     tags: [Categories]
+ *     summary: Major
+ *     tags: [Major]
  *     requestBody:
  *       required: true
  *       content:
@@ -132,6 +126,8 @@ export default categoryRoute;
  *             required:
  *               - name
  *               - image
+ *               - fieldId
+ *               - subjectId
  *             properties:
  *               name:
  *                 type: string
@@ -139,6 +135,12 @@ export default categoryRoute;
  *               image:
  *                 type: string
  *                 example: "linke"
+ *               fieldId:
+ *                 type: integer
+ *                 example: 2
+ *               subjectId:
+ *                 type: integer
+ *                 example: 4
  *     responses:
  *       201:
  *         description: Created successfully
@@ -152,17 +154,17 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/major/{id}:
  *   patch:
- *     summary: Update a Field
- *     tags: [Categories]
+ *     summary: Update a major
+ *     tags: [Major]
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the category to update
+ *         description: The ID of the field to update
  *     requestBody:
  *       required: false
  *       content:
@@ -176,13 +178,19 @@ export default categoryRoute;
  *               image:
  *                 type: string
  *                 example: "updated link"
+ *               fieldId:
+ *                 type: integer
+ *                 example: 5
+ *               subjectId:
+ *                 type: integer
+ *                 example: 5
  *     responses:
- *       204:
- *         description: Field updated successfully
+ *       202:
+ *         description: major updated successfully
  *       400:
  *         description: Invalid request data
  *       404:
- *         description: Field not found
+ *         description: major not found
  *       500:
  *         description: Server error
  */
@@ -191,10 +199,10 @@ export default categoryRoute;
 
 /**
  * @swagger
- * /api/categories/{id}:
+ * /api/major/{id}:
  *   delete:
- *     summary: Get one categories
- *     tags: [Categories]
+ *     summary: Get one Major
+ *     tags: [Major]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -203,13 +211,12 @@ export default categoryRoute;
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: Major ID
  *     responses:
  *       200:
  *         description: delete
  *       404:
- *         description: Not Found category
+ *         description: Not Found filed
  *       500:
  *         description: Server error
  */
-
