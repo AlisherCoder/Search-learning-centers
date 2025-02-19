@@ -1,28 +1,56 @@
-import { userPatchValid, userSearchValid } from "../validations/user.valid.js";
+import { userPatchValid, SearchValid } from "../validations/user.valid.js";
+import Center from "../models/center.model.js";
 import User from "../models/user.model.js";
 import { Op } from "sequelize";
 import path from "path";
 import fs from "fs";
-import Center from "../models/center.model.js";
 
 export async function findAll(req, res) {
    try {
-      let { page, take = 10 } = req.query;
+      let query = {};
+      for (let [key, value] of Object.entries(req.query)) {
+         if (value) {
+            query[key] = value;
+         }
+      }
+
+      let { error, value } = SearchValid.validate(query);
+      if (error) {
+         return res.status(422).json({ message: error.details[0].message });
+      }
+
+      if(value.role == "user" || value.role == "admin"){
+         return res.status(401).json({message: "Not allowed."})
+      }
+
+      let { take = 5, page, sortBy, sortOrder, ...queries } = value;
+      let sort = sortBy || "firstName";
+      let order = sortOrder || "ASC";
+
       let skip = 0;
       if (page) {
          skip = (page - 1) * take;
       }
 
-      take = JSON.parse(take);
-      skip = JSON.parse(skip);
+      query = { role: "seo" };
+      for (let [key, val] of Object.entries(queries)) {
+         if (typeof val != "boolean") {
+            query[key] = { [Op.substring]: `%${val}%` };
+         } else {
+            query[key] = val;
+         }
+      }
 
       let users = await User.findAll({
+         where: query,
          limit: take,
          offset: skip,
+         order: [[sort, order]],
          include: Center,
       });
+
       if (!users.length) {
-         return res.status(200).json({ message: "Not users yet." });
+         return res.status(200).json({ message: "Not found users." });
       }
 
       res.status(200).json({ data: users });
@@ -117,7 +145,7 @@ export async function getBySearch(req, res) {
          }
       }
 
-      let { error, value } = userSearchValid.validate(query);
+      let { error, value } = SearchValid.validate(query);
       if (error) {
          return res.status(422).json({ message: error.details[0].message });
       }

@@ -26,7 +26,7 @@ userRoute.post("/login", login);
 userRoute.post("/reset-password", resetPassword);
 
 userRoute.get("/search", verifyToken, getBySearch);
-userRoute.get("/", verifyToken, rolePolice(["admin"]), findAll);
+userRoute.get("/", findAll);
 userRoute.get("/:id", verifyToken, selfPolice(["admin"]), findOne);
 userRoute.delete("/:id", verifyToken, selfPolice(["admin"]), remove);
 userRoute.patch("/:id", verifyToken, selfPolice(["admin"]), update);

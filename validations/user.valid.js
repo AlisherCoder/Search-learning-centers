@@ -3,9 +3,9 @@ import joi from "joi";
 const passwordValid = joi.object({
    newPassword: joi
       .string()
-      .pattern(
-         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/
-      )
+      .min(6)
+      .max(16)
+      .pattern(/^[A-Za-z\d.]+$/)
       .required(),
 });
 
@@ -31,10 +31,8 @@ const userRegValid = joi.object({
    password: joi
       .string()
       .min(6)
-      .max(32)
-      .pattern(
-         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/
-      )
+      .max(16)
+      .pattern(/^[A-Za-z\d.]+$/)
       .required(),
    image: joi.string().optional(),
 });
@@ -56,9 +54,7 @@ const userPatchValid = joi.object({
    isActive: joi.boolean(),
 });
 
-// test rejimidan keyin buni passwordga qo'shib ketish kerak.
-
-const userSearchValid = joi.object({
+const SearchValid = joi.object({
    firstName: joi.string(),
    lastName: joi.string(),
    email: joi.string(),
@@ -71,4 +67,4 @@ const userSearchValid = joi.object({
    sortBy: joi.string(),
 });
 
-export { userRegValid, userPatchValid, userSearchValid, passwordValid };
+export { userRegValid, userPatchValid, SearchValid, passwordValid };

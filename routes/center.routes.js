@@ -7,13 +7,14 @@ import {
    update,
 } from "../controllers/center.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
+import rolePolice from "../middleware/rolePolice.js";
 
 const centerRoute = Router();
 
 centerRoute.get("/", findAll);
-centerRoute.post("/", verifyToken, create);
+centerRoute.post("/", verifyToken, rolePolice(["admin", "seo"]), create);
 centerRoute.get("/:id", findOne);
-centerRoute.delete("/:id", verifyToken, remove);
-centerRoute.patch("/:id", verifyToken, update);
+centerRoute.delete("/:id", verifyToken, rolePolice(["admin", "seo"]), remove);
+centerRoute.patch("/:id", verifyToken, rolePolice(["admin", "seo"]), update);
 
 export default centerRoute;
