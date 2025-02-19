@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findAll, findBySorted, findOne, create, update ,remove} from "../controllers/mojor.controller.js";
+import { findAll, findBySorted, findOne, create, update ,remove} from "../controllers/major.controller.js";
 
 const mojorRouter = Router();
 
@@ -156,7 +156,7 @@ export default mojorRouter
  * @swagger
  * /api/major/{id}:
  *   patch:
- *     summary: Update a Field
+ *     summary: Update a major
  *     tags: [Major]
  *     parameters:
  *       - in: path
@@ -185,12 +185,12 @@ export default mojorRouter
  *                 type: integer
  *                 example: 5
  *     responses:
- *       204:
- *         description: Field updated successfully
+ *       202:
+ *         description: major updated successfully
  *       400:
  *         description: Invalid request data
  *       404:
- *         description: Field not found
+ *         description: major not found
  *       500:
  *         description: Server error
  */

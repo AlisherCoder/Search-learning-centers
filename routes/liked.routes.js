@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findAll, findBySorted, findOne, create, update ,remove} from "../controllers/likeds.controller.js";
+import { findAll, findBySorted, findOne, create ,remove} from "../controllers/likeds.controller.js";
 
 const likedRouter = Router();
 
@@ -7,7 +7,6 @@ likedRouter.get("/", findAll);
 likedRouter.get("/query", findBySorted);
 likedRouter.get("/:id", findOne);
 likedRouter.post("/", create);
-likedRouter.patch("/:id", update);
 likedRouter.delete("/:id", remove);
 
 export default likedRouter
@@ -57,7 +56,7 @@ export default likedRouter
  *         name: search
  *         schema:
  *           type: string
- *         description: "search" 
+ *         description: "2025-02-19T06:54:40.242Z" 
  *       - in: query
  *         name: sort
  *         schema:
@@ -149,49 +148,6 @@ export default likedRouter
  */
 
 
-
-/**
- * @swagger
- * /api/liked/{id}:
- *   patch:
- *     summary: Update a reception
- *     tags: [Liked]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the liked to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: integer
- *                 example: 2
- *               centerId:
- *                 type: integer
- *                 example: 1
- *             optional:
- *               - userId
- *               - centerId
- *     responses:
- *       200:
- *         description: Reception updated successfully
- *       400:
- *         description: Invalid request data
- *       404:
- *         description: Reception not found
- *       500:
- *         description: Server error
- */
-
-
-
 /**
  * @swagger
  * /api/liked/{id}:
@@ -211,7 +167,7 @@ export default likedRouter
  *       200:
  *         description: delete
  *       404:
- *         description: Not Found filed
+ *         description: Not Found liked
  *       500:
  *         description: Server error
  */

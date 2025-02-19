@@ -74,8 +74,8 @@ export async function update (req,res) {
         if(!data){
             return res.status(404).json({message: "Not Fount By id"})
         }
-        await Subject.update(value, {where: {id}});
-        res.status(200).json({message: "Update"})
+        await data.update(value);
+        res.status(200).json({message: "Update", data})
     }catch(e){
         res.status(500).json({message:e.message});
     }
@@ -87,7 +87,7 @@ export async function remove (req,res) {
         if(!data){
             return res.status(404).json({message: "Not Found filed"})
         }
-        await Subject.destroy({where: {id}});
+        await data.destroy();
         res.status(200).json({message: "delete"})
     }catch(e){
         console.log(e);

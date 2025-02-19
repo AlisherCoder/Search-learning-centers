@@ -171,7 +171,7 @@ export default subjectRouter
  *                 type: string
  *                 example: "updated link"
  *     responses:
- *       204:
+ *       200:
  *         description: Field updated successfully
  *       400:
  *         description: Invalid request data

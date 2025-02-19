@@ -72,23 +72,7 @@ export async function create (req,res) {
         res.status(500).json({message: e.message});
     }
 };
-export async function update (req,res) {
-    try{
-        let {id} = req.params;
-        let {error, value} = LikedsPATCH.validate(req.body);
-        if(error){
-            return res.status(400).json({message: error.message})
-        }
-        let data = await Like.findByPk(id);
-        if(!data){
-            return res.status(404).json({message: "Not Fount By id"})
-        }
-        await Like.update(value, {where: {id}});
-        res.status(200).json({message: "Update"})
-    }catch(e){
-        res.status(500).json({message:e.message});
-    }
-};
+
 export async function remove (req,res) {
     try{
         let {id} = req.params;
@@ -96,7 +80,7 @@ export async function remove (req,res) {
         if(!data){
             return res.status(404).json({message: "Not Found filed"})
         }
-        await Like.destroy({where: { id }});
+        await data.destroy();
         res.status(200).json({message: "delete"})
     }catch(e){
         res.status(500).json({message: e.message});

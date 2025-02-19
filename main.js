@@ -20,10 +20,24 @@ const options = {
          version: "0.1.0",
          description:
             "This is a simple CRUD API application made with Express and documented with Swagger",
-      }, 
+      },
       servers: [
          {
             url: "http://localhost:4000/",
+         },
+      ],
+      components: {
+         securitySchemes: {
+            BearerAuth: {
+               type: "http",
+               scheme: "bearer",
+               bearerFormat: "JWT",
+            },
+         },
+      },
+      security: [
+         {
+            BearerAuth: [],
          },
       ],
    },
