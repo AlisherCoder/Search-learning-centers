@@ -15,8 +15,6 @@ const filialPostValid = joi.object({
 const filialPatchValid = joi.object({
    name: joi.string().min(2),
    phone: joi.string().pattern(/^(?:\+998|998)?\d{9}$/),
-   regionId: joi.number().positive(),
-   centerId: joi.number().positive(),
    address: joi.string(),
    image: joi.string(),
 });

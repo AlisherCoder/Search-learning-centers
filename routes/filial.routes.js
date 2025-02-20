@@ -300,12 +300,6 @@ export default filialRoute;
  *               phone:
  *                 type: string
  *                 description: Filial phone number
- *               regionId:
- *                 type: integer
- *                 description: Associated region ID
- *               centerId:
- *                 type: integer
- *                 description: Associated center ID
  *               address:
  *                 type: string
  *                 description: Filial address

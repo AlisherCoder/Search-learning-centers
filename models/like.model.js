@@ -24,6 +24,7 @@ const Like = sequelize.define("likes", {
          model: Center,
          key: "id",
       },
+      unique: true,
    },
 });
 

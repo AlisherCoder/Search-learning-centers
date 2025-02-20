@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import { totp } from "otplib";
 
-totp.options = { step: 300, digits: 5 };
+totp.options = { step: 600, digits: 5 };
 const transport = nodemailer.createTransport({
    service: "gmail",
    auth: {

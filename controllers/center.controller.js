@@ -6,12 +6,15 @@ import {
 import MajorItem from "../models/majorItem.model.js";
 import Center from "../models/center.model.js";
 import Major from "../models/major.model.js";
+import Comment from "../models/comment.model.js";
 import path from "path";
 import fs from "fs";
 import { Op } from "sequelize";
 import Region from "../models/region.model.js";
 import User from "../models/user.model.js";
 import Filial from "../models/filial.model.js";
+import Like from "../models/like.model.js";
+import Reception from "../models/reseption.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -43,7 +46,17 @@ export async function findAll(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: [Major, Region, User, Filial],
+         include: [
+            { model: Major },
+            { model: Region },
+            {
+               model: Filial,
+               include: [{ model: Reception, include: [{ model: User }] }],
+            },
+            { model: User },
+            { model: Comment, include: [{ model: User }] },
+            { model: Like, include: [{ model: User }] },
+         ],
       });
 
       if (!centers.length) {
@@ -62,7 +75,20 @@ export async function findOne(req, res) {
    try {
       let { id } = req.params;
 
-      let center = await Center.findByPk(id, { include: [Major, Region, User] });
+      let center = await Center.findByPk(id, {
+         include: [
+            { model: Major },
+            { model: Region },
+            {
+               model: Filial,
+               include: [{ model: Reception, include: [{ model: User }] }],
+            },
+            { model: User },
+            { model: Comment, include: [{ model: User }] },
+            { model: Like, include: [{ model: User }] },
+         ],
+      });
+
       if (!center) {
          return res.status(404).json({ message: "Not found learning center." });
       }

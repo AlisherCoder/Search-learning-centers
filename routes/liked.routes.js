@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { findAll, findBySorted, findOne, create ,remove} from "../controllers/likeds.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
 
 const likedRouter = Router();
 
 likedRouter.get("/", findAll);
 likedRouter.get("/query", findBySorted);
 likedRouter.get("/:id", findOne);
-likedRouter.post("/", create);
-likedRouter.delete("/:id", remove);
+likedRouter.post("/", verifyToken, create);
+likedRouter.delete("/:id", verifyToken, remove);
 
 export default likedRouter
 

@@ -1,25 +1,25 @@
 import { Router } from "express";
 import {
-  create,
-  findAll,
-  findBySearch,
-  findOne,
-  remove,
-  update,
+   create,
+   findAll,
+   findBySearch,
+   findOne,
+   remove,
+   update,
 } from "../controllers/category.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
+import rolePolice from "../middleware/rolePolice.js";
 
 const categoryRoute = Router();
 
 categoryRoute.get("/", findAll);
 categoryRoute.get("/query", findBySearch);
 categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", create);
-categoryRoute.patch("/:id", update);
-categoryRoute.delete("/:id", remove);
+categoryRoute.post("/", verifyToken, rolePolice(["admin"]), create);
+categoryRoute.patch("/:id", verifyToken, rolePolice(["admin"]), update);
+categoryRoute.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
 
 export default categoryRoute;
-
-
 
 /**
  * @swagger
@@ -38,12 +38,10 @@ export default categoryRoute;
  *       200:
  *         description: All categories
  *       404:
- *         description: Not 
+ *         description: Not
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -63,7 +61,7 @@ export default categoryRoute;
  *         name: search
  *         schema:
  *           type: string
- *         description: "search" 
+ *         description: "search"
  *       - in: query
  *         name: sort
  *         schema:
@@ -89,8 +87,6 @@ export default categoryRoute;
  *         description: "Server error"
  */
 
-
-
 /**
  * @swagger
  * /api/categories/{id}:
@@ -111,11 +107,9 @@ export default categoryRoute;
  *         description: data
  *       404:
  *         description: Not Fount
- *       500: 
- *         description: Server error  
+ *       500:
+ *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -147,8 +141,6 @@ export default categoryRoute;
  *       500:
  *         description: server error
  */
-
-
 
 /**
  * @swagger
@@ -187,8 +179,6 @@ export default categoryRoute;
  *         description: Server error
  */
 
-
-
 /**
  * @swagger
  * /api/categories/{id}:
@@ -212,4 +202,3 @@ export default categoryRoute;
  *       500:
  *         description: Server error
  */
-

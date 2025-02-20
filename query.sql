@@ -33,4 +33,6 @@ VALUES ("fullstack", "web.jpg", 1), ("marketing", "smm.jpg", 1);
 
 INSERT INTO regions (name) VALUES("Tashkent");
 
-SELECT * FROM regions;
+SELECT * FROM users;
+
+UPDATE users SET role = "admin";

@@ -1,9 +1,14 @@
 import { userPatchValid, SearchValid } from "../validations/user.valid.js";
 import Center from "../models/center.model.js";
 import User from "../models/user.model.js";
-import { Op} from "sequelize";
+import { Op } from "sequelize";
 import path from "path";
 import fs from "fs";
+import Reception from "../models/reseption.model.js";
+import Resource from "../models/resource.model.js";
+import Like from "../models/like.model.js";
+import Comment from "../models/comment.model.js";
+import Filial from "../models/filial.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -23,7 +28,7 @@ export async function findAll(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: Center,
+         include: [Center, Reception, Comment, Resource, Like],
       });
 
       if (!users.length) {
@@ -40,7 +45,9 @@ export async function findOne(req, res) {
    try {
       let { id } = req.params;
 
-      let user = await User.findByPk(id, { include: Center });
+      let user = await User.findByPk(id, {
+         include: [Center, Resource, Like, Comment],
+      });
       if (!user) {
          return res.status(404).json({ message: "Not found user." });
       }

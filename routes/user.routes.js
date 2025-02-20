@@ -31,7 +31,7 @@ userRoute.get("/seos", getAllSeos);
 userRoute.get("/seos/:id", getOneSeo);
 
 userRoute.get("/search", verifyToken, getBySearch);
-userRoute.get("/", verifyToken, rolePolice(["seo"]), findAll);
+userRoute.get("/", verifyToken, rolePolice(["admin"]), findAll);
 userRoute.get("/:id", verifyToken, selfPolice(["admin"]), findOne);
 userRoute.delete("/:id", verifyToken, selfPolice(["admin"]), remove);
 userRoute.patch("/:id", verifyToken, selfPolice(["admin"]), update);

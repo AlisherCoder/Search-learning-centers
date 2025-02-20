@@ -248,18 +248,10 @@ export default centerRoute;
  *                 type: string
  *                 description: Center name
  *                 example: "Modern Learning Center"
- *               regionId:
- *                 type: integer
- *                 description: Region ID
- *                 example: 2
  *               address:
  *                 type: string
  *                 description: Center address
  *                 example: "123 Main St, City"
- *               seoId:
- *                 type: integer
- *                 description: SEO user ID
- *                 example: 5
  *               phone:
  *                 type: string
  *                 description: Contact phone number
