@@ -10,11 +10,305 @@ import {
 
 const resourceRoute = Router();
 
+// Routelar
 resourceRoute.get("/", findAll);
 resourceRoute.get("/search", findBySearch);
 resourceRoute.get("/:id", findOne);
 resourceRoute.post("/", create);
 resourceRoute.patch("/:id", update);
 resourceRoute.delete("/:id", remove);
+
+// Swagger Dokumentatsiyasi
+/**
+ * @swagger
+ * tags:
+ *   name: Resources
+ *   description: Resource management
+ */
+
+/**
+ * @swagger
+ * /api/resources:
+ *   get:
+ *     summary: Retrieve a list of resources
+ *     tags: [Resources]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: The number of items per page
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *         description: The sort order
+ *     responses:
+ *       200:
+ *         description: A list of resources
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Resource'
+ *                 total:
+ *                   type: integer
+ *       404:
+ *         description: Resources not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/resources/search:
+ *   get:
+ *     summary: Search resources by name
+ *     tags: [Resources]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: The name to search for
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: The number of items per page
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *         description: The sort order
+ *     responses:
+ *       200:
+ *         description: A list of resources matching the search criteria
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Resource'
+ *                 total:
+ *                   type: integer
+ *       404:
+ *         description: Resources not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/resources/{id}:
+ *   get:
+ *     summary: Retrieve a resource by ID
+ *     tags: [Resources]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The resource ID
+ *     responses:
+ *       200:
+ *         description: A single resource
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Resource'
+ *       404:
+ *         description: Resource not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/resources:
+ *   post:
+ *     summary: Create a new resource
+ *     tags: [Resources]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - categoryId
+ *               - name
+ *               - description
+ *               - media
+ *               - image
+ *             properties:
+ *               userId:
+ *                 type: integer
+ *                 description: The ID of the user who created the resource
+ *               categoryId:
+ *                 type: integer
+ *                 description: The ID of the category the resource belongs to
+ *               name:
+ *                 type: string
+ *                 description: The name of the resource
+ *               description:
+ *                 type: string
+ *                 description: The description of the resource
+ *               media:
+ *                 type: string
+ *                 description: The media URL of the resource
+ *               image:
+ *                 type: string
+ *                 description: The image URL of the resource
+ *             example:
+ *               userId: 1
+ *               categoryId: 1
+ *               name: "Sample Resource"
+ *               description: "This is a sample resource"
+ *               media: "https://example.com/media.mp4"
+ *               image: "https://example.com/image.jpg"
+ *     responses:
+ *       201:
+ *         description: Resource created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Resource'
+ *       400:
+ *         description: Bad request (e.g., missing required fields)
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/resources/{id}:
+ *   patch:
+ *     summary: Update a resource by ID
+ *     tags: [Resources]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The resource ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The updated name of the resource
+ *               description:
+ *                 type: string
+ *                 description: The updated description of the resource
+ *               media:
+ *                 type: string
+ *                 description: The updated media URL of the resource
+ *               image:
+ *                 type: string
+ *                 description: The updated image URL of the resource
+ *             example:
+ *               name: "Updated Resource Name"
+ *               description: "Updated resource description"
+ *               media: "https://example.com/updated-media.mp4"
+ *               image: "https://example.com/updated-image.jpg"
+ *     responses:
+ *       200:
+ *         description: Resource updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Resource'
+ *       404:
+ *         description: Resource not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/resources/{id}:
+ *   delete:
+ *     summary: Delete a resource by ID
+ *     tags: [Resources]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The resource ID
+ *     responses:
+ *       200:
+ *         description: Resource deleted successfully
+ *       404:
+ *         description: Resource not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Resource:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated ID of the resource
+ *         userId:
+ *           type: integer
+ *           description: The ID of the user who created the resource
+ *         categoryId:
+ *           type: integer
+ *           description: The ID of the category the resource belongs to
+ *         name:
+ *           type: string
+ *           description: The name of the resource
+ *         description:
+ *           type: string
+ *           description: The description of the resource
+ *         media:
+ *           type: string
+ *           description: The media URL of the resource
+ *         image:
+ *           type: string
+ *           description: The image URL of the resource
+ *       example:
+ *         id: 1
+ *         userId: 1
+ *         categoryId: 1
+ *         name: "Sample Resource"
+ *         description: "This is a sample resource"
+ *         media: "https://example.com/media.mp4"
+ *         image: "https://example.com/image.jpg"
+ */
 
 export default resourceRoute;
