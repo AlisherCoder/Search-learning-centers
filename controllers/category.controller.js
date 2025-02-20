@@ -63,14 +63,26 @@ async function findBySearch(req, res) {
     if (search) {
         where[column] = { [Op.like]: `%${search}%` };
     }
-    let data = await Category.findAll({ ...query, where });
 
-    if (!data.length) {
-        return res.status(404).json({ message: "Not Found" });
+    let allItems = await Category.findAll({where: filters});
+
+
+    let currentItems = await Category.findAll({
+      where: filters,
+      limit: limit,
+      offset: offset,
+      include: [Resource],
+      order: [["name", sortOrder]],
+    });
+    if (currentItems) {
+      res.status(200).json({ data: currentItems, total: allItems.length });
+    } else {
+      res.status(404).json({ message: "Category not found by search!" });
     }
-    res.status(200).json({ data });
-  } catch (e) {
-      res.status(500).json({ message: e.message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+    console.log(error);
+    
   }
 };
 
@@ -84,8 +96,6 @@ async function create(req, res) {
     res.status(201).json({ data: currentItem });
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
@@ -106,16 +116,13 @@ async function update(req, res) {
       res.status(404).json({message: "Category not found which has the ID"});
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-    
+    res.status(500).json({ message: error.message });    
   }
 }
 
 async function remove(req, res) {
   try {
     let {id} = req.params;
-
     let currentItem = await Category.findByPk(id);
     if(currentItem) {
       await currentItem.destroy()
@@ -125,8 +132,6 @@ async function remove(req, res) {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 

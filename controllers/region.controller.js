@@ -11,7 +11,7 @@ async function findAll(req, res) {
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
-    let total = await Region.findAll();
+    let totalCount = await Region.count();
 
     const page = value.page || 1;
     const limit = value.limit || 10;
@@ -24,14 +24,12 @@ async function findAll(req, res) {
       order: [["name", sortOrder]]
     });
     if (allItems) {
-      res.status(200).json({ date: allItems, total: total.length });
+      res.status(200).json({ date: allItems, total: totalCount });
     } else {
       res.status(404).json({ message: "Region not found!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
@@ -46,8 +44,6 @@ async function findOne(req, res) {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
@@ -71,7 +67,7 @@ async function findBySearch(req, res) {
       };
     }
 
-    const allItems = await Region.findAll({
+    const totalCount = await Region.count({
         where: filters
     })
 
@@ -83,14 +79,12 @@ async function findBySearch(req, res) {
       order: [["name", sortOrder]],
     });
     if (currentItems) {
-      res.status(200).json({ data: currentItems, total: allItems.length });
+      res.status(200).json({ data: currentItems, total: totalCount });
     } else {
       res.status(404).json({ message: "Region not found by search!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
@@ -104,8 +98,6 @@ async function create(req, res) {
     res.status(201).json({ data: currentItem });
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 
@@ -135,11 +127,7 @@ async function update(req, res) {
 async function remove(req, res) {
   try {
     let {id} = req.params;
-    let { error, value } = regionValid.validate(req.body);
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
     let currentItem = await Region.findByPk(id);
 
     if(currentItem) {
@@ -150,8 +138,6 @@ async function remove(req, res) {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
-    
   }
 }
 

@@ -132,3 +132,6 @@ VALUES
    (3, 1, 'Advanced TypeScript', 'TypeScript deep dive', 'typescript_advanced.mp4', 'typescript_thumbnail.jpg', NOW(), NOW()),
    (4, 3, 'Django Framework', 'Web development with Django', 'django_course.pdf', 'django_thumbnail.jpg', NOW(), NOW()),
    (5, 2, 'Next.js Guide', 'Server-side rendering with Next.js', 'nextjs_tutorial.mp4', 'nextjs_thumbnail.jpg', NOW(), NOW());
+
+
+CREATE Table comments;

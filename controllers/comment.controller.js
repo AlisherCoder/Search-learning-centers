@@ -2,6 +2,7 @@ import Center from "../models/center.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
 import commentValid from "../validations/comment.valid.js";
+import Comment from "../models/comment.model.js";
 
 async function findAll(req, res) {
   try {
@@ -21,16 +22,15 @@ async function findAll(req, res) {
       include: [User, Center],
     });
 
-    let allItemsCount = await Comment.findAll();
+    let totalCount = await Comment.count();
 
     if (allItems) {
-      res.status(200).json({ data: allItems, total: allItemsCount.length });
+      res.status(200).json({ data: allItems, total: totalCount });
     } else {
       res.status(404).json({ message: "Comment not found!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
   }
 }
 

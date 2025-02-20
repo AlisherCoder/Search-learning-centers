@@ -25,16 +25,15 @@ async function findAll(req, res) {
       order: [["name", sortOrder]]
     });
 
-    let allItemsCount = await Resource.findAll();
+    let totalCount = await Resource.count();
 
     if (allItems) {
-      res.status(200).json({ data: allItems, total: allItemsCount.length });
+      res.status(200).json({ data: allItems, total: totalCount });
     } else {
       res.status(404).json({ message: "Resource not found!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
   }
 }
 
@@ -85,16 +84,15 @@ async function findBySearch(req, res) {
       order: [["name", sortOrder]]
     });
 
-    const totalCount = await Resource.findAll({where: filters});
+    const totalCount = await Resource.count({where: filters});
 
     if (itemsBySearch) {
-      res.status(200).json({ data: itemsBySearch, total: totalCount.length });
+      res.status(200).json({ data: itemsBySearch, total: totalCount });
     } else {
       res.status(404).json({ message: "Resource not found!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
   }
 }
 
