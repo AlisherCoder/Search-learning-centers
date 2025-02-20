@@ -70,24 +70,15 @@ async function findBySearch(req, res) {
       };
     }
 
-    let allItems = await Category.findAll({where: filters});
+    let allItems = await Category.findAll({...query, where});
 
-
-    let currentItems = await Category.findAll({
-      where: filters,
-      limit: limit,
-      offset: offset,
-      include: [Resource],
-      order: [["name", sortOrder]],
-    });
-    if (currentItems) {
-      res.status(200).json({ data: currentItems, total: allItems.length });
+    if (allItems) {
+      res.status(200).json({ data: allItems, total: allItems.length });
     } else {
       res.status(404).json({ message: "Category not found by search!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
     
   }
 }
@@ -139,7 +130,6 @@ async function remove(req, res) {
       return res.status(400).json({ message: error.details[0].message });
     }
     let currentItem = await Category.findByPk(id);
-
     if(currentItem) {
       await currentItem.destroy()
       res.status(200).json({message: "The category was deleted successfully!"})

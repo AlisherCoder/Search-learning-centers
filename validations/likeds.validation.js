@@ -6,8 +6,3 @@ export const LikedsPOST = Joi.object({
 
 
 });
-
-export const LikedsPATCH = Joi.object({
-    userId: Joi.number().optional(),
-    centerId: Joi.number().optional(),
-});

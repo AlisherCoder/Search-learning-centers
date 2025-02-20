@@ -42,7 +42,6 @@ export async function findBySorted(req, res) {
             where[column] = { [Op.like]: `%${search}%` };
         }
         let data = await Subject.findAll({ ...query, where });
-
         if (!data.length) {
             return res.status(404).json({ message: "Not Found" });
         }
