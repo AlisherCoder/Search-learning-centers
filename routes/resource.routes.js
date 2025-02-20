@@ -10,7 +10,7 @@ import {
 
 const resourceRoute = Router();
 
-// Routelar
+
 resourceRoute.get("/", findAll);
 resourceRoute.get("/search", findBySearch);
 resourceRoute.get("/:id", findOne);
@@ -18,7 +18,7 @@ resourceRoute.post("/", create);
 resourceRoute.patch("/:id", update);
 resourceRoute.delete("/:id", remove);
 
-// Swagger Dokumentatsiyasi
+
 /**
  * @swagger
  * tags:

@@ -1,3 +1,4 @@
+-- Active: 1737689992095@@127.0.0.1@3306@fullstackexam
 
 CREATE DATABASE if Not EXISTS fullstackexam;
 SHOW tables;
@@ -134,4 +135,6 @@ VALUES
    (5, 2, 'Next.js Guide', 'Server-side rendering with Next.js', 'nextjs_tutorial.mp4', 'nextjs_thumbnail.jpg', NOW(), NOW());
 
 
-CREATE Table comments;
+CREATE Table comments(
+    
+);
