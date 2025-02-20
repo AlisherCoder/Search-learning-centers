@@ -67,6 +67,7 @@ export async function create (req,res) {
         res.status(500).json({message: e.message});
     }
 };
+
 export async function update (req,res) {
     try{
         let {id} = req.params;
