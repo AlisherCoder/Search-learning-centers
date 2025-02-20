@@ -1,22 +1,23 @@
 import { Router } from "express";
 import {
-  create,
-  findAll,
-  findBySearch,
-  findOne,
-  remove,
-  update,
+   create,
+   findAll,
+   findBySearch,
+   findOne,
+   remove,
+   update,
 } from "../controllers/region.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
+import rolePolice from "../middleware/rolePolice.js";
 
 const regionRoute = Router();
 
 regionRoute.get("/", findAll);
 regionRoute.get("/search", findBySearch);
 regionRoute.get("/:id", findOne);
-regionRoute.post("/", create);
-regionRoute.patch("/:id", update);
-regionRoute.delete("/:id", remove);
-
+regionRoute.post("/", verifyToken, rolePolice(["admin"]), create);
+regionRoute.patch("/:id", verifyToken, rolePolice(["admin"]), update);
+regionRoute.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
 
 /**
  * @swagger
@@ -68,8 +69,6 @@ regionRoute.delete("/:id", remove);
  *         description: Internal server error
  */
 
-
-
 /**
  * @swagger
  * /api/regions/search:
@@ -118,8 +117,6 @@ regionRoute.delete("/:id", remove);
  *         description: Internal server error
  */
 
-
-
 /**
  * @swagger
  * /api/regions/{id}:
@@ -145,8 +142,6 @@ regionRoute.delete("/:id", remove);
  *       500:
  *         description: Internal server error
  */
-
-
 
 /**
  * @swagger
@@ -180,8 +175,6 @@ regionRoute.delete("/:id", remove);
  *       500:
  *         description: Internal server error
  */
-
-
 
 /**
  * @swagger
@@ -221,8 +214,6 @@ regionRoute.delete("/:id", remove);
  *         description: Internal server error
  */
 
-
-
 /**
  * @swagger
  * /api/regions/{id}:
@@ -244,8 +235,6 @@ regionRoute.delete("/:id", remove);
  *       500:
  *         description: Internal server error
  */
-
-
 
 /**
  * @swagger

@@ -12,6 +12,11 @@ const Center = sequelize.define("centers", {
    name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+   },
+   phone: {
+      type: DataTypes.STRING,
+      allowNull: false,
    },
    regionId: {
       type: DataTypes.INTEGER,

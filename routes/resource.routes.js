@@ -1,12 +1,13 @@
 import { Router } from "express";
 import {
-  create,
-  findAll,
-  findBySearch,
-  findOne,
-  remove,
-  update,
+   create,
+   findAll,
+   findBySearch,
+   findOne,
+   remove,
+   update,
 } from "../controllers/resource.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
 
 const resourceRoute = Router();
 
@@ -14,9 +15,9 @@ const resourceRoute = Router();
 resourceRoute.get("/", findAll);
 resourceRoute.get("/search", findBySearch);
 resourceRoute.get("/:id", findOne);
-resourceRoute.post("/", create);
-resourceRoute.patch("/:id", update);
-resourceRoute.delete("/:id", remove);
+resourceRoute.post("/", verifyToken, create);
+resourceRoute.patch("/:id", verifyToken, update);
+resourceRoute.delete("/:id", verifyToken, remove);
 
 
 /**

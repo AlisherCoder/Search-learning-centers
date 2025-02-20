@@ -12,6 +12,7 @@ const Filial = sequelize.define("filials", {
    name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
    },
    phone: {
       type: DataTypes.STRING,

@@ -33,9 +33,14 @@ const Reception = sequelize.define("receptions", {
          model: Major,
          key: "id",
       },
+      unique: true,
+   },
+   visitDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
    },
    status: {
-      type: DataTypes.ENUM("pending", "study", "finished"),
+      type: DataTypes.ENUM("visit", "pending", "not visit"),
       allowNull: true,
       defaultValue: "pending",
    },
