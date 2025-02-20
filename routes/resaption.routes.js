@@ -1,19 +1,31 @@
-import {Router} from "express"
-import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/reception.controller.js"
+import { Router } from "express";
+import {
+   create,
+   findAll,
+   findBySorted,
+   findOne,
+   remove,
+   update,
+} from "../controllers/reception.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
+import rolePolice from "../middleware/rolePolice.js";
+import selfPolice from "../middleware/selfPolice.js";
 
+const reseptionRouter = Router();
 
-const reseptionRouter = Router()
+reseptionRouter.get("/", verifyToken, rolePolice(["admin", "seo"]), findAll);
+reseptionRouter.get(
+   "/query",
+   verifyToken,
+   rolePolice(["admin", "seo"]),
+   findBySorted
+);
+reseptionRouter.get("/:id", verifyToken, rolePolice(["admin", "seo"]), findOne);
+reseptionRouter.post("/", verifyToken, create);
+reseptionRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
+reseptionRouter.delete("/:id", verifyToken, remove);
 
-reseptionRouter.get("/", findAll);
-reseptionRouter.get("/query", findBySorted);
-reseptionRouter.get("/:id", findOne);
-reseptionRouter.post("/", create);
-reseptionRouter.patch("/:id", update);
-reseptionRouter.delete("/:id", remove);
-
-export default reseptionRouter
-
-
+export default reseptionRouter;
 
 /**
  * @swagger
@@ -32,12 +44,10 @@ export default reseptionRouter
  *       200:
  *         description: All Reseption
  *       404:
- *         description: Not 
+ *         description: Not
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -57,7 +67,7 @@ export default reseptionRouter
  *         name: search
  *         schema:
  *           type: string
- *         description: "search" 
+ *         description: "search"
  *       - in: query
  *         name: sort
  *         schema:
@@ -83,8 +93,6 @@ export default reseptionRouter
  *         description: "Server error"
  */
 
-
-
 /**
  * @swagger
  * /api/reseption/{id}:
@@ -105,11 +113,9 @@ export default reseptionRouter
  *         description: data
  *       404:
  *         description: Not Fount
- *       500: 
- *         description: Server error  
+ *       500:
+ *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -127,6 +133,7 @@ export default reseptionRouter
  *               - userId
  *               - filialId
  *               - majorId
+ *               - visitDate
  *             properties:
  *               userId:
  *                 type: integer
@@ -134,9 +141,12 @@ export default reseptionRouter
  *               filialId:
  *                 type: integer
  *                 example: 1
- *               major:
+ *               majorId:
  *                 type: integer
  *                 example: 5
+ *               visitDate:
+ *                 type: date
+ *                 example: "2025-05-14 10:00:00"
  *     responses:
  *       201:
  *         description: Created successfully
@@ -145,8 +155,6 @@ export default reseptionRouter
  *       500:
  *         description: server error
  */
-
-
 
 /**
  * @swagger
@@ -168,23 +176,11 @@ export default reseptionRouter
  *           schema:
  *             type: object
  *             properties:
- *               userId:
- *                 type: integer
- *                 example: 2
- *               filialId:
- *                 type: integer
- *                 example: 1
- *               majorId:
- *                 type: integer
- *                 example: 5
  *               status:
  *                 type: string
- *                 enum: ["pending", "study", "finished"]
+ *                 enum: ["pending", "visit", "not visit"]
  *                 example: "pending"
  *             optional:
- *               - userId
- *               - filialId
- *               - majorId
  *               - status
  *     responses:
  *       200:
@@ -196,8 +192,6 @@ export default reseptionRouter
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger

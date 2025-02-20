@@ -16,6 +16,7 @@ const MajorItem = sequelize.define("majoritems", {
          model: Major,
          key: "id",
       },
+      unique: true,
    },
    centerId: {
       type: DataTypes.INTEGER,

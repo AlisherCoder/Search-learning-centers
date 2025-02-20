@@ -1,19 +1,25 @@
 import { Router } from "express";
-import { findAll, findBySorted, findOne, create, update ,remove} from "../controllers/major.controller.js";
+import {
+   findAll,
+   findBySorted,
+   findOne,
+   create,
+   update,
+   remove,
+} from "../controllers/major.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
+import rolePolice from "../middleware/rolePolice.js";
 
 const mojorRouter = Router();
 
 mojorRouter.get("/", findAll);
 mojorRouter.get("/query", findBySorted);
 mojorRouter.get("/:id", findOne);
-mojorRouter.post("/", create);
-mojorRouter.patch("/:id", update);
-mojorRouter.delete("/:id", remove);
+mojorRouter.post("/", verifyToken, rolePolice(["admin"]), create);
+mojorRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
+mojorRouter.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
 
-export default mojorRouter
-
-
-
+export default mojorRouter;
 
 /**
  * @swagger
@@ -32,12 +38,10 @@ export default mojorRouter
  *       200:
  *         description: All Major
  *       404:
- *         description: Not 
+ *         description: Not
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -57,7 +61,7 @@ export default mojorRouter
  *         name: search
  *         schema:
  *           type: string
- *         description: "search" 
+ *         description: "search"
  *       - in: query
  *         name: sort
  *         schema:
@@ -83,8 +87,6 @@ export default mojorRouter
  *         description: "Server error"
  */
 
-
-
 /**
  * @swagger
  * /api/major/{id}:
@@ -105,11 +107,9 @@ export default mojorRouter
  *         description: data
  *       404:
  *         description: Not Fount
- *       500: 
- *         description: Server error  
+ *       500:
+ *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -149,8 +149,6 @@ export default mojorRouter
  *       500:
  *         description: server error
  */
-
-
 
 /**
  * @swagger
@@ -194,8 +192,6 @@ export default mojorRouter
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger

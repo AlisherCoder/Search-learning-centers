@@ -23,12 +23,12 @@ const options = {
       },
       servers: [
          {
-            url: "http://localhost:3000/",
+            url: "http://localhost:4000/",
          },
       ],
       components: {
          securitySchemes: {
-            BearerAuth: {
+            bearerAuth: {
                type: "http",
                scheme: "bearer",
                bearerFormat: "JWT",
@@ -37,7 +37,7 @@ const options = {
       },
       security: [
          {
-            BearerAuth: [],
+            bearerAuth: [],
          },
       ],
    },
@@ -48,7 +48,7 @@ const specs = swaggerJSDoc(options);
 
 
 app.use(
-   cors({
+   cors({ 
       origin: "*",
       methods: "GET,POST,PATCH,DELETE",
       allowedHeaders: "Content-Type,Authorization",
@@ -63,7 +63,7 @@ app.use("/*", (req, res) => {
 });
 
 async function bootstrapt() {
-   try {
+   try { 
       await sequelize.authenticate();
       // await sequelize.sync({force: true});
 

@@ -1,18 +1,25 @@
-import {Router} from "express";
-import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/field.controller.js"
+import { Router } from "express";
+import {
+   create,
+   findAll,
+   findBySorted,
+   findOne,
+   remove,
+   update,
+} from "../controllers/field.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
+import rolePolice from "../middleware/rolePolice.js";
 
-
-const fieldRouter = Router()
+const fieldRouter = Router();
 
 fieldRouter.get("/", findAll);
 fieldRouter.get("/query", findBySorted);
 fieldRouter.get("/:id", findOne);
-fieldRouter.post("/", create);
-fieldRouter.patch("/:id", update);
-fieldRouter.delete("/:id", remove);
+fieldRouter.post("/", verifyToken, rolePolice(["admin"]), create);
+fieldRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
+fieldRouter.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
 
-export default fieldRouter
-
+export default fieldRouter;
 
 /**
  * @swagger
@@ -31,12 +38,10 @@ export default fieldRouter
  *       200:
  *         description: All Fields
  *       404:
- *         description: Not 
+ *         description: Not
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -56,7 +61,7 @@ export default fieldRouter
  *         name: search
  *         schema:
  *           type: string
- *         description: "search" 
+ *         description: "search"
  *       - in: query
  *         name: sort
  *         schema:
@@ -82,8 +87,6 @@ export default fieldRouter
  *         description: "Server error"
  */
 
-
-
 /**
  * @swagger
  * /api/fields/{id}:
@@ -104,11 +107,9 @@ export default fieldRouter
  *         description: data
  *       404:
  *         description: Not Fount
- *       500: 
- *         description: Server error  
+ *       500:
+ *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -140,8 +141,6 @@ export default fieldRouter
  *       500:
  *         description: server error
  */
-
-
 
 /**
  * @swagger
@@ -179,8 +178,6 @@ export default fieldRouter
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger

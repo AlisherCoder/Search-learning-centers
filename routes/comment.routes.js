@@ -6,15 +6,16 @@ import {
   remove,
   update,
 } from "../controllers/comment.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
 
 const commentRoute = Router();
 
 
 commentRoute.get("/", findAll);
 commentRoute.get("/:id", findOne);
-commentRoute.post("/", create);
-commentRoute.patch("/:id", update);
-commentRoute.delete("/:id", remove);
+commentRoute.post("/", verifyToken, create);
+commentRoute.patch("/:id", verifyToken, update);
+commentRoute.delete("/:id", verifyToken, remove);
 
 
 /**
