@@ -14,6 +14,7 @@ const Major = sequelize.define(
       name: {
          type: DataTypes.STRING,
          allowNull: false,
+         unique: true,
       },
       image: {
          type: DataTypes.STRING,
@@ -39,9 +40,14 @@ const Major = sequelize.define(
    {
       timestamps: false,
       validate: {
-         FieldOrSubject() {
-            if (!this.fieldId && !this.subjectId) {
-               throw new Error("Subject yo fiend id bo'lishi kerak");
+         onlyOneFieldOrSubject() {
+            if (
+               (this.fieldId && this.subjectId) ||
+               (!this.fieldId && !this.subjectId)
+            ) {
+               throw new Error(
+                  "Either fieldId or subjectId must be provided, but not both."
+               );
             }
          },
       },

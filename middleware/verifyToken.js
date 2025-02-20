@@ -9,9 +9,8 @@ function verifyToken(req, res, next) {
          return res.status(401).send({ msg: "Empty token" });
       }
 
-      let accessSecret = process.env.accessKey || "access-secret";
-      console.log(accessSecret);
-      let result = jwt.decode(token, accessSecret);
+      let accessSecret = process.env.accessKey;
+      let result = jwt.verify(token, accessSecret);
 
       req.user = result;
 

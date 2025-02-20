@@ -12,6 +12,7 @@ const Field = sequelize.define(
       name: {
          type: DataTypes.STRING,
          allowNull: false,
+         unique: true,
       },
       image: {
          type: DataTypes.STRING,

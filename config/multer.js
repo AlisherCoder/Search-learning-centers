@@ -10,9 +10,11 @@ let storage = multer.diskStorage({
    },
 });
 
-export let upload = multer({
+let upload = multer({
    storage,
    limits: {
       fileSize: 10 * 1024 ** 2,
    },
 });
+
+export default upload;

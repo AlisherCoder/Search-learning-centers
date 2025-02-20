@@ -6,12 +6,7 @@ import categoryValid from "../validations/category.valid.js";
 
 async function findAll(req, res) {
   try {
-    let { error, value } = queryValid.validate(req.query);
-
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-    let {limit = 10, offset = 0, sort, column = "name"} = value;
+    let { limit = 10, offset = 1, sort, column = "name" } = req.query;
 
     limit = parseInt(limit);
     offset = Math.max(0, (parseInt(offset) - 1) * limit);
@@ -20,7 +15,6 @@ async function findAll(req, res) {
     if (sort === "asc" || sort === "desc") {
         query.order = [[column, sort.toUpperCase()]];
     }
-
     let data = await Category.findAll({ ...query});
 
     if (!data.length) {
@@ -64,24 +58,15 @@ async function findBySearch(req, res) {
         where[column] = { [Op.like]: `%${search}%` };
     }
 
-    let allItems = await Category.findAll({where: filters});
+    let allItems = await Category.findAll({...query, where});
 
-
-    let currentItems = await Category.findAll({
-      where: filters,
-      limit: limit,
-      offset: offset,
-      include: [Resource],
-      order: [["name", sortOrder]],
-    });
-    if (currentItems) {
-      res.status(200).json({ data: currentItems, total: allItems.length });
+    if (allItems) {
+      res.status(200).json({ data: allItems, total: allItems.length });
     } else {
       res.status(404).json({ message: "Category not found by search!" });
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
-    console.log(error);
     
   }
 };

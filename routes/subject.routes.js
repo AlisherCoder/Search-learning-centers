@@ -1,19 +1,25 @@
-import {Router} from "express"
-import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/subject.controller.js";
+import { Router } from "express";
+import {
+   create,
+   findAll,
+   findBySorted,
+   findOne,
+   remove,
+   update,
+} from "../controllers/subject.controller.js";
+import verifyToken from "../middleware/verifyToken.js";
+import rolePolice from "../middleware/rolePolice.js";
 
-
-const subjectRouter = Router()
+const subjectRouter = Router();
 
 subjectRouter.get("/", findAll);
 subjectRouter.get("/query", findBySorted);
 subjectRouter.get("/:id", findOne);
-subjectRouter.post("/", create);
-subjectRouter.patch("/:id", update);
-subjectRouter.delete("/:id", remove);
+subjectRouter.post("/", verifyToken, rolePolice(["admin"]), create);
+subjectRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
+subjectRouter.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
 
-export default subjectRouter
-
-
+export default subjectRouter;
 
 /**
  * @swagger
@@ -32,12 +38,10 @@ export default subjectRouter
  *       200:
  *         description: All Subject
  *       404:
- *         description: Not 
+ *         description: Not
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -57,7 +61,7 @@ export default subjectRouter
  *         name: search
  *         schema:
  *           type: string
- *         description: "search" 
+ *         description: "search"
  *       - in: query
  *         name: sort
  *         schema:
@@ -83,8 +87,6 @@ export default subjectRouter
  *         description: "Server error"
  */
 
-
-
 /**
  * @swagger
  * /api/subject/{id}:
@@ -105,11 +107,9 @@ export default subjectRouter
  *         description: data
  *       404:
  *         description: Not Fount
- *       500: 
- *         description: Server error  
+ *       500:
+ *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -141,8 +141,6 @@ export default subjectRouter
  *       500:
  *         description: server error
  */
-
-
 
 /**
  * @swagger
@@ -180,8 +178,6 @@ export default subjectRouter
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
