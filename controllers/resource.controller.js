@@ -3,7 +3,7 @@ import Category from "../models/category.model.js";
 import Resource from "../models/resource.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
-import resourceValid from "../validations/resource.valid.js";
+import {resourceValid, resourcePatchValid} from "../validations/resource.valid.js";
 
 async function findAll(req, res) {
    try {
@@ -123,7 +123,7 @@ async function create(req, res) {
 async function update(req, res) {
    try {
       const { id } = req.params;
-      let { error, value } = resourceValid.validate(req.body);
+      let { error, value } = resourcePatchValid.validate(req.body);
 
       if (error) {
          return res.status(400).json({ message: error.message });

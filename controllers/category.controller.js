@@ -3,137 +3,144 @@ import Resource from "../models/resource.model.js";
 import Category from "../models/category.model.js";
 import queryValid from "../validations/query.valid.js";
 import categoryValid from "../validations/category.valid.js";
+import User from "../models/user.model.js";
 
 async function findAll(req, res) {
-  try {
-    let { error, value } = queryValid.validate(req.query);
+   try {
+      let { error, value } = queryValid.validate(req.query);
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-    let {limit = 10, offset = 0, sort, column = "name"} = value;
+      if (error) {
+         return res.status(400).json({ message: error.details[0].message });
+      }
+      let { limit = 10, offset = 0, sort, column = "name" } = value;
 
-    limit = parseInt(limit);
-    offset = Math.max(0, (parseInt(offset) - 1) * limit);
+      limit = parseInt(limit);
+      offset = Math.max(0, (parseInt(offset) - 1) * limit);
 
-    let query = {limit, offset};
-    if (sort === "asc" || sort === "desc") {
-        query.order = [[column, sort.toUpperCase()]];
-    }
+      let query = { limit, offset };
+      if (sort === "asc" || sort === "desc") {
+         query.order = [[column, sort.toUpperCase()]];
+      }
 
-    let data = await Category.findAll({ ...query});
+      let data = await Category.findAll({
+         ...query,
+         include: { model: Resource, include: User },
+      });
 
-    if (!data.length) {
-        return res.status(404).json({ message: "Not Found" });
-    }
-    res.status(200).json({ data });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+      if (!data.length) {
+         return res.status(404).json({ message: "Not Found" });
+      }
+      res.status(200).json({ data });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
 }
 
 async function findOne(req, res) {
-  try {
-    const { id } = req.params;
-    let currentItem = await Category.findByPk(id, { include: [Resource] });
-    if (currentItem) {
-      res.status(200).json({ data: currentItem });
-    } else {
-      res.status(404).json({ message: "Category not found!" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-    
-  }
+   try {
+      const { id } = req.params;
+      let currentItem = await Category.findByPk(id, { include: [Resource] });
+      if (currentItem) {
+         res.status(200).json({ data: currentItem });
+      } else {
+         res.status(404).json({ message: "Category not found!" });
+      }
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+      console.log(error);
+   }
 }
 
 async function findBySearch(req, res) {
-  try {
-    let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
+   try {
+      let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
 
-    limit = parseInt(limit);
-    offset = Math.max(0, (parseInt(offset) - 1) * limit);
+      limit = parseInt(limit);
+      offset = Math.max(0, (parseInt(offset) - 1) * limit);
 
-    let query = {limit, offset};
-    if (sort === "asc" || sort === "desc") {
-        query.order = [[column, sort.toUpperCase()]];
-    }
-    let where = {};
-    if (search) {
-        where[column] = { [Op.like]: `%${search}%` };
-    }
+      let query = { limit, offset };
+      if (sort === "asc" || sort === "desc") {
+         query.order = [[column, sort.toUpperCase()]];
+      }
+      let where = {};
+      if (search) {
+         where[column] = { [Op.like]: `%${search}%` };
+      }
 
-    let allItems = await Category.findAll({where: filters});
+      let allItems = await Category.findAll({ where: filters });
 
-
-    let currentItems = await Category.findAll({
-      where: filters,
-      limit: limit,
-      offset: offset,
-      include: [Resource],
-      order: [["name", sortOrder]],
-    });
-    if (currentItems) {
-      res.status(200).json({ data: currentItems, total: allItems.length });
-    } else {
-      res.status(404).json({ message: "Category not found by search!" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
-    
-  }
-};
+      let currentItems = await Category.findAll({
+         where: where,
+         limit: limit,
+         offset: offset,
+         include: [Resource],
+         order: [["name", sortOrder]],
+      });
+      if (currentItems) {
+         res.status(200).json({ data: currentItems, total: allItems.length });
+      } else {
+         res.status(404).json({ message: "Category not found by search!" });
+      }
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+      console.log(error);
+   }
+}
 
 async function create(req, res) {
-  try {
-    let { error, value } = categoryValid.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-    let currentItem = await Category.create(value);
-    res.status(201).json({ data: currentItem });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+   try {
+      let { error, value } = categoryValid.validate(req.body);
+      if (error) {
+         return res.status(400).json({ message: error.details[0].message });
+      }
+      let currentItem = await Category.create(value);
+      res.status(201).json({ data: currentItem });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
 }
 
 async function update(req, res) {
-  try {
-    let {id} = req.params;
-    let { error, value } = categoryValid.validate(req.body);
+   try {
+      let { id } = req.params;
+      let { error, value } = categoryValid.validate(req.body);
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-    let currentItem = await Category.findByPk(id);
+      if (error) {
+         return res.status(400).json({ message: error.details[0].message });
+      }
+      let currentItem = await Category.findByPk(id);
 
-    if(currentItem) {
-      await currentItem.update(value)
-      res.status(200).json({data: currentItem})
-    } else {
-      res.status(404).json({message: "Category not found which has the ID"});
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });    
-  }
+      if (currentItem) {
+         await currentItem.update(value);
+         res.status(200).json({ data: currentItem });
+      } else {
+         res.status(404).json({
+            message: "Category not found which has the ID",
+         });
+      }
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
 }
 
 async function remove(req, res) {
-  try {
-    let {id} = req.params;
-    let currentItem = await Category.findByPk(id);
-
-    if(currentItem) {
-      await currentItem.destroy()
-      res.status(200).json({message: "The category was deleted successfully!"})
-    } else {
-      res.status(404).json({message: "Category not found which has the ID"});
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+   try {
+      let { id } = req.params;
+      let currentItem = await Category.findByPk(id);
+      
+      if (currentItem) {
+         await currentItem.destroy();
+         res.status(200).json({
+            message: "The category was deleted successfully!",
+         });
+      } else {
+         res.status(404).json({
+            message: "Category not found which has the ID",
+         });
+      }
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
 }
 
 export { findAll, findOne, findBySearch, create, update, remove };

@@ -14,7 +14,6 @@ import Region from "../models/region.model.js";
 import User from "../models/user.model.js";
 import Filial from "../models/filial.model.js";
 import Like from "../models/like.model.js";
-import Reception from "../models/reseption.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -47,13 +46,10 @@ export async function findAll(req, res) {
          offset: skip,
          order: [[sort, order]],
          include: [
-            { model: Major },
-            { model: Region },
-            {
-               model: Filial,
-               include: [{ model: Reception, include: [{ model: User }] }],
-            },
-            { model: User },
+            Major,
+            Region,
+            User,
+            Filial,
             { model: Comment, include: [{ model: User }] },
             { model: Like, include: [{ model: User }] },
          ],
@@ -77,13 +73,10 @@ export async function findOne(req, res) {
 
       let center = await Center.findByPk(id, {
          include: [
-            { model: Major },
-            { model: Region },
-            {
-               model: Filial,
-               include: [{ model: Reception, include: [{ model: User }] }],
-            },
-            { model: User },
+            Major,
+            Region,
+            User,
+            Filial,
             { model: Comment, include: [{ model: User }] },
             { model: Like, include: [{ model: User }] },
          ],
