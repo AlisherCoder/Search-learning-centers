@@ -70,7 +70,6 @@ async function findBySearch(req, res) {
     
   }
 };
-
 async function create(req, res) {
   try {
     let { error, value } = categoryValid.validate(req.body);
