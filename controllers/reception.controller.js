@@ -11,18 +11,10 @@ export async function create(req, res) {
       if (error) {
          return res.status(401).json({ message: error.message });
       }
+      value.userId = req.user.id
 
-      let user = await User.findByPk(value.userId);
-      if (!user) {
-         return res.status(404).json({ message: "Not found user." });
-      }
-
-      if (user.id != req.user.id && req.user.role != "admin") {
-         return res.status(401).json({ message: "Not allowed." });
-      }
-
-      let data = await Reception.create();
-      res.status(201).json({ data });
+      let data = await Reception.create(value);
+      res.status(201).json({ data});
    } catch (e) {
       console.log(e);
       res.status(500).json({ message: e.message });

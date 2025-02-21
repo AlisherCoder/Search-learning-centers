@@ -31,15 +31,11 @@ export default reseptionRouter;
  *           schema:
  *             type: object
  *             required:
- *               - userId
  *               - centerId
  *               - filialId
  *               - majorId
  *               - visitDate
  *             properties:
- *               userId:
- *                 type: integer
- *                 example: 2
  *               centerId:
  *                 type: integer
  *                 example: 1

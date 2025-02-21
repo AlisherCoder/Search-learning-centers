@@ -4,7 +4,8 @@ CREATE DATABASE fullstackexam;
 
 SELECT * FROM users;
 
-UPDATE users set role = "admin" where id = 15;
+use fullstackexam;
+UPDATE users set role = "admin" where id = 1;
 
 SHOW TABLES;
 

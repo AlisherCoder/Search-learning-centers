@@ -55,7 +55,7 @@ export default mojorRouter;
  *         name: column
  *         schema:
  *           type: string
- *           enum: [name]
+ *           enum: [name, SubjectId, FiledId]
  *         description: "major bo‘yicha filtr"
  *       - in: query
  *         name: search
@@ -126,8 +126,6 @@ export default mojorRouter;
  *             required:
  *               - name
  *               - image
- *               - fieldId
- *               - subjectId
  *             properties:
  *               name:
  *                 type: string
@@ -136,19 +134,20 @@ export default mojorRouter;
  *                 type: string
  *                 example: "linke"
  *               fieldId:
- *                 type: integer
- *                 example: 2
+ *                     type: integer
+ *                     example: 2
  *               subjectId:
- *                 type: integer
- *                 example: 4
+ *                     type: integer
+ *                     example: 4
  *     responses:
  *       201:
  *         description: Created successfully
  *       400:
  *         description: Invalid request data
  *       500:
- *         description: server error
+ *         description: Server error
  */
+
 
 /**
  * @swagger

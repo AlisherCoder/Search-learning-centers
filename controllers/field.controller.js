@@ -5,6 +5,8 @@ import {
    ValidationPATCH,
 } from "../validations/subjectANDfield.validation.js";
 import Major from "../models/major.model.js";
+import path from "path"
+import fs from "fs"
 
 export async function findAll(req, res) {
    try {
@@ -91,8 +93,20 @@ export async function remove(req, res) {
       if (!data) {
          return res.status(404).json({ message: "Not Found filed" });
       }
+      let img = data.image;
+      if(img){
+         try{
+               let filepas = path.join("uploads",img)
+               if(fs.existsSync(filepas)){
+                  fs.unlinkSync(filepas);
+               }
+         }catch(e){
+
+         }
+      }
       await data.destroy();
       res.status(200).json({ message: "delete" });
+
    } catch (e) {
       res.status(500).json({ message: e.message });
    }

@@ -4,6 +4,8 @@ import Major from "../models/major.model.js";
 import Subject from "../models/subject.model.js";
 import { MojorPATCH, MojorPOST } from "../validations/mojor.validation.js";
 import Center from "../models/center.model.js";
+import Region from "../models/region.model.js";
+import User from "../models/user.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -18,7 +20,7 @@ export async function findAll(req, res) {
                required: false,
             },
             {
-               model: Center,
+               model: Center,include: [{model: Region},{model: User, attributes: {exclude: ["password", "isActive","updatedAt","createdAt"]}}]
             },
          ],
       });
@@ -45,8 +47,8 @@ export async function findOne(req, res) {
                required: false,
             },
             {
-               model: Center,
-            },
+                model: Center,include: [{model: Region},{model: User, attributes: {exclude: ["password", "isActive","updatedAt","createdAt"]}}]
+             },
          ],
       });
       if (!data) {
@@ -64,19 +66,26 @@ export async function findBySorted(req, res) {
       limit = parseInt(limit);
       offset = Math.max(0, (parseInt(offset) - 1) * limit);
 
-      let query = { limit, offset };
-      if (sort === "asc" || sort === "desc") {
-         query.order = [[column, sort.toUpperCase()]];
-      }
-      let where = {};
-      if (search) {
-         where[column] = { [Op.like]: `%${search}%` };
-      }
-      let data = await Major.findAll({
-         ...query,
-         where,
-         include: [Field, Subject, Center],
-      });
+        let query = {limit, offset};
+        if (sort === "asc" || sort === "desc") {
+            query.order = [[column, sort.toUpperCase()]];
+        }
+        let where = {};
+        if (search) {
+            where[column] = { [Op.like]: `%${search}%` };
+        }
+        let data = await Major.findAll({ ...query, where, include:[{
+            model: Field,
+            required: false,
+        },
+        {
+            model: Subject,
+            required: false
+        },
+        {
+            model: Center,include: [{model: Region},{model: User, attributes: {exclude: ["password", "isActive","updatedAt","createdAt"]}}]
+         },
+    ]});
 
       if (!data.length) {
          return res.status(404).json({ message: "Not Found" });
@@ -121,6 +130,17 @@ export async function remove(req, res) {
       let data = await Major.findByPk(id);
       if (!data) {
          return res.status(404).json({ message: "Not Found filed" });
+      }
+      let img = data.image;
+      if(img){
+         try{
+               let filepas = path.join("uploads",img)
+               if(fs.existsSync(filepas)){
+                  fs.unlinkSync(filepas);
+               }
+         }catch(e){
+
+         }
       }
       await data.destroy();
       res.status(200).json({ message: "delete" });
