@@ -3,10 +3,9 @@ import Category from "../models/category.model.js";
 import Resource from "../models/resource.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
-import { resourcePatchValid, resourcePostValid } from "../validations/resource.valid.js";
 import {
-   resourceValid,
    resourcePatchValid,
+   resourcePostValid,
 } from "../validations/resource.valid.js";
 
 async function findAll(req, res) {
@@ -14,7 +13,7 @@ async function findAll(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(500).json({ data: error.details[0].message });
+         return res.status(422).json({ data: error.details[0].message });
       }
 
       let page = value.page || 1;
@@ -64,7 +63,7 @@ async function findBySearch(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(422).json({ message: error.details[0].message });
       }
 
       const page = value.page || 1;
@@ -72,7 +71,7 @@ async function findBySearch(req, res) {
       const offset = (page - 1) * limit;
       const sortOrder = value.sortOrder || "ASC";
 
-      let sortBy = "name" || sort
+      let sortBy = "name" || sort;
 
       let filters = {};
 
@@ -93,7 +92,7 @@ async function findBySearch(req, res) {
       let itemsBySearch = await Resource.findAll({
          where: filters,
          limit: limit,
-         offset: offset, 
+         offset: offset,
          include: [User, Category],
          order: [[sortBy, sortOrder]],
       });
@@ -115,20 +114,20 @@ async function create(req, res) {
       let { error, value } = resourcePostValid.validate(req.body);
 
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(422).json({ message: error.details[0].message });
       }
 
-      let user = await User.findByPk(value.userId);
-      if (!user) {
-         return res.status(404).json({ message: "Not found user." });
-      }
+      let userId = req.user.id;
 
-      if (user.id != req.user.id) {
-         return res.status(401).json({ message: "Not allowed." });
+      let categoryId = value.categoryId;
+
+      let isExistCategory = await Category.findByPk(categoryId);
+      if (!isExistCategory) {
+         return res.status(400).json({ message: "The category not found!" });
       }
       let currentItem = await Resource.create({
          userId,
-         ...value
+         ...value,
       });
       res.status(201).json({ data: currentItem });
    } catch (error) {
@@ -142,7 +141,7 @@ async function update(req, res) {
       let { error, value } = resourcePatchValid.validate(req.body);
 
       if (error) {
-         return res.status(500).json({ message: error.message });
+         return res.status(422).json({ message: error.details[0].message });
       }
 
       let currentItem = await Resource.findByPk(id);
@@ -151,28 +150,21 @@ async function update(req, res) {
          return res.status(404).json({ message: "Resource not found!" });
       }
 
-      if (currentItem.id != req.user.id && req.user.role != "admin") {
+      if (currentItem.userId != req.user.id && req.user.role != "ADMIN") {
          return res.status(401).json({ message: "Not allowed." });
       }
       if (value.image) {
          try {
-           let filepath = path.join("uploads", currentItem.image);
+            let filepath = path.join("uploads", currentItem.image);
             fs.unlinkSync(filepath);
          } catch (error) {}
-      }; 
+      }
 
       if (value.media) {
          try {
-           let filepath = path.join("uploads", currentItem.image);
+            let filepath = path.join("uploads", currentItem.image);
             fs.unlinkSync(filepath);
          } catch (error) {}
-      }; 
-
-      let categoryId = value.categoryId;
-
-      let isExistCategory = await Category.findByPk(categoryId);
-      if(!isExistCategory) {
-         return res.status(400).json({message: "The category not found!"})
       }
 
       await currentItem.update(value);
@@ -191,7 +183,7 @@ async function remove(req, res) {
          return res.status(404).json({ message: "Resource not found!" });
       }
 
-      if (currentItem.id != req.user.id && req.user.role != "admin") {
+      if (currentItem.userId != req.user.id && req.user.role != "ADMIN") {
          return res.status(401).json({ message: "Not allowed." });
       }
       try {
@@ -200,7 +192,6 @@ async function remove(req, res) {
          fs.unlinkSync(filepath);
          fs.unlinkSync(filepath2);
       } catch (error) {}
-
 
       await currentItem.destroy();
       res.status(200).json({ message: "Recource was deleted successfully!" });
