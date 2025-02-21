@@ -7,6 +7,7 @@ const sequelize = new Sequelize({
    database: "fullstackexam",
    dialect: "mysql",
    logging: false,
+   timezone: "+05:00"
 });
 
 export { sequelize };

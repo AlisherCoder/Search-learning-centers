@@ -205,9 +205,6 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *               - media
  *               - image
  *             properties:
- *               userId:
- *                 type: integer
- *                 description: The ID of the user who created the resource
  *               categoryId:
  *                 type: integer
  *                 description: The ID of the category the resource belongs to
@@ -224,7 +221,6 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *                 type: string
  *                 description: The image URL of the resource
  *             example:
- *               userId: 1
  *               categoryId: 1
  *               name: "Sample Resource"
  *               description: "This is a sample resource"

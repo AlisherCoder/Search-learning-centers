@@ -4,7 +4,6 @@ import Resource from "../models/resource.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
 import { resourcePatchValid, resourcePostValid } from "../validations/resource.valid.js";
-import { message } from "telegraf/filters";
 
 async function findAll(req, res) {
    try {

@@ -1,26 +1,14 @@
 import { Router } from "express";
 import {
    create,
-   findAll,
-   findBySorted,
-   findOne,
    remove,
    update,
 } from "../controllers/reception.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import rolePolice from "../middleware/rolePolice.js";
-import selfPolice from "../middleware/selfPolice.js";
 
 const reseptionRouter = Router();
 
-reseptionRouter.get("/", verifyToken, rolePolice(["admin", "seo"]), findAll);
-reseptionRouter.get(
-   "/query",
-   verifyToken,
-   rolePolice(["admin", "seo"]),
-   findBySorted
-);
-reseptionRouter.get("/:id", verifyToken, rolePolice(["admin", "seo"]), findOne);
 reseptionRouter.post("/", verifyToken, create);
 reseptionRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
 reseptionRouter.delete("/:id", verifyToken, remove);
@@ -37,89 +25,6 @@ export default reseptionRouter;
 /**
  * @swagger
  * /api/reseption:
- *   get:
- *     summary: Get all Reseption
- *     tags: [Reseption]
- *     responses:
- *       200:
- *         description: All Reseption
- *       404:
- *         description: Not
- *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
- * /api/reseption/query:
- *   get:
- *     summary: "Get all Reseption"
- *     tags: [Reseption]
- *     description: "Query orqali filter, sort va pagination bilan"
- *     parameters:
- *       - in: query
- *         name: column
- *         schema:
- *           type: string
- *           enum: [status]
- *         description: "reseption bo‘yicha filtr"
- *       - in: query
- *         name: search
- *         schema:
- *           type: string
- *         description: "search"
- *       - in: query
- *         name: sort
- *         schema:
- *           type: string
- *           enum: [asc, desc]
- *         description: "Saralash tartibi: o'sish (asc) yoki kamayish (desc)"
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: "Nechta natija qaytarish"
- *       - in: query
- *         name: offset
- *         schema:
- *           type: integer
- *         description: "Nechanchi natijadan boshlash (pagination)"
- *     responses:
- *       200:
- *         description: "data"
- *       404:
- *         description: "Not Fount"
- *       500:
- *         description: "Server error"
- */
-
-/**
- * @swagger
- * /api/reseption/{id}:
- *   get:
- *     summary: Get one Reseption
- *     tags: [Reseption]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: Reseption ID
- *     responses:
- *       200:
- *         description: data
- *       404:
- *         description: Not Fount
- *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
- * /api/reseption:
  *   post:
  *     summary: Reseption
  *     tags: [Reseption]
@@ -130,14 +35,14 @@ export default reseptionRouter;
  *           schema:
  *             type: object
  *             required:
- *               - userId
+ *               - centerId
  *               - filialId
  *               - majorId
  *               - visitDate
  *             properties:
- *               userId:
+ *               centerId:
  *                 type: integer
- *                 example: 2
+ *                 example: 1
  *               filialId:
  *                 type: integer
  *                 example: 1

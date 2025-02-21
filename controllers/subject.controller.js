@@ -1,37 +1,41 @@
 import { Op, where } from "sequelize";
 import Subject from "../models/subject.model.js";
-import {ValidationPOST, ValidationPATCH} from "../validations/subjectANDfield.validation.js";
+import {
+   ValidationPOST,
+   ValidationPATCH,
+} from "../validations/subjectANDfield.validation.js";
+import Major from "../models/major.model.js";
 
-export async function findAll (req,res) {
-    try{
-        let data = await Subject.findAll()
-        if(data.length == 0){
-            return res.status(404).json({message: "Not Fount"});
-        }
-        res.status(200).json({data})
-    }catch(e){
-        res.status(500).json({message: e.message});
-    }   
-};
+export async function findAll(req, res) {
+   try {
+      let data = await Subject.findAll({ include: Major });
+      if (data.length == 0) {
+         return res.status(404).json({ message: "Not Fount" });
+      }
+      res.status(200).json({ data });
+   } catch (e) {
+      res.status(500).json({ message: e.message });
+   }
+}
 
-export async function findOne (req,res){
-    try{
-        let {id} = req.params;
-        let data = await Subject.findByPk(id)
-        if(!data){
-            return res.status(404).json({message: "Not Fount"});
-        }
-        res.status(200).json(data);
-    }catch(e){
-        res.status(500).json({message: e.message})
-    }
-};
+export async function findOne(req, res) {
+   try {
+      let { id } = req.params;
+      let data = await Subject.findByPk(id, { include: Major });
+      if (!data) {
+         return res.status(404).json({ message: "Not Fount" });
+      }
+      res.status(200).json(data);
+   } catch (e) {
+      res.status(500).json({ message: e.message });
+   }
+}
 export async function findBySorted(req, res) {
-    try {
-        let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
+   try {
+      let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
 
-        limit = parseInt(limit);
-        offset = Math.max(0, (parseInt(offset) - 1) * limit);
+      limit = parseInt(limit);
+      offset = Math.max(0, (parseInt(offset) - 1) * limit);
 
         let query = {limit, offset};
         if (sort === "asc" || sort === "desc") {
@@ -85,6 +89,17 @@ export async function remove (req,res) {
         let data = await Subject.findByPk(id);
         if(!data){
             return res.status(404).json({message: "Not Found filed"})
+        }
+        let img = data.image;
+        if(img){
+           try{
+                 let filepas = path.join("uploads",img)
+                 if(fs.existsSync(filepas)){
+                    fs.unlinkSync(filepas);
+                 }
+           }catch(e){
+  
+           }
         }
         await data.destroy();
         res.status(200).json({message: "delete"})

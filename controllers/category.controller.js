@@ -1,7 +1,6 @@
 import { Op, where } from "sequelize";
 import Resource from "../models/resource.model.js";
 import Category from "../models/category.model.js";
-import categoryValid from "../validations/category.valid.js";
 import queryValid from "../validations/query.valid.js";
 import fs from "fs";
 import path from "path";
