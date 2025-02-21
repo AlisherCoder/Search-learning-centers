@@ -55,7 +55,7 @@ export default mojorRouter;
  *         name: column
  *         schema:
  *           type: string
- *           enum: [name, SubjectId, FiledId]
+ *           enum: [name, subjectId, fieldId]
  *         description: "major bo‘yicha filtr"
  *       - in: query
  *         name: search
@@ -175,12 +175,6 @@ export default mojorRouter;
  *               image:
  *                 type: string
  *                 example: "updated link"
- *               fieldId:
- *                 type: integer
- *                 example: 5
- *               subjectId:
- *                 type: integer
- *                 example: 5
  *     responses:
  *       202:
  *         description: major updated successfully
