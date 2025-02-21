@@ -9,7 +9,7 @@ async function findAll(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(422).json({ message: error.details[0].message });
       }
       let totalCount = await Region.count();
 
@@ -52,7 +52,7 @@ async function findBySearch(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(422).json({ message: error.details[0].message });
       }
       const page = value.page || 1;
       const limit = value.limit || 10;
@@ -92,8 +92,14 @@ async function create(req, res) {
    try {
       let { error, value } = regionValid.validate(req.body);
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(422).json({ message: error.details[0].message });
       }
+
+      let isExists = await Region.findOne({ where: { name: value.name } });
+      if (isExists) {
+         return res.status(400).json({ message: "This name already exists." });
+      }
+
       let currentItem = await Region.create(value);
       res.status(201).json({ data: currentItem });
    } catch (error) {
@@ -105,10 +111,19 @@ async function update(req, res) {
    try {
       let { id } = req.params;
       let { error, value } = regionValid.validate(req.body);
-
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(422).json({ message: error.details[0].message });
       }
+
+      if (value.name) {
+         let isExists = await Region.findOne({ where: { name: value.name } });
+         if (isExists) {
+            return res
+               .status(400)
+               .json({ message: "This name already exists." });
+         }
+      }
+
       let currentItem = await Region.findByPk(id);
 
       if (currentItem) {
@@ -119,7 +134,6 @@ async function update(req, res) {
       }
    } catch (error) {
       res.status(500).json({ message: error.message });
-      console.log(error);
    }
 }
 

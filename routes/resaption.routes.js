@@ -6,7 +6,7 @@ import rolePolice from "../middleware/rolePolice.js";
 const reseptionRouter = Router();
 
 reseptionRouter.post("/", verifyToken, create);
-reseptionRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
+reseptionRouter.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
 reseptionRouter.delete("/:id", verifyToken, remove);
 
 export default reseptionRouter;
@@ -79,8 +79,8 @@ export default reseptionRouter;
  *             properties:
  *               status:
  *                 type: string
- *                 enum: ["pending", "visit", "not visit"]
- *                 example: "pending"
+ *                 enum: ["PENDING", "VISIT", "NOT VISIT"]
+ *                 example: "PENDING"
  *             optional:
  *               - status
  *     responses:

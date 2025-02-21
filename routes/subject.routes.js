@@ -15,9 +15,9 @@ const subjectRouter = Router();
 subjectRouter.get("/", findAll);
 subjectRouter.get("/query", findBySorted);
 subjectRouter.get("/:id", findOne);
-subjectRouter.post("/", verifyToken, rolePolice(["admin"]), create);
-subjectRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
-subjectRouter.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
+subjectRouter.post("/", verifyToken, rolePolice(["ADMIN"]), create);
+subjectRouter.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
+subjectRouter.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
 
 export default subjectRouter;
 
@@ -39,8 +39,8 @@ export default subjectRouter;
  *         description: All Subject
  *       404:
  *         description: Not
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -83,8 +83,8 @@ export default subjectRouter;
  *         description: "data"
  *       404:
  *         description: "Not Fount"
- *       500:
- *         description: "Server error"
+ *       400:
+ *         description: "Bad request"
  */
 
 /**
@@ -107,8 +107,8 @@ export default subjectRouter;
  *         description: data
  *       404:
  *         description: Not Fount
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -138,15 +138,13 @@ export default subjectRouter;
  *         description: Created successfully
  *       400:
  *         description: Invalid request data
- *       500:
- *         description: server error
  */
 
 /**
  * @swagger
  * /api/subject/{id}:
  *   patch:
- *     summary: Update a Field
+ *     summary: Update a Subject
  *     tags: [Subject]
  *     parameters:
  *       - in: path
@@ -154,7 +152,7 @@ export default subjectRouter;
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the field to update
+ *         description: The ID of the subject to update
  *     requestBody:
  *       required: false
  *       content:
@@ -170,13 +168,11 @@ export default subjectRouter;
  *                 example: "updated link"
  *     responses:
  *       200:
- *         description: Field updated successfully
+ *         description: Subject updated successfully
  *       400:
  *         description: Invalid request data
  *       404:
  *         description: Field not found
- *       500:
- *         description: Server error
  */
 
 /**
@@ -199,6 +195,4 @@ export default subjectRouter;
  *         description: delete
  *       404:
  *         description: Not Found filed
- *       500:
- *         description: Server error
  */

@@ -27,7 +27,7 @@ const userRegValid = joi.object({
       .string()
       .pattern(/^(?:\+998|998)?\d{9}$/)
       .required(),
-   role: joi.string().valid("USER", "SEO").insensitive().required(),
+   role: joi.string().valid("USER", "CEO").required(),
    password: joi
       .string()
       .min(6)
@@ -49,7 +49,6 @@ const userPatchValid = joi.object({
       .max(20)
       .pattern(/^[A-Za-z]+$/),
    phone: joi.string().pattern(/^(?:\+998|998)?\d{9}$/),
-   role: joi.string().valid("user", "seo").insensitive(),
    image: joi.string().optional(),
    isActive: joi.boolean(),
 });

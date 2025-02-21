@@ -103,8 +103,7 @@ async function create(req, res) {
       let currentItem = await Category.create(value);
       res.status(201).json({ data: currentItem });
    } catch (error) {
-      res.status(500).json({ message: error.message });
-      console.log(error);
+      res.status(400).json({ message: error.message });
    }
 }
 
@@ -143,6 +142,7 @@ async function remove(req, res) {
       let currentItem = await Category.findByPk(id);
       if (currentItem) {
          await currentItem.destroy();
+         
          res.status(200).json({
             message: "The category was deleted successfully!",
          });

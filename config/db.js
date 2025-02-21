@@ -8,7 +8,6 @@ const sequelize = new Sequelize({
    dialect: "mysql",
    timezone: "+05:00",
    logging: false,
-   timezone: "+05:00"
 });
 
 export { sequelize };

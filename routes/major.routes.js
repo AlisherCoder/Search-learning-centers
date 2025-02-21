@@ -15,9 +15,9 @@ const mojorRouter = Router();
 mojorRouter.get("/", findAll);
 mojorRouter.get("/query", findBySorted);
 mojorRouter.get("/:id", findOne);
-mojorRouter.post("/", verifyToken, rolePolice(["admin"]), create);
-mojorRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
-mojorRouter.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
+mojorRouter.post("/", verifyToken, rolePolice(["ADMIN"]), create);
+mojorRouter.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
+mojorRouter.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
 
 export default mojorRouter;
 
@@ -175,12 +175,6 @@ export default mojorRouter;
  *               image:
  *                 type: string
  *                 example: "updated link"
- *               fieldId:
- *                 type: integer
- *                 example: 5
- *               subjectId:
- *                 type: integer
- *                 example: 5
  *     responses:
  *       202:
  *         description: major updated successfully

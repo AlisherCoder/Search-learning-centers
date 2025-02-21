@@ -7,11 +7,15 @@ const centerPostValid = joi.object({
       .max(30)
       .pattern(/^[A-Za-z]+(?:[A-Za-z0-9-]*\s[A-Za-z0-9-]+)*$/)
       .required(),
-   seoId: joi.number().positive().required(),
    regionId: joi.number().positive().required(),
    address: joi.string().required(),
    image: joi.string().required(),
-   majorsId: joi.array().required(),
+   majorsId: joi
+      .array()
+      .items(joi.number().required())
+      .unique()
+      .min(1)
+      .required(),
    phone: joi
       .string()
       .pattern(/^(?:\+998|998)?\d{9}$/)

@@ -15,9 +15,9 @@ const categoryRoute = Router();
 categoryRoute.get("/", findAll);
 categoryRoute.get("/search", findBySearch);
 categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", verifyToken, rolePolice(["admin"]), create);
-categoryRoute.patch("/:id", verifyToken, rolePolice(["admin"]), update);
-categoryRoute.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
+categoryRoute.post("/", verifyToken, rolePolice(["ADMIN"]), create);
+categoryRoute.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
+categoryRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
 
 export default categoryRoute;
 
@@ -69,8 +69,8 @@ export default categoryRoute;
  *                   description: Total number of categories
  *       404:
  *         description: Categories not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  */
 
 /**
@@ -96,8 +96,8 @@ export default categoryRoute;
  *               $ref: '#/components/schemas/Category'
  *       404:
  *         description: Category not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  */
 
 /**
@@ -146,8 +146,8 @@ export default categoryRoute;
  *                   description: Total number of categories
  *       404:
  *         description: Categories not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  */
 
 /**
@@ -234,8 +234,8 @@ export default categoryRoute;
  *         description: Unauthorized
  *       404:
  *         description: Category not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: 
  */
 
 /**
@@ -245,9 +245,6 @@ export default categoryRoute;
  *     Category:
  *       type: object
  *       properties:
- *         id:
- *           type: integer
- *           description: The category ID
  *         name:
  *           type: string
  *           description: The category name

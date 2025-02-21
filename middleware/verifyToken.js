@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
 function verifyToken(req, res, next) {
    try {
@@ -10,9 +11,9 @@ function verifyToken(req, res, next) {
       }
 
       let accessSecret = process.env.accessKey;
-      let result = jwt.verify(token, accessSecret);
+      let data = jwt.verify(token, accessSecret);
 
-      req.user = result;
+      req.user = data;
 
       next();
    } catch (error) {
@@ -20,4 +21,4 @@ function verifyToken(req, res, next) {
    }
 }
 
-export default verifyToken;
+export default verifyToken; 

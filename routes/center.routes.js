@@ -16,10 +16,10 @@ const centerRoute = Router();
 centerRoute.get("/star", findByStar);
 centerRoute.get("/like", findByLike);
 centerRoute.get("/", findAll);
-centerRoute.post("/", verifyToken, rolePolice(["admin", "seo"]), create);
 centerRoute.get("/:id", findOne);
-centerRoute.delete("/:id", verifyToken, rolePolice(["admin", "seo"]), remove);
-centerRoute.patch("/:id", verifyToken, rolePolice(["admin", "seo"]), update);
+centerRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO"]), create);
+centerRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "CEO"]), remove);
+centerRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "CEO"]), update);
 
 export default centerRoute;
 
@@ -45,15 +45,11 @@ export default centerRoute;
  *         regionId:
  *           type: integer
  *           description: The region where the learning center is located
- *           example: 2
+ *           example: 1
  *         address:
  *           type: string
  *           description: The full address of the learning center
  *           example: "Tashkent City, Chilonzor District"
- *         seoId:
- *           type: integer
- *           description: The ID of the SEO user responsible for the center
- *           example: 3
  *         image:
  *           type: string
  *           description: URL of the learning center's image
@@ -131,8 +127,8 @@ export default centerRoute;
  *         description: Learning center found
  *       404:
  *         description: Learning center not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -153,7 +149,6 @@ export default centerRoute;
  *               - name
  *               - regionId
  *               - address
- *               - seoId
  *               - image
  *               - majorsId
  *               - phone
@@ -172,10 +167,6 @@ export default centerRoute;
  *                 type: string
  *                 description: Address of the learning center
  *                 example: "123 Main St, Tashkent"
- *               seoId:
- *                 type: integer
- *                 description: ID of the SEO (admin or manager)
- *                 example: 2
  *               image:
  *                 type: string
  *                 description: Image URL or filename of the center
@@ -198,8 +189,8 @@ export default centerRoute;
  *         description: Not allowed to create center
  *       422:
  *         description: Validation error
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -222,8 +213,8 @@ export default centerRoute;
  *         description: Not allowed to delete this center
  *       404:
  *         description: Learning center not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -271,8 +262,8 @@ export default centerRoute;
  *         description: Learning center not found
  *       422:
  *         description: Validation error
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -318,8 +309,8 @@ export default centerRoute;
  *                   description: Number of items per page
  *       404:
  *         description: No centers found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -358,6 +349,6 @@ export default centerRoute;
  *                     $ref: '#/components/schemas/Center'
  *       404:
  *         description: No centers found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad request
  */

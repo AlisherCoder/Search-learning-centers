@@ -14,7 +14,6 @@ import Region from "../models/region.model.js";
 import User from "../models/user.model.js";
 import Filial from "../models/filial.model.js";
 import Like from "../models/like.model.js";
-import Reception from "../models/reseption.model.js";
 import likeValid from "../validations/like.valid.js";
 import starValid from "../validations/star.valid.js";
 import { Sequelize } from "sequelize";
@@ -50,21 +49,21 @@ export async function findAll(req, res) {
          offset: skip,
          order: [[sort, order]],
          include: [
-            { model: Major },
-            { model: Region },
+            { model: User, attributes: { exclude: ["password"] } },
+            Major,
+            Region,
             {
                model: Filial,
-               include: [{ model: Reception, include: [{ model: User }] }],
+               include: Region,
             },
-            { model: User },
-            { model: Comment, include: [{ model: User }] },
-            { model: Like, include: [{ model: User }] },
+            { model: Comment, include: User },
+            Like,
          ],
       });
 
       if (!centers.length) {
          return res
-            .status(200)
+            .status(404)
             .json({ message: "Not found learning centers." });
       }
 
@@ -80,12 +79,15 @@ export async function findOne(req, res) {
 
       let center = await Center.findByPk(id, {
          include: [
+            { model: User, attributes: { exclude: ["password"] } },
             Major,
             Region,
-            User,
-            Filial,
-            { model: Comment, include: [{ model: User }] },
-            { model: Like, include: [{ model: User }] },
+            {
+               model: Filial,
+               include: Region,
+            },
+            { model: Comment, include: User },
+            Like,
          ],
       });
 
@@ -106,16 +108,25 @@ export async function create(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
 
-      if (req.body.seoId != req.user.id && req.user.role != "admin") {
-         return res.status(401).json({ message: "Not allowed." });
+      let isExists = await Center.findOne({ where: { name: value.name } });
+      if (isExists) {
+         return res.status(400).json({ message: "This name already exists." });
+      }
+
+      let region = await Region.findByPk(value.regionId);
+      if (!region) {
+         return res.status(400).json({ message: "Not found region." });
       }
 
       let { majorsId } = value;
-      if (!majorsId.length) {
-         return res.status(500).json({ message: "Majors id cannot be empty." });
+      for (let id of majorsId) {
+         let major = await Major.findByPk(id);
+         if (!major) {
+            return res.status(400).json({ message: "Not found major." });
+         }
       }
 
-      let created = await Center.create(value);
+      let created = await Center.create({ ...value, seoId: req.user.id });
       let majoritem = await MajorItem.bulkCreate(
          majorsId.map((id) => ({ majorId: id, centerId: created.id }))
       );
@@ -135,7 +146,7 @@ export async function remove(req, res) {
          return res.status(404).json({ message: "Not found learning center." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "admin") {
+      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
          return res.status(401).json({ message: "Not allowed." });
       }
 
@@ -165,8 +176,17 @@ export async function update(req, res) {
          return res.status(404).json({ message: "Not found learning center." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "admin") {
+      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
          return res.status(401).json({ message: "Not allowed." });
+      }
+
+      if (value.name) {
+         let isExists = await Center.findOne({ where: { name: value.name } });
+         if (isExists) {
+            return res
+               .status(400)
+               .json({ message: "This name already exists." });
+         }
       }
 
       if (value.image) {
@@ -189,7 +209,7 @@ export async function findByLike(req, res) {
       let { error, value } = likeValid.validate(req.query);
 
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(400).json({ message: error.details[0].message });
       }
 
       const pageLike = value.pageLike || 1;
@@ -226,7 +246,6 @@ export async function findByLike(req, res) {
       }
    } catch (error) {
       res.status(500).json({ message: error.message });
-      console.log(error);
    }
 }
 
@@ -235,7 +254,7 @@ export async function findByStar(req, res) {
       let { error, value } = starValid.validate(req.query);
 
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(400).json({ message: error.details[0].message });
       }
 
       const maxStar = value.maxStar || 5;
@@ -271,6 +290,5 @@ export async function findByStar(req, res) {
       res.status(200).json({ centers });
    } catch (error) {
       res.status(500).json({ message: error.message });
-      console.error(error);
    }
 }

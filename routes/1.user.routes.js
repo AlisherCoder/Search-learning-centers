@@ -38,17 +38,17 @@ userRoute.get("/seos/:id", getOneSeo);
 userRoute.get(
    "/students/:centerId",
    verifyToken,
-   rolePolice(["admin", "seo"]),
+   rolePolice(["ADMIN", "CEO"]),
    getStudents
 );
 userRoute.get("/mydata", verifyToken, getMyData);
-userRoute.get("/mycenters", verifyToken, rolePolice("seo"), getMyCenters);
+userRoute.get("/mycenters", verifyToken, rolePolice("ADMIN","CEO"), getMyCenters);
 
-userRoute.get("/search", verifyToken, getBySearch);
-userRoute.get("/", verifyToken, rolePolice(["admin"]), findAll);
-userRoute.get("/:id", verifyToken, selfPolice(["admin"]), findOne);
-userRoute.delete("/:id", verifyToken, selfPolice(["admin"]), remove);
-userRoute.patch("/:id", verifyToken, selfPolice(["admin"]), update);
+userRoute.get("/search", verifyToken, rolePolice(["ADMIN"]), getBySearch);
+userRoute.get("/", verifyToken, rolePolice(["ADMIN"]), findAll);
+userRoute.get("/:id", verifyToken, selfPolice(["ADMIN"]), findOne);
+userRoute.delete("/:id", verifyToken, selfPolice(["ADMIN"]), remove);
+userRoute.patch("/:id", verifyToken, selfPolice(["ADMIN"]), update);
 
 export default userRoute;
 
@@ -86,8 +86,8 @@ export default userRoute;
  *           description: User's password
  *         role:
  *           type: string
- *           enum: [user, seo]
- *           example: seo
+ *           enum: [USER, CEO]
+ *           example: CEO
  *           description: User role in the system
  *         image:
  *            type: string
@@ -134,8 +134,8 @@ export default userRoute;
  *     responses:
  *       200:
  *         description: OTP sent successfully
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad Request
  *
  * /api/users/verify-otp:
  *   post:
@@ -251,8 +251,8 @@ export default userRoute;
  *                   type: array
  *                   items:
  *                     $ref: '#/components/schemas/User'
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  *
  * /api/users/search:
  *   get:
@@ -374,7 +374,7 @@ export default userRoute;
  * /api/users/seos:
  *   get:
  *     tags: [Users]
- *     summary: Get all SEO users with filtering, pagination, and sorting
+ *     summary: Get all CEO users with filtering, pagination, and sorting
  *     parameters:
  *       - in: query
  *         name: take
@@ -441,13 +441,13 @@ export default userRoute;
  *         description: No users found
  *       422:
  *         description: Validation error
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  *
  * /api/users/seos/{id}:
  *   get:
  *     tags: [Users]
- *     summary: Get one SEO user by ID
+ *     summary: Get one CEO user by ID
  *     parameters:
  *       - in: path
  *         name: id
@@ -467,8 +467,8 @@ export default userRoute;
  *                   $ref: '#/components/schemas/User'
  *       404:
  *         description: Not found data
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  *
  */
 
@@ -537,8 +537,8 @@ export default userRoute;
  *         description: Forbidden - Only admins or SEO users can access
  *       404:
  *         description: Learning center or students not found
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad Request
  */
 
 /**
@@ -565,15 +565,15 @@ export default userRoute;
  *         description:  Unauthorized - Missing or invalid token
  *       404:
  *         description:  User not found
- *       500:
- *         description:  Server error
+ *       400:
+ *         description:  Bad Request
  */
 
 /**
  * @swagger
  * /api/users/mycenters:
  *   get:
- *     summary: Get Centers Managed by SEO
+ *     summary: Get Centers Managed by CEO
  *     tags: [Users]
  *     description: Retrieves the list of centers managed by the authenticated SEO user.
  *     security:
@@ -609,8 +609,8 @@ export default userRoute;
  *         description: Forbidden - Only SEO users can access this route
  *       404:
  *         description: No centers found for the SEO user
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad Request
  */
 
 /**
@@ -646,6 +646,6 @@ export default userRoute;
  *                   description: The newly generated access token.
  *       401:
  *         description:  Refresh token not provided
- *       500:
- *         description:  Server error
+ *       400:
+ *         description:  Bad Request
  */

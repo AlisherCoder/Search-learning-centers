@@ -1,6 +1,6 @@
 import { Router } from "express";
 import express from "express";
-import userRoute from "./user.routes.js";
+import userRoute from "./1.user.routes.js";
 import upload from "../config/multer.js";
 import centerRoute from "./center.routes.js";
 import majorItemRoute from "./majorItem.routes.js";
