@@ -156,4 +156,4 @@ async function remove(req, res) {
    }
 }
 
-export { findAll, findOne, findBySearch, create, update, remove };
+export { findOne, findBySearch, create, update, remove };

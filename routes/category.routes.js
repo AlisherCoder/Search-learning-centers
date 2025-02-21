@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
    create,
    findAll,
-   findBySearch,
    findOne,
    remove,
    update,
@@ -13,7 +12,6 @@ import rolePolice from "../middleware/rolePolice.js";
 const categoryRoute = Router();
 
 categoryRoute.get("/", findAll);
-categoryRoute.get("/search", findBySearch);
 categoryRoute.get("/:id", findOne);
 categoryRoute.post("/", verifyToken, rolePolice(["ADMIN"]), create);
 categoryRoute.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
@@ -36,6 +34,11 @@ export default categoryRoute;
  *     description: Retrieve a list of categories with pagination and sorting
  *     tags: [Categories]
  *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: "search by name"
  *       - in: query
  *         name: page
  *         schema:
@@ -67,6 +70,7 @@ export default categoryRoute;
  *                 total:
  *                   type: integer
  *                   description: Total number of categories
+ *                   example: 1
  *       404:
  *         description: Categories not found
  *       400:
@@ -96,56 +100,6 @@ export default categoryRoute;
  *               $ref: '#/components/schemas/Category'
  *       404:
  *         description: Category not found
- *       400:
- *         description: Bad Request
- */
-
-/**
- * @swagger
- * /api/categories/search:
- *   get:
- *     summary: Search categories with filtering and sorting
- *     description: Retrieve categories with filtering, sorting, and pagination
- *     tags: [Categories]
- *     parameters:
- *       - in: query
- *         name: name
- *         schema:
- *           type: string
- *         description: Filter by category name
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: The page number
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: The number of items per page
- *       - in: query
- *         name: sortOrder
- *         schema:
- *           type: string
- *           enum: [ASC, DESC]
- *         description: Sort order (ASC for ascending, DESC for descending)
- *     responses:
- *       200:
- *         description: A list of categories
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Category'
- *                 total:
- *                   type: integer
- *                   description: Total number of categories
- *       404:
- *         description: Categories not found
  *       400:
  *         description: Bad Request
  */
@@ -247,13 +201,16 @@ export default categoryRoute;
  *       properties:
  *         name:
  *           type: string
- *           description: The category name
+ *           description: The name of the learning center
+ *           example: "Najot ta'lim"
  *         image:
  *           type: string
  *           description: The category image URL
+ *           example: "image.png"
  *   securitySchemes:
  *     bearerAuth:
  *       type: http
  *       scheme: bearer
  *       bearerFormat: JWT
  */
+

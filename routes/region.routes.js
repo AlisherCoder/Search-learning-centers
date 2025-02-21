@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
    create,
-   findAll,
    findBySearch,
    findOne,
    remove,
@@ -12,7 +11,6 @@ import rolePolice from "../middleware/rolePolice.js";
 
 const regionRoute = Router();
 
-regionRoute.get("/", findAll);
 regionRoute.get("/search", findBySearch);
 regionRoute.get("/:id", findOne);
 regionRoute.post("/", verifyToken, rolePolice(["ADMIN"]), create);
@@ -26,48 +24,6 @@ regionRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
  *   description: Region management
  */
 
-/**
- * @swagger
- * /api/regions:
- *   get:
- *     summary: Retrieve a list of regions
- *     tags: [Regions]
- *     parameters:
- *       - in: query
- *         name: page
- *         schema:
- *           type: integer
- *         description: The page number
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: The number of items per page
- *       - in: query
- *         name: sortOrder
- *         schema:
- *           type: string
- *           enum: [ASC, DESC]
- *         description: The sort order
- *     responses:
- *       200:
- *         description: A list of regions
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/Region'
- *                 total:
- *                   type: integer
- *       404:
- *         description: Regions not found
- *       500:
- *         description: Internal server error
- */
 
 /**
  * @swagger

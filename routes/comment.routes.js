@@ -103,7 +103,6 @@ commentRoute.delete("/:id", verifyToken, remove);
  *             required:
  *               - text
  *               - star
- *               - userId
  *               - centerId
  *             properties:
  *               text:
@@ -112,16 +111,12 @@ commentRoute.delete("/:id", verifyToken, remove);
  *               star:
  *                 type: number
  *                 description: The star rating of the comment
- *               userId:
- *                 type: integer
- *                 description: The ID of the user who created the comment
  *               centerId:
  *                 type: integer
  *                 description: The ID of the center the comment belongs to
  *             example:
  *               text: "Great service!"
  *               star: 5
- *               userId: 1
  *               centerId: 1
  *     responses:
  *       201:
@@ -162,9 +157,13 @@ commentRoute.delete("/:id", verifyToken, remove);
  *               star:
  *                 type: number
  *                 description: The updated star rating of the comment
+ *               centerId:
+ *                 type: number
+ *                 description: The updated centerId of the comment
  *             example:
  *               text: "Updated comment text"
  *               star: 4
+ *               centerId: 11
  *     responses:
  *       200:
  *         description: Comment updated successfully
