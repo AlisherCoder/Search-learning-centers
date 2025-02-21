@@ -104,6 +104,7 @@ async function create(req, res) {
          return res.status(400).json({ message: error.details[0].message });
       }
 
+
       let user = await User.findByPk(value.userId);
       if (!user) {
          return res.status(404).json({ message: "Not found user." });

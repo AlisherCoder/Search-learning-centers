@@ -9,4 +9,12 @@ const categoryValid = Joi.object({
    image: Joi.string().min(2).max(200).required(),
 });
 
-export default categoryValid;
+const categoryPatchValid = Joi.object({
+   name: Joi.string()
+      .min(2)
+      .max(100)
+      .pattern(/^[A-Za-z]+(?:[A-Za-z0-9-]*\s[A-Za-z0-9-]+)*$/),
+   image: Joi.string().min(2).max(200),
+});
+
+export { categoryValid, categoryPatchValid };
