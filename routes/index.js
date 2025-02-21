@@ -1,4 +1,5 @@
 import { Router } from "express";
+import express from "express";
 import userRoute from "./user.routes.js";
 import upload from "../config/multer.js";
 import centerRoute from "./center.routes.js";
@@ -37,6 +38,8 @@ mainRoute.use("/upload", verifyToken, upload.single("image"), (req, res) => {
    res.status(201).json({ data: req.file.filename });
 });
 
+mainRoute.use("/image", express.static("uploads"));
+
 export default mainRoute;
 
 /**
@@ -73,4 +76,30 @@ export default mainRoute;
  *         description: ❌ Bad request ❌
  *       500:
  *         description: ❌ Internal server error ❌
+ */
+
+/**
+ * @swagger
+ * /api/image/{filename}:
+ *   get:
+ *     summary: 🖼️ Retrieve an uploaded image 🖼️
+ *     tags:
+ *       - Upload
+ *     parameters:
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         description: Name of the image file to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: ✅ Image retrieved successfully ✅
+ *         content:
+ *           image/*:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: ❌ Image not found ❌
  */

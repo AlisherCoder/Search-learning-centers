@@ -1,7 +1,11 @@
 import joi from "joi";
 
 const filialPostValid = joi.object({
-   name: joi.string().min(2).required(),
+   name: joi
+      .string()
+      .min(2)
+      .pattern(/^[A-Za-z]+(?:[A-Za-z0-9-]*\s[A-Za-z0-9-]+)*$/)
+      .required(),
    phone: joi
       .string()
       .pattern(/^(?:\+998|998)?\d{9}$/)
@@ -13,7 +17,10 @@ const filialPostValid = joi.object({
 });
 
 const filialPatchValid = joi.object({
-   name: joi.string().min(2),
+   name: joi
+      .string()
+      .min(2)
+      .pattern(/^[A-Za-z]+(?:[A-Za-z0-9-]*\s[A-Za-z0-9-]+)*$/),
    phone: joi.string().pattern(/^(?:\+998|998)?\d{9}$/),
    address: joi.string(),
    image: joi.string(),

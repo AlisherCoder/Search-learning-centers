@@ -28,6 +28,7 @@ export async function findOne(req, res) {
       res.status(500).json({ message: e.message });
    }
 }
+
 export async function findBySorted(req, res) {
    try {
       let {
@@ -66,6 +67,7 @@ export async function findBySorted(req, res) {
       res.status(500).json({ message: e.message });
    }
 }
+
 export async function create(req, res) {
    try {
       let { error, value } = LikedsPOST.validate(req.body);

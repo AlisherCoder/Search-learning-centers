@@ -12,12 +12,16 @@ import {
    findOne,
    getAllSeos,
    getBySearch,
+   getMyCenters,
+   getMyData,
    getOneSeo,
+   getStudents,
    remove,
    update,
 } from "../controllers/user.controller.js";
 import rolePolice from "../middleware/rolePolice.js";
 import selfPolice from "../middleware/selfPolice.js";
+import { getAccessToken } from "../config/gentokens.js";
 
 const userRoute = Router();
 
@@ -26,16 +30,25 @@ userRoute.post("/send-otp", sendOTP);
 userRoute.post("/verify-otp", verifyOTP);
 userRoute.post("/login", login);
 userRoute.post("/reset-password", resetPassword);
+userRoute.post("/refreshToken", getAccessToken);
 
 userRoute.get("/seos", getAllSeos);
 userRoute.get("/seos/:id", getOneSeo);
+
+userRoute.get(
+   "/students/:centerId",
+   verifyToken,
+   rolePolice(["admin", "seo"]),
+   getStudents
+);
+userRoute.get("/mydata", verifyToken, getMyData);
+userRoute.get("/mycenters", verifyToken, rolePolice("seo"), getMyCenters);
 
 userRoute.get("/search", verifyToken, getBySearch);
 userRoute.get("/", verifyToken, rolePolice(["admin"]), findAll);
 userRoute.get("/:id", verifyToken, selfPolice(["admin"]), findOne);
 userRoute.delete("/:id", verifyToken, selfPolice(["admin"]), remove);
 userRoute.patch("/:id", verifyToken, selfPolice(["admin"]), update);
-
 
 export default userRoute;
 
@@ -241,7 +254,7 @@ export default userRoute;
  *       500:
  *         description: Internal server error
  *
-  * /api/users/search:
+ * /api/users/search:
  *   get:
  *     tags: [Users]
  *     summary: Search users
@@ -357,7 +370,7 @@ export default userRoute;
  *         description: Not allowed to update role
  *       404:
  *         description: User not found
- * 
+ *
  * /api/users/seos:
  *   get:
  *     tags: [Users]
@@ -430,7 +443,7 @@ export default userRoute;
  *         description: Validation error
  *       500:
  *         description: Internal server error
- * 
+ *
  * /api/users/seos/{id}:
  *   get:
  *     tags: [Users]
@@ -456,5 +469,183 @@ export default userRoute;
  *         description: Not found data
  *       500:
  *         description: Internal server error
- * 
+ *
+ */
+
+/**
+ * @swagger
+ * /api/users/students/{centerId}:
+ *   get:
+ *     summary: Get Students of a Learning Center
+ *     tags: [Users]
+ *     description: Retrieves the list of students registered at a specific learning center. Only admins and the SEO assigned to the center can access this data.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: centerId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the learning center
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved students
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 10
+ *                       user:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 5
+ *                           name:
+ *                             type: string
+ *                             example: "John Doe"
+ *                       filial:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 2
+ *                           name:
+ *                             type: string
+ *                             example: "Filial A"
+ *                       major:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 3
+ *                           name:
+ *                             type: string
+ *                             example: "Computer Science"
+ *       401:
+ *         description: Unauthorized - Missing or invalid token
+ *       403:
+ *         description: Forbidden - Only admins or SEO users can access
+ *       404:
+ *         description: Learning center or students not found
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /api/users/mydata:
+ *   get:
+ *     summary: Get My Data
+ *     tags: [Users]
+ *     description: Retrieves the authenticated user's profile data.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description:  Successfully retrieved user data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   description: The user's profile data with related entities.
+ *       401:
+ *         description:  Unauthorized - Missing or invalid token
+ *       404:
+ *         description:  User not found
+ *       500:
+ *         description:  Server error
+ */
+
+/**
+ * @swagger
+ * /api/users/mycenters:
+ *   get:
+ *     summary: Get Centers Managed by SEO
+ *     tags: [Users]
+ *     description: Retrieves the list of centers managed by the authenticated SEO user.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved centers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       name:
+ *                         type: string
+ *                         example: "Modern Learning Center"
+ *                       regionId:
+ *                         type: integer
+ *                         example: 3
+ *                       seoId:
+ *                         type: integer
+ *                         example: 5
+ *       401:
+ *         description: Unauthorized - Missing or invalid token
+ *       403:
+ *         description: Forbidden - Only SEO users can access this route
+ *       404:
+ *         description: No centers found for the SEO user
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /api/users/refreshToken:
+ *   post:
+ *     summary: 🔄 Refresh Access Token 🔄
+ *     tags:
+ *       - Authentication
+ *     description: Generates a new access token using a valid refresh token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: The refresh token to generate a new access token.
+ *     responses:
+ *       200:
+ *         description:  Successfully generated a new access token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   description: The newly generated access token.
+ *       401:
+ *         description:  Refresh token not provided
+ *       500:
+ *         description:  Server error
  */
