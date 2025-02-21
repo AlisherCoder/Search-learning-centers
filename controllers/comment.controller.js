@@ -2,10 +2,11 @@ import Center from "../models/center.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
 import {
-   commentValid,
-   commenPatchtValid,
+   commentPostValid,
+   commentPatchtValid,
 } from "../validations/comment.valid.js";
 import Comment from "../models/comment.model.js";
+import { message } from "telegraf/filters";
 
 async function findAll(req, res) {
    try {
@@ -56,22 +57,24 @@ async function findOne(req, res) {
 
 async function create(req, res) {
    try {
-      let { error, value } = commentValid.validate(req.body);
+      let { error, value } = commentPostValid.validate(req.body);
 
       if (error) {
          return res.status(400).json({ message: error.details[0].message });
       }
 
-      let user = await User.findByPk(value.userId);
-      if (!user) {
-         return res.status(404).json({ message: "Not found user." });
+      let userId = req.user.id;
+
+      let centerId = value.centerId;
+      let isExistCenter = await Center.findByPk(centerId);
+      if(!isExistCenter){
+         return res.status(404).json({message: "The center not found"})
       }
 
-      if (user.id != req.user.id) {
-         return res.status(401).json({ message: "Not allowed." });
-      }
-
-      let currentItem = await Comment.create(value);
+      let currentItem = await Comment.create({
+         userId,
+         ...value
+      });
       res.status(201).json({ data: currentItem });
    } catch (error) {
       res.status(500).json({ message: error.message });
@@ -81,7 +84,7 @@ async function create(req, res) {
 async function update(req, res) {
    try {
       const { id } = req.params;
-      let { error, value } = commenPatchtValid.validate(req.body);
+      let { error, value } = commentPatchtValid.validate(req.body);
 
       if (error) {
          return res.status(400).json({ message: error.message });
@@ -89,15 +92,21 @@ async function update(req, res) {
 
       let currentItem = await Comment.findByPk(id);
 
+      let userId = req.user.id;
+      
+      if(userId != currentItem.userId) {
+         return res.status(400).json({message: "Not alllowed"})
+      }
+      let centerId = value.centerId;
+      let isExistCenter = await Center.findByPk(centerId);
+      if(!isExistCenter){
+         return res.status(404).json({message: "The center not found"})
+      }
+      await currentItem.update(value);
+
       if (!currentItem) {
          return res.status(404).json({ message: "Comment not found!" });
       }
-
-      if (currentItem.userId != req.user.id) {
-         return res.status(401).json({ message: "Not allowed." });
-      }
-
-      await currentItem.update(value);
       res.status(200).json({ data: currentItem });
    } catch (error) {
       res.status(500).json({ message: error.message });

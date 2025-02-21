@@ -74,33 +74,50 @@ resourceRoute.delete("/:id", verifyToken, remove);
  * @swagger
  * /api/resources/search:
  *   get:
- *     summary: Search resources by name
- *     tags: [Resources]
+ *     summary: Search for resources
+ *     description: Retrieves a list of resources filtered by name, userId, or categoryId with pagination and sorting options.
+ *     tags:
+ *       - Resources
  *     parameters:
  *       - in: query
  *         name: name
  *         schema:
  *           type: string
- *         description: The name to search for
+ *         description: Filter by resource name (partial match).
  *       - in: query
- *         name: page
+ *         name: userId
  *         schema:
  *           type: integer
- *         description: The page number
+ *         description: Filter by user ID.
  *       - in: query
- *         name: limit
+ *         name: categoryId
  *         schema:
  *           type: integer
- *         description: The number of items per page
+ *         description: Filter by category ID.
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *         description: Sort by field (default is "name").
  *       - in: query
  *         name: sortOrder
  *         schema:
  *           type: string
  *           enum: [ASC, DESC]
- *         description: The sort order
+ *         description: Sorting order (default is "ASC").
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination (default is 1).
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page (default is 10).
  *     responses:
  *       200:
- *         description: A list of resources matching the search criteria
+ *         description: Successfully retrieved the list of resources.
  *         content:
  *           application/json:
  *             schema:
@@ -112,11 +129,36 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *                     $ref: '#/components/schemas/Resource'
  *                 total:
  *                   type: integer
+ *                   description: Total number of matching resources.
+ *       400:
+ *         description: Invalid query parameters.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  *       404:
- *         description: Resources not found
+ *         description: No resources found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  *       500:
- *         description: Internal server error
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
  */
+
 
 /**
  * @swagger
@@ -157,7 +199,6 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *           schema:
  *             type: object
  *             required:
- *               - userId
  *               - categoryId
  *               - name
  *               - description
@@ -222,6 +263,9 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *           schema:
  *             type: object
  *             properties:
+ *               categoryId:
+ *                 type: integer
+ *                 description: The updated category of the resource
  *               name:
  *                 type: string
  *                 description: The updated name of the resource
@@ -235,6 +279,7 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *                 type: string
  *                 description: The updated image URL of the resource
  *             example:
+ *               categoryId: 3
  *               name: "Updated Resource Name"
  *               description: "Updated resource description"
  *               media: "https://example.com/updated-media.mp4"

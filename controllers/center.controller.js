@@ -17,7 +17,7 @@ import Like from "../models/like.model.js";
 import Reception from "../models/reseption.model.js";
 import likeValid from "../validations/like.valid.js";
 import starValid from "../validations/star.valid.js";
-import {Sequelize} from "sequelize";
+import { Sequelize } from "sequelize";
 
 export async function findAll(req, res) {
   try {
@@ -185,90 +185,89 @@ export async function update(req, res) {
   }
 }
 
+
+
 export async function findByLike(req, res) {
-   try {
-     let { error, value } = likeValid.validate(req.query);
- 
-     if (error) {
-       return res.status(400).json({ message: error.details[0].message });
-     }
- 
-     const pageLike = value.pageLike || 1;
-     const limitLike = value.limitLike || 10;
-     const sortOrder = value.sortOrder || "ASC";
- 
-     let currentItems = await Center.findAll({
-       include: [
-         { model: Like } 
-       ],
-     });
- 
-     let sortedByLikes;
-     if (sortOrder === "ASC") {
-       sortedByLikes = currentItems.sort((a, b) => (a.Likes?.length || 0) - (b.Likes?.length || 0));
-     } else {
-       sortedByLikes = currentItems.sort((a, b) => (b.Likes?.length || 0) - (a.Likes?.length || 0));
-     }
- 
-     const offset = (pageLike - 1) * limitLike;
-     const paginatedResults = sortedByLikes.slice(offset, offset + limitLike);
- 
-     if (paginatedResults.length > 0) {
-       res.status(200).json({
-         data: paginatedResults,
-         total: sortedByLikes.length,
-         page: pageLike,
-         limit: limitLike,
-       });
-     } else {
-       res.status(404).json({ message: "Center not found by like!" });
-     }
-   } catch (error) {
-     res.status(500).json({ message: error.message });
-     console.log(error);
-   }
- }
+  try {
+    let { error, value } = likeValid.validate(req.query);
 
- export async function findByStar(req, res) {
-   try {
-     let { error, value } = starValid.validate(req.query);
- 
-     if (error) {
-       return res.status(400).json({ message: error.details[0].message });
-     }
- 
-     const maxStar = value.maxStar || 5; 
-     const minStar = value.minStar || 0;
-     console.log(`Filtering centers with stars between ${minStar} and ${maxStar}`);
- 
-     let centers = await Center.findAll({
-       include: [
-         {
-           model: Comment,
-           attributes: [], 
-         },
-       ],
-       attributes: {
-         include: [
-           [
-             Sequelize.fn("AVG", Sequelize.col("comments.star")), 
-             "averageStar", 
-           ],
-         ],
-       },
-       group: ["centers.id"], 
-       having: Sequelize.where(
-         Sequelize.fn("AVG", Sequelize.col("comments.star")), 
-         {
-           [Op.between]: [minStar, maxStar], 
-         }
-       ),
-     });
- 
-     res.status(200).json({ centers });
-   } catch (error) {
-     res.status(500).json({ message: error.message });
-     console.error(error);
-   }
- }
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
 
+    const pageLike = parseInt(value.pageLike) || 1;
+    const limitLike = parseInt(value.limitLike) || 10;
+    const sortOrder = value.sortOrder?.toUpperCase() === "ASC" ? "ASC" : "DESC";
+
+    const offset = (pageLike - 1) * limitLike;
+
+    let centers = await Center.findAll({
+      attributes: [
+        "id",
+        [Sequelize.fn("COUNT", Sequelize.col("likes.id")), "likeCount"],
+        "name", 
+        "phone",
+        "address",
+        "image",
+      ],
+      include: [
+        Region,
+        {
+          model: Like,
+          attributes: [], 
+        },
+      ],
+      group: ["centers.id"], 
+      order: [[Sequelize.literal("likeCount"), sortOrder]], 
+      limit: limitLike,
+      offset: offset,
+      subQuery: false,
+    });
+
+    res.status(200).json(centers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
+
+export async function findByStar(req, res) {
+  try {
+    let { error, value } = starValid.validate(req.query);
+
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
+    const maxStar = value.maxStar || 5;
+    const minStar = value.minStar || 0;
+
+    let centers = await Center.findAll({
+      include: [
+        Comment,
+        {
+          model: Comment,
+          attributes: [],
+        },
+      ],
+      attributes: {
+        include: [
+          [Sequelize.fn("AVG", Sequelize.col("comments.star")), "averageStar"],
+        ],
+      },
+      group: ["centers.id"], 
+      having: Sequelize.where(
+        Sequelize.fn("AVG", Sequelize.col("comments.star")),
+        {
+          [Op.between]: [minStar, maxStar],
+        }
+      ),
+      order: [[Sequelize.literal("AVG(comments.star)"), "DESC"]], 
+    });
+
+    res.status(200).json({ centers });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

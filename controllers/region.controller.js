@@ -4,34 +4,6 @@ import Center from "../models/center.model.js"
 import Region from "../models/region.model.js";
 import regionValid from "../validations/region.valid.js";
 
-async function findAll(req, res) {
-  try {
-    let { error, value } = queryValid.validate(req.query);
-
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-    let totalCount = await Region.count();
-
-    const page = value.page || 1;
-    const limit = value.limit || 10;
-    const offset = (page - 1) * limit;
-    const sortOrder = value.sortOrder || "ASC";
-    let allItems = await Region.findAll({
-      limit: limit,
-      offset: offset,
-      include: [Center],
-      order: [["name", sortOrder]]
-    });
-    if (allItems) {
-      res.status(200).json({ date: allItems, total: totalCount });
-    } else {
-      res.status(404).json({ message: "Region not found!" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-}
 
 async function findOne(req, res) {
   try {
@@ -94,6 +66,18 @@ async function create(req, res) {
     if (error) {
       return res.status(400).json({ message: error.details[0].message });
     }
+
+    let {name} = req.body
+    
+    let isExist = await Region.findOne({
+      where: {name}
+    });
+
+    if(isExist) {
+      return res.status(400).json({message: "This name already exist!"})
+    }
+
+
     let currentItem = await Region.create(value);
     res.status(201).json({ data: currentItem });
   } catch (error) {
@@ -112,6 +96,16 @@ async function update(req, res) {
     let currentItem = await Region.findByPk(id);
 
     if(currentItem) {
+
+      let {name} = req.body
+    if(name) {
+      let isExist = await Region.findOne({
+        where: {name}
+      });
+      if(isExist) {
+        return res.status(400).json({message: "This name already exist!"});
+      }
+    }
       await currentItem.update(value)
       res.status(200).json({data: currentItem})
     } else {
@@ -141,4 +135,4 @@ async function remove(req, res) {
   }
 }
 
-export { findAll, findOne, findBySearch, create, update, remove };
+export { findOne, findBySearch, create, update, remove };
