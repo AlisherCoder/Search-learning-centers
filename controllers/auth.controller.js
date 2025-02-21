@@ -69,7 +69,6 @@ export async function login(req, res) {
          id: founduser.id,
          role: founduser.role,
       });
-      
 
       let refreshToken = genRefreshToken({
          id: founduser.id,

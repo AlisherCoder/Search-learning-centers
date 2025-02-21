@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { findAll, findBySorted, findOne, create ,remove} from "../controllers/likeds.controller.js";
+import {
+   findAll,
+   findBySorted,
+   findOne,
+   create,
+   remove,
+} from "../controllers/likeds.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 
 const likedRouter = Router();
@@ -10,10 +16,7 @@ likedRouter.get("/:id", findOne);
 likedRouter.post("/", verifyToken, create);
 likedRouter.delete("/:id", verifyToken, remove);
 
-export default likedRouter
-
-
-
+export default likedRouter;
 
 /**
  * @swagger
@@ -32,12 +35,10 @@ export default likedRouter
  *       200:
  *         description: All Liked
  *       404:
- *         description: Not 
+ *         description: Not
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -57,7 +58,7 @@ export default likedRouter
  *         name: search
  *         schema:
  *           type: string
- *         description: "2025-02-19T06:54:40.242Z" 
+ *         description: "2025-02-19T06:54:40.242Z"
  *       - in: query
  *         name: sort
  *         schema:
@@ -89,8 +90,6 @@ export default likedRouter
  *         description: "Server error"
  */
 
-
-
 /**
  * @swagger
  * /api/liked/{id}:
@@ -111,11 +110,9 @@ export default likedRouter
  *         description: data
  *       404:
  *         description: Not Fount
- *       500: 
- *         description: Server error  
+ *       500:
+ *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -147,7 +144,6 @@ export default likedRouter
  *       500:
  *         description: server error
  */
-
 
 /**
  * @swagger

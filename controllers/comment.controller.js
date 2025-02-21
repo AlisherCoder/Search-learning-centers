@@ -12,7 +12,7 @@ async function findAll(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(400).json({ data: error.details[0].message });
+         return res.status(500).json({ data: error.details[0].message });
       }
 
       let page = value.page || 1;
@@ -59,7 +59,7 @@ async function create(req, res) {
       let { error, value } = commentValid.validate(req.body);
 
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
 
       let user = await User.findByPk(value.userId);
@@ -84,7 +84,7 @@ async function update(req, res) {
       let { error, value } = commenPatchtValid.validate(req.body);
 
       if (error) {
-         return res.status(400).json({ message: error.message });
+         return res.status(500).json({ message: error.message });
       }
 
       let currentItem = await Comment.findByPk(id);

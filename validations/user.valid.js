@@ -27,7 +27,7 @@ const userRegValid = joi.object({
       .string()
       .pattern(/^(?:\+998|998)?\d{9}$/)
       .required(),
-   role: joi.string().valid("user", "seo").insensitive().required(),
+   role: joi.string().valid("USER", "SEO").insensitive().required(),
    password: joi
       .string()
       .min(6)

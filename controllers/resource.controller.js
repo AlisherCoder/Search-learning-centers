@@ -3,14 +3,17 @@ import Category from "../models/category.model.js";
 import Resource from "../models/resource.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
-import {resourceValid, resourcePatchValid} from "../validations/resource.valid.js";
+import {
+   resourceValid,
+   resourcePatchValid,
+} from "../validations/resource.valid.js";
 
 async function findAll(req, res) {
    try {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(400).json({ data: error.details[0].message });
+         return res.status(500).json({ data: error.details[0].message });
       }
 
       let page = value.page || 1;
@@ -60,7 +63,7 @@ async function findBySearch(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
 
       const page = value.page || 1;
@@ -101,9 +104,8 @@ async function create(req, res) {
       let { error, value } = resourceValid.validate(req.body);
 
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
-
 
       let user = await User.findByPk(value.userId);
       if (!user) {
@@ -127,7 +129,7 @@ async function update(req, res) {
       let { error, value } = resourcePatchValid.validate(req.body);
 
       if (error) {
-         return res.status(400).json({ message: error.message });
+         return res.status(500).json({ message: error.message });
       }
 
       let currentItem = await Resource.findByPk(id);

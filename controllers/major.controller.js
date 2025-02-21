@@ -90,7 +90,7 @@ export async function create(req, res) {
    try {
       let { error, value } = MojorPOST.validate(req.body);
       if (error) {
-         return res.status(400).json({ message: error.message });
+         return res.status(500).json({ message: error.message });
       }
       let data = await Major.create(value);
       res.status(201).json({ data });
@@ -103,7 +103,7 @@ export async function update(req, res) {
       let { id } = req.params;
       let { error, value } = MojorPATCH.validate(req.body);
       if (error) {
-         return res.status(400).json({ message: error.message });
+         return res.status(500).json({ message: error.message });
       }
       let data = await Major.findByPk(id);
       if (!data) {

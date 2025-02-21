@@ -245,6 +245,9 @@ export default categoryRoute;
  *     Category:
  *       type: object
  *       properties:
+ *         id:
+ *           type: integer
+ *           description: The category ID
  *         name:
  *           type: string
  *           description: The category name

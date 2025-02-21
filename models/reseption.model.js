@@ -49,9 +49,9 @@ const Reception = sequelize.define("receptions", {
       allowNull: false,
    },
    status: {
-      type: DataTypes.ENUM("visit", "pending", "not visit"),
+      type: DataTypes.ENUM("VISIT", "PENDING", "NOT VISIT"),
       allowNull: true,
-      defaultValue: "pending",
+      defaultValue: "PENDING",
    },
 });
 

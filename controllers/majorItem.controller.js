@@ -10,7 +10,7 @@ export async function create(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
       let { majorItems } = req.body;
-      
+
       let center = await Center.findByPk(majorItems[0].centerId);
       if (!center) {
          return res.status(404).json({ message: "Not found centerId." });

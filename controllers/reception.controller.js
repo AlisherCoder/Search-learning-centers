@@ -21,7 +21,7 @@ export async function create(req, res) {
          return res.status(401).json({ message: "Not allowed." });
       }
 
-      let data = await Reception.create(value);
+      let data = await Reception.create();
       res.status(201).json({ data });
    } catch (e) {
       console.log(e);

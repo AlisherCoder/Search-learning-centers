@@ -13,7 +13,7 @@ async function findAll(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
       const page = value.page || 1;
       const limit = value.limit || 10;
@@ -58,7 +58,7 @@ async function findBySearch(req, res) {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
       const page = value.page || 1;
       const limit = value.limit || 10;
@@ -98,7 +98,7 @@ async function create(req, res) {
    try {
       let { error, value } = categoryValid.validate(req.body);
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
       let currentItem = await Category.create(value);
       res.status(201).json({ data: currentItem });
@@ -114,7 +114,7 @@ async function update(req, res) {
       let { error, value } = categoryPatchValid.validate(req.body);
 
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
       let currentItem = await Category.findByPk(id);
 
@@ -138,7 +138,7 @@ async function remove(req, res) {
       let { error, value } = categoryValid.validate(req.body);
 
       if (error) {
-         return res.status(400).json({ message: error.details[0].message });
+         return res.status(500).json({ message: error.details[0].message });
       }
       let currentItem = await Category.findByPk(id);
       if (currentItem) {

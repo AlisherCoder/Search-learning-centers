@@ -103,7 +103,7 @@ export async function remove(req, res) {
       if (data.userId != req.user.id) {
          return res.status(401).json({ message: "Not allowed." });
       }
-      
+
       await data.destroy();
       res.status(200).json({ message: "delete" });
    } catch (e) {

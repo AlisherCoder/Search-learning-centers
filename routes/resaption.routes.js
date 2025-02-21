@@ -1,9 +1,5 @@
 import { Router } from "express";
-import {
-   create,
-   remove,
-   update,
-} from "../controllers/reception.controller.js";
+import { create, remove, update } from "../controllers/reception.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import rolePolice from "../middleware/rolePolice.js";
 

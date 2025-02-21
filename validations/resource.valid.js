@@ -14,4 +14,4 @@ const resourcePatchValid = Joi.object({
    image: Joi.string().min(3).max(200),
 });
 
-export {resourceValid, resourcePatchValid};
+export { resourceValid, resourcePatchValid };

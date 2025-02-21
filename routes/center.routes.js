@@ -13,15 +13,13 @@ import rolePolice from "../middleware/rolePolice.js";
 
 const centerRoute = Router();
 
-
-centerRoute.get("/star", findByStar)
+centerRoute.get("/star", findByStar);
 centerRoute.get("/like", findByLike);
 centerRoute.get("/", findAll);
 centerRoute.post("/", verifyToken, rolePolice(["admin", "seo"]), create);
 centerRoute.get("/:id", findOne);
 centerRoute.delete("/:id", verifyToken, rolePolice(["admin", "seo"]), remove);
 centerRoute.patch("/:id", verifyToken, rolePolice(["admin", "seo"]), update);
-
 
 export default centerRoute;
 
@@ -196,8 +194,6 @@ export default centerRoute;
  *     responses:
  *       200:
  *         description: Learning center successfully created
- *       400:
- *         description: Majors ID cannot be empty
  *       401:
  *         description: Not allowed to create center
  *       422:
@@ -278,7 +274,6 @@ export default centerRoute;
  *       500:
  *         description: Internal server error
  */
-
 
 /**
  * @swagger

@@ -6,6 +6,7 @@ const sequelize = new Sequelize({
    password: "953901313",
    database: "fullstackexam",
    dialect: "mysql",
+   timezone: "+05:00",
    logging: false,
 });
 
