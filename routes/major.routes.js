@@ -175,12 +175,6 @@ export default mojorRouter;
  *               image:
  *                 type: string
  *                 example: "updated link"
- *               fieldId:
- *                 type: integer
- *                 example: 5
- *               subjectId:
- *                 type: integer
- *                 example: 5
  *     responses:
  *       202:
  *         description: major updated successfully
