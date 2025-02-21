@@ -9,6 +9,8 @@ import fs from "fs";
 import Region from "../models/region.model.js";
 import Filial from "../models/filial.model.js";
 import Center from "../models/center.model.js";
+import Reception from "../models/reseption.model.js";
+import User from "../models/user.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -40,7 +42,7 @@ export async function findAll(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: [Center, Region],
+         include: [Center, Region, { model: Reception, include: User }],
       });
 
       if (!filials.length) {
@@ -57,7 +59,9 @@ export async function findOne(req, res) {
    try {
       let { id } = req.params;
 
-      let filial = await Filial.findByPk(id, { include: [Center, Region] });
+      let filial = await Filial.findByPk(id, {
+         include: [Center, Region, { model: Reception, include: User }],
+      });
       if (!filial) {
          return res.status(404).json({ message: "Not found filial." });
       }

@@ -1,5 +1,5 @@
 import { passwordValid, userRegValid } from "../validations/user.valid.js";
-import { genAccessToken } from "../config/gentokens.js";
+import { genAccessToken, genRefreshToken } from "../config/gentokens.js";
 import sendMail from "../config/sendmail.js";
 import User from "../models/user.model.js";
 import { totp } from "otplib";
@@ -71,7 +71,12 @@ export async function login(req, res) {
       });
       
 
-      res.status(200).json({ message: "Logined.", token: accessToken });
+      let refreshToken = genRefreshToken({
+         id: founduser.id,
+         role: founduser.role,
+      });
+
+      res.status(200).json({ message: "Logined.", accessToken, refreshToken });
    } catch (error) {
       res.status(500).json({ message: error.message });
    }

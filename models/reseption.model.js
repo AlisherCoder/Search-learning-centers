@@ -3,6 +3,7 @@ import { sequelize } from "../config/db.js";
 import User from "./user.model.js";
 import Filial from "./filial.model.js";
 import Major from "./major.model.js";
+import Center from "./center.model.js";
 
 const Reception = sequelize.define("receptions", {
    id: {
@@ -15,6 +16,14 @@ const Reception = sequelize.define("receptions", {
       allowNull: false,
       references: {
          model: User,
+         key: "id",
+      },
+   },
+   centerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+         model: Center,
          key: "id",
       },
    },
@@ -51,6 +60,9 @@ Reception.belongsTo(User, { foreignKey: "userId" });
 
 Filial.hasMany(Reception, { foreignKey: "filialId" });
 Reception.belongsTo(Filial, { foreignKey: "filialId" });
+
+Center.hasMany(Reception, { foreignKey: "centerId" });
+Reception.belongsTo(Center, { foreignKey: "centerId" });
 
 Major.hasMany(Reception, { foreignKey: "majorId" });
 Reception.belongsTo(Major, { foreignKey: "majorId" });

@@ -1,7 +1,13 @@
 import joi from "joi";
 
 const centerPostValid = joi.object({
-   name: joi.string().min(2).max(30).required(),
+   name: joi
+      .string()
+      .min(2)
+      .max(30)
+      .pattern(/^[A-Za-z]+(?:[A-Za-z0-9-]*\s[A-Za-z0-9-]+)*$/)
+      .required(),
+   seoId: joi.number().positive().required(),
    regionId: joi.number().positive().required(),
    address: joi.string().required(),
    image: joi.string().required(),
@@ -13,7 +19,11 @@ const centerPostValid = joi.object({
 });
 
 const centerPatchValid = joi.object({
-   name: joi.string().min(2).max(30),
+   name: joi
+      .string()
+      .min(2)
+      .max(30)
+      .pattern(/^[A-Za-z]+(?:[A-Za-z0-9-]*\s[A-Za-z0-9-]+)*$/),
    address: joi.string(),
    image: joi.string(),
    phone: joi.string().pattern(/^(?:\+998|998)?\d{9}$/),

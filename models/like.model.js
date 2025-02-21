@@ -25,8 +25,9 @@ const Like = sequelize.define("likes", {
          key: "id",
       },
       unique: true,
-   },
-});
+   }
+},
+);
 
 User.hasMany(Like, { foreignKey: "userId" });
 Like.belongsTo(User, { foreignKey: "userId" });

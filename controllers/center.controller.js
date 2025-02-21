@@ -76,19 +76,16 @@ export async function findOne(req, res) {
   try {
     let { id } = req.params;
 
-    let center = await Center.findByPk(id, {
-      include: [
-        { model: Major },
-        { model: Region },
-        {
-          model: Filial,
-          include: [{ model: Reception, include: [{ model: User }] }],
-        },
-        { model: User },
-        { model: Comment, include: [{ model: User }] },
-        { model: Like, include: [{ model: User }] },
-      ],
-    });
+      let center = await Center.findByPk(id, {
+         include: [
+            Major,
+            Region,
+            User,
+            Filial,
+            { model: Comment, include: [{ model: User }] },
+            { model: Like, include: [{ model: User }] },
+         ],
+      });
 
     if (!center) {
       return res.status(404).json({ message: "Not found learning center." });

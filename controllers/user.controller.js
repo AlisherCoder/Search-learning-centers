@@ -9,6 +9,7 @@ import Resource from "../models/resource.model.js";
 import Like from "../models/like.model.js";
 import Comment from "../models/comment.model.js";
 import Filial from "../models/filial.model.js";
+import Major from "../models/major.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -28,7 +29,13 @@ export async function findAll(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: [Center, Reception, Comment, Resource, Like],
+         include: [
+            Center,
+            { model: Reception, include: Filial },
+            Comment,
+            Resource,
+            Like,
+         ],
       });
 
       if (!users.length) {
@@ -46,7 +53,13 @@ export async function findOne(req, res) {
       let { id } = req.params;
 
       let user = await User.findByPk(id, {
-         include: [Center, Resource, Like, Comment],
+         include: [
+            Center,
+            Resource,
+            Like,
+            Comment,
+            { model: Reception, include: Filial },
+         ],
       });
       if (!user) {
          return res.status(404).json({ message: "Not found user." });
@@ -161,7 +174,13 @@ export async function getBySearch(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: Center,
+         include: [
+            Center,
+            Resource,
+            Like,
+            Comment,
+            { model: Reception, include: Filial },
+         ],
       });
 
       if (!users.length) {
@@ -238,6 +257,74 @@ export async function getOneSeo(req, res) {
       }
 
       res.status(200).json({ data: user });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export async function getMyData(req, res) {
+   try {
+      let { id } = req.user;
+
+      let user = await User.findOne({
+         where: { id },
+         include: [
+            Comment,
+            Like,
+            Resource,
+            { model: Reception, include: Filial },
+         ],
+      });
+
+      if (!user) {
+         return res.status(404).json({ message: "Not found user." });
+      }
+
+      res.status(200).json({ data: user });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export async function getMyCenters(req, res) {
+   try {
+      let { id } = req.user;
+
+      let centers = await Center.findAll({ where: { seoId: id } });
+
+      if (!centers) {
+         return res.status(404).json({ message: "Not found centers." });
+      }
+
+      res.status(200).json({ data: centers });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export async function getStudents(req, res) {
+   try {
+      let { centerId } = req.params;
+
+      let center = await Center.findByPk(centerId);
+      if (!center) {
+         return res.status(404).json({ message: "Not found data." });
+      }
+
+      if (center.seoId != req.user.id && req.user.role != "admin") {
+         return res.status(401).json({ message: "Not allowed." });
+      }
+
+      let receptions = await Reception.findAll({
+         where: { centerId },
+         include: [User, Filial, Major],
+      });
+
+      if (!receptions) {
+         return res.status(404).json({ message: "Not found receptions." });
+      }
+
+      res.status(200).json({ data: receptions });
    } catch (error) {
       res.status(500).json({ message: error.message });
    }
