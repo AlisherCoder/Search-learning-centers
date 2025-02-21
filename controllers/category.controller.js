@@ -6,21 +6,28 @@ import categoryValid from "../validations/category.valid.js";
 
 async function findAll(req, res) {
   try {
-    let { limit = 10, offset = 1, sort, column = "name" } = req.query;
+    let { error, value } = queryValid.validate(req.query);
 
-    limit = parseInt(limit);
-    offset = Math.max(0, (parseInt(offset) - 1) * limit);
-
-    let query = {limit, offset};
-    if (sort === "asc" || sort === "desc") {
-        query.order = [[column, sort.toUpperCase()]];
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
     }
-    let data = await Category.findAll({ ...query});
+    const page = value.page || 1;
+    const limit = value.limit || 10;
+    const offset = (page - 1) * limit;
+    const sortOrder = value.sortOrder || "ASC";
+    let allItems = await Category.findAll({
+      limit: limit,
+      offset: offset,
+      include: [Resource],
+      order: [["name", sortOrder]],
+    });
 
-    if (!data.length) {
-        return res.status(404).json({ message: "Not Found" });
+    let total = await Category.findAll();
+    if (allItems) {
+      res.status(200).json({ data: allItems, total: total.length });
+    } else {
+      res.status(404).json({ message: "Category not found!" });
     }
-    res.status(200).json({ data });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -44,18 +51,23 @@ async function findOne(req, res) {
 
 async function findBySearch(req, res) {
   try {
-    let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
+    let { error, value } = queryValid.validate(req.query);
 
-    limit = parseInt(limit);
-    offset = Math.max(0, (parseInt(offset) - 1) * limit);
-
-    let query = {limit, offset};
-    if (sort === "asc" || sort === "desc") {
-        query.order = [[column, sort.toUpperCase()]];
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
     }
-    let where = {};
-    if (search) {
-        where[column] = { [Op.like]: `%${search}%` };
+
+    const page = value.page || 1;
+    const limit = value.limit || 10;
+    const offset = (page - 1) * limit;
+    const sortOrder = value.sortOrder || "ASC";
+
+    const { name } = req.query;
+    let filters = {};
+    if (name) {
+      filters.name = {
+        [Op.like]: `%${name}%`,
+      };
     }
 
     let allItems = await Category.findAll({...query, where});
@@ -69,7 +81,8 @@ async function findBySearch(req, res) {
     res.status(500).json({ message: error.message });
     
   }
-};
+}
+
 async function create(req, res) {
   try {
     let { error, value } = categoryValid.validate(req.body);
@@ -80,6 +93,8 @@ async function create(req, res) {
     res.status(201).json({ data: currentItem });
   } catch (error) {
     res.status(500).json({ message: error.message });
+    console.log(error);
+    
   }
 }
 
@@ -100,13 +115,20 @@ async function update(req, res) {
       res.status(404).json({message: "Category not found which has the ID"});
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });    
+    res.status(500).json({ message: error.message });
+    console.log(error);
+    
   }
 }
 
 async function remove(req, res) {
   try {
     let {id} = req.params;
+    let { error, value } = categoryValid.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
     let currentItem = await Category.findByPk(id);
     if(currentItem) {
       await currentItem.destroy()
@@ -116,6 +138,8 @@ async function remove(req, res) {
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
+    console.log(error);
+    
   }
 }
 

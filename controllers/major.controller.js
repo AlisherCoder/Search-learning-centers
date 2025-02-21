@@ -61,7 +61,14 @@ export async function findBySorted(req, res) {
         if (search) {
             where[column] = { [Op.like]: `%${search}%` };
         }
-        let data = await Major.findAll({ ...query, where });
+        let data = await Major.findAll({ ...query, where, include:[{
+            model: Field,
+            required: false,
+        },
+        {
+            model: Subject,
+            required: false
+        }]});
 
         if (!data.length) {
             return res.status(404).json({ message: "Not Found" });

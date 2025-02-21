@@ -69,6 +69,7 @@ export async function login(req, res) {
          id: founduser.id,
          role: founduser.role,
       });
+      
 
       res.status(200).json({ message: "Logined.", token: accessToken });
    } catch (error) {

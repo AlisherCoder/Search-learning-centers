@@ -55,7 +55,7 @@ export default mojorRouter;
  *         name: column
  *         schema:
  *           type: string
- *           enum: [name]
+ *           enum: [name, SubjectId, FiledId]
  *         description: "major bo‘yicha filtr"
  *       - in: query
  *         name: search

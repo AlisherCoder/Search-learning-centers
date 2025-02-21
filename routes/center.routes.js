@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
    create,
    findAll,
+   findByLike,
+   findByStar,
    findOne,
    remove,
    update,
@@ -11,11 +13,15 @@ import rolePolice from "../middleware/rolePolice.js";
 
 const centerRoute = Router();
 
+
+centerRoute.get("/star", findByStar)
+centerRoute.get("/like", findByLike);
 centerRoute.get("/", findAll);
 centerRoute.post("/", verifyToken, rolePolice(["admin", "seo"]), create);
 centerRoute.get("/:id", findOne);
 centerRoute.delete("/:id", verifyToken, rolePolice(["admin", "seo"]), remove);
 centerRoute.patch("/:id", verifyToken, rolePolice(["admin", "seo"]), update);
+
 
 export default centerRoute;
 
@@ -269,6 +275,94 @@ export default centerRoute;
  *         description: Learning center not found
  *       422:
  *         description: Validation error
+ *       500:
+ *         description: Internal server error
+ */
+
+
+/**
+ * @swagger
+ * /api/centers/like:
+ *   get:
+ *     tags: [Centers]
+ *     summary: Retrieve centers sorted by likes
+ *     description: Retrieve learning centers sorted by the number of likes (ascending or descending).
+ *     parameters:
+ *       - in: query
+ *         name: pageLike
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limitLike
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Centers sorted by likes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Center'
+ *                 total:
+ *                   type: integer
+ *                   description: Total number of centers
+ *                 page:
+ *                   type: integer
+ *                   description: Current page number
+ *                 limit:
+ *                   type: integer
+ *                   description: Number of items per page
+ *       404:
+ *         description: No centers found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/centers/star:
+ *   get:
+ *     tags: [Centers]
+ *     summary: Retrieve centers filtered by star rating
+ *     description: Retrieve learning centers filtered by average star rating (between minStar and maxStar).
+ *     parameters:
+ *       - in: query
+ *         name: minStar
+ *         schema:
+ *           type: number
+ *           format: float
+ *           default: 0
+ *         description: Minimum star rating (inclusive)
+ *       - in: query
+ *         name: maxStar
+ *         schema:
+ *           type: number
+ *           format: float
+ *           default: 5
+ *         description: Maximum star rating (inclusive)
+ *     responses:
+ *       200:
+ *         description: Centers filtered by star rating
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 centers:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Center'
+ *       404:
+ *         description: No centers found
  *       500:
  *         description: Internal server error
  */

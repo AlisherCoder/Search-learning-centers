@@ -11,7 +11,7 @@ import verifyToken from "../middleware/verifyToken.js";
 
 const resourceRoute = Router();
 
-// Routelar
+
 resourceRoute.get("/", findAll);
 resourceRoute.get("/search", findBySearch);
 resourceRoute.get("/:id", findOne);
@@ -19,7 +19,7 @@ resourceRoute.post("/", verifyToken, create);
 resourceRoute.patch("/:id", verifyToken, update);
 resourceRoute.delete("/:id", verifyToken, remove);
 
-// Swagger Dokumentatsiyasi
+
 /**
  * @swagger
  * tags:

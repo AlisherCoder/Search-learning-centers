@@ -13,7 +13,7 @@ import rolePolice from "../middleware/rolePolice.js";
 const categoryRoute = Router();
 
 categoryRoute.get("/", findAll);
-categoryRoute.get("/query", findBySearch);
+categoryRoute.get("/search", findBySearch);
 categoryRoute.get("/:id", findOne);
 categoryRoute.post("/", verifyToken, rolePolice(["admin"]), create);
 categoryRoute.patch("/:id", verifyToken, rolePolice(["admin"]), update);
@@ -25,7 +25,7 @@ export default categoryRoute;
  * @swagger
  * tags:
  *   name: Categories
- *   description: categories management endpoints
+ *   description: Categories management endpoints
  */
 
 /**
@@ -33,181 +33,155 @@ export default categoryRoute;
  * /api/categories:
  *   get:
  *     summary: Get all categories
+ *     description: Retrieve a list of categories with pagination and sorting
  *     tags: [Categories]
- *     description: "Query orqali filter, sort va pagination bilan"
  *     parameters:
  *       - in: query
- *         name: column
+ *         name: page
  *         schema:
- *           type: string
- *           enum: [name]
- *         description: "categories bo‘yicha filtr"
- *       - in: query
- *         name: sort
- *         schema:
- *           type: string
- *           enum: [asc, desc]
- *         description: "Saralash tartibi: o'sish (asc) yoki kamayish (desc)"
+ *           type: integer
+ *         description: The page number
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
- *         description: "Nechta natija qaytarish"
+ *         description: The number of items per page
  *       - in: query
- *         name: offset
+ *         name: sortOrder
  *         schema:
- *           type: integer
- *         description: "Nechanchi natijadan boshlash (pagination)"
+ *           type: string
+ *           enum: [ASC, DESC]
+ *         description: Sort order (ASC for ascending, DESC for descending)
  *     responses:
  *       200:
- *         description: All categories
+ *         description: A list of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Category'
+ *                 total:
+ *                   type: integer
+ *                   description: Total number of categories
  *       404:
- *         description: Not
+ *         description: Categories not found
  *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
- * /api/categories/query:
- *   get:
- *     summary: "Get all categories"
- *     tags: [Categories]
- *     description: "Query orqali filter, sort va pagination bilan"
- *     parameters:
- *       - in: query
- *         name: column
- *         schema:
- *           type: string
- *           enum: [name]
- *         description: "categories bo‘yicha filtr"
- *       - in: query
- *         name: search
- *         schema:
- *           type: string
- *         description: "search"
- *       - in: query
- *         name: sort
- *         schema:
- *           type: string
- *           enum: [asc, desc]
- *         description: "Saralash tartibi: o'sish (asc) yoki kamayish (desc)"
- *       - in: query
- *         name: limit
- *         schema:
- *           type: integer
- *         description: "Nechta natija qaytarish"
- *       - in: query
- *         name: offset
- *         schema:
- *           type: integer
- *         description: "Nechanchi natijadan boshlash (pagination)"
- *     responses:
- *       200:
- *         description: "data"
- *       404:
- *         description: "Not Fount"
- *       500:
- *         description: "Server error"
+ *         description: Internal server error
  */
 
 /**
  * @swagger
  * /api/categories/{id}:
  *   get:
- *     summary: Get one categories
+ *     summary: Get a category by ID
+ *     description: Retrieve a single category by its ID
  *     tags: [Categories]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: ID of the category to retrieve
  *     responses:
  *       200:
- *         description: data
+ *         description: A single category
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
  *       404:
- *         description: Not Fount
+ *         description: Category not found
  *       500:
- *         description: Server error
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/categories/search:
+ *   get:
+ *     summary: Search categories with filtering and sorting
+ *     description: Retrieve categories with filtering, sorting, and pagination
+ *     tags: [Categories]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: Filter by category name
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: The number of items per page
+ *       - in: query
+ *         name: sortOrder
+ *         schema:
+ *           type: string
+ *           enum: [ASC, DESC]
+ *         description: Sort order (ASC for ascending, DESC for descending)
+ *     responses:
+ *       200:
+ *         description: A list of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Category'
+ *                 total:
+ *                   type: integer
+ *                   description: Total number of categories
+ *       404:
+ *         description: Categories not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**
  * @swagger
  * /api/categories:
  *   post:
- *     summary: categories
+ *     summary: Create a new category
+ *     description: Create a new category with the provided details
  *     tags: [Categories]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - name
- *               - image
- *             properties:
- *               name:
- *                 type: string
- *                 example: "optional"
- *               image:
- *                 type: string
- *                 example: "linke"
+ *             $ref: '#/components/schemas/Category'
  *     responses:
  *       201:
- *         description: Created successfully
+ *         description: Category created successfully
  *       400:
- *         description: Invalid request data
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
  *       500:
- *         description: server error
+ *         description: Internal server error
  */
 
 /**
  * @swagger
  * /api/categories/{id}:
  *   patch:
- *     summary: Update a Field
- *     tags: [Categories]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the category to update
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: "updated name"
- *               image:
- *                 type: string
- *                 example: "updated link"
- *     responses:
- *       204:
- *         description: Field updated successfully
- *       400:
- *         description: Invalid request data
- *       404:
- *         description: Field not found
- *       500:
- *         description: Server error
- */
-
-/**
- * @swagger
- * /api/categories/{id}:
- *   delete:
- *     summary: Get one categories
+ *     summary: Update a category by ID
+ *     description: Update an existing category by its ID
  *     tags: [Categories]
  *     security:
  *       - bearerAuth: []
@@ -217,14 +191,69 @@ export default categoryRoute;
  *         schema:
  *           type: integer
  *         required: true
- *         description: categories ID
+ *         description: ID of the category to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Category'
  *     responses:
  *       200:
- *         description: delete
- *       404:
- *         description: Not Found category
+ *         description: Category updated successfully
  *       400:
- *         description: validation error
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Category not found
  *       500:
- *         description: Server error
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/categories/{id}:
+ *   delete:
+ *     summary: Delete a category by ID
+ *     description: Delete an existing category by its ID
+ *     tags: [Categories]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID of the category to delete
+ *     responses:
+ *       200:
+ *         description: Category deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Category not found
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Category:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The category name
+ *         image:
+ *           type: string
+ *           description: The category image URL
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
