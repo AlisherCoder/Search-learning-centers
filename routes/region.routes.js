@@ -24,7 +24,6 @@ regionRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
  *   description: Region management
  */
 
-
 /**
  * @swagger
  * /api/regions/search:
@@ -97,6 +96,24 @@ regionRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
  *         description: Region not found
  *       500:
  *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Region:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated ID of the region
+ *         name:
+ *           type: string
+ *           description: The name of the region
+ *       example:
+ *         id: 1
+ *         name: "Toshkent"
  */
 
 /**
@@ -190,24 +207,6 @@ regionRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
  *         description: Region not found
  *       500:
  *         description: Internal server error
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Region:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           description: The auto-generated ID of the region
- *         name:
- *           type: string
- *           description: The name of the region
- *       example:
- *         id: 1
- *         name: "Toshkent"
  */
 
 export default regionRoute;

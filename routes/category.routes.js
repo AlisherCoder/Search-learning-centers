@@ -202,7 +202,7 @@ export default categoryRoute;
  *         name:
  *           type: string
  *           description: The name of the learning center
- *           example: "Najot ta'lim"
+ *           example: "Sport"
  *         image:
  *           type: string
  *           description: The category image URL
