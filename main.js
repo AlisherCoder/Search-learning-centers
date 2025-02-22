@@ -8,7 +8,7 @@ import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
-let PORT = process.env.PORT || 3000;
+let PORT = process.env.PORT || 4000;
 let app = express();
 app.use(express.json());
 
