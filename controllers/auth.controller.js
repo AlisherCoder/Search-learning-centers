@@ -83,7 +83,7 @@ export async function login(req, res) {
 
 export async function verifyOTP(req, res) {
    try {
-      const sekretKey = process.env.OTPKEY;
+      const sekretKey = process.env.OTPKEY || "otpsecret";
 
       let { email, otp } = req.body;
       let isValid = totp.check(otp, sekretKey + email);
@@ -126,7 +126,7 @@ export async function sendOTP(req, res) {
 
 export async function resetPassword(req, res) {
    try {
-      const sekretKey = process.env.OTPKEY;
+      const sekretKey = process.env.OTPKEY || "otpsecret";
 
       let { email, otp, newPassword } = req.body;
 

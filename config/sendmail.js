@@ -12,7 +12,7 @@ const transport = nodemailer.createTransport({
 
 async function sendMail(email) {
    try {
-      const sekretKey = process.env.OTPKEY;
+      const sekretKey = process.env.OTPKEY || "otpsecret";
       let otp = totp.generate(sekretKey + email);
       
       await transport.sendMail({
