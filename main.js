@@ -8,9 +8,9 @@ import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
-let PORT = process.env.PORT || 3000
+let PORT = process.env.PORT || 3000;
 let app = express();
-app.use(express.json())
+app.use(express.json());
 
 const options = {
    definition: {
@@ -46,9 +46,8 @@ const options = {
 
 const specs = swaggerJSDoc(options);
 
-
 app.use(
-   cors({ 
+   cors({
       origin: "*",
       methods: "GET,POST,PATCH,DELETE",
       allowedHeaders: "Content-Type,Authorization",
@@ -59,11 +58,11 @@ app.use("/api", mainRoute);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use("/*", (req, res) => {
-   res.status(400).json({ message: "Not found route." });
+   res.status(500).json({ message: "Not found route." });
 });
 
 async function bootstrapt() {
-   try { 
+   try {
       await sequelize.authenticate();
       // await sequelize.sync({force: true});
 

@@ -5,8 +5,8 @@ import rolePolice from "../middleware/rolePolice.js";
 
 const majorItemRoute = Router();
 
-majorItemRoute.post("/", verifyToken, rolePolice(["admin", "seo"]), create);
-majorItemRoute.delete("/", verifyToken, rolePolice(["admin", "seo"]), remove);
+majorItemRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO"]), create);
+majorItemRoute.delete("/", verifyToken, rolePolice(["ADMIN", "CEO"]), remove);
 
 export default majorItemRoute;
 
@@ -19,17 +19,23 @@ export default majorItemRoute;
  *       scheme: bearer
  *       bearerFormat: JWT
  *   schemas:
- *     MajorItem:
+ *     MajorItemPost:
  *       type: object
+ *       required:
+ *         - centerId
+ *         - majorItems
  *       properties:
+ *         centerId:
+ *           type: integer
+ *           example: 1
  *         majorItems:
  *           type: array
- *           description: List of major items
  *           items:
- *             type: object
+ *             type: integer
  *           example:
- *             - { majorId: 1, centerId: 2 }
- *             - { majorId: 3, centerId: 4 }
+ *             - 2
+ *             - 3
+ *             - 5
  */
 
 /**
@@ -46,7 +52,7 @@ export default majorItemRoute;
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/MajorItem'
+ *             $ref: '#/components/schemas/MajorItemPost'
  *     responses:
  *       201:
  *         description: Major items successfully created

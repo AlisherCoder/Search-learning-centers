@@ -31,11 +31,12 @@ export async function findAll(req, res) {
          order: [[sort, order]],
          include: [
             Center,
-            { model: Reception, include: Filial },
-            Comment,
+            { model: Reception, include: [Center, Filial] },
+            { model: Comment, include: Center },
             Resource,
             Like,
          ],
+         attributes: { exclude: ["password"] },
       });
 
       if (!users.length) {
@@ -55,11 +56,12 @@ export async function findOne(req, res) {
       let user = await User.findByPk(id, {
          include: [
             Center,
+            { model: Reception, include: [Center, Filial] },
+            { model: Comment, include: Center },
             Resource,
             Like,
-            Comment,
-            { model: Reception, include: Filial },
          ],
+         attributes: { exclude: ["password"] },
       });
       if (!user) {
          return res.status(404).json({ message: "Not found user." });
@@ -75,7 +77,10 @@ export async function remove(req, res) {
    try {
       let { id } = req.params;
 
-      let user = await User.findByPk(id);
+      let user = await User.findByPk(id, {
+         attributes: { exclude: ["password"] },
+      });
+
       if (!user) {
          return res.status(404).json({ message: "Not found user." });
       }
@@ -100,7 +105,9 @@ export async function update(req, res) {
       }
 
       let { id } = req.params;
-      let user = await User.findByPk(id);
+      let user = await User.findByPk(id, {
+         attributes: { exclude: ["password"] },
+      });
 
       if (!user) {
          return res.status(404).json({ message: "Not found user." });
@@ -112,7 +119,7 @@ export async function update(req, res) {
             .json({ message: "Not allowed to updated role." });
       }
 
-      if (value.isActive != undefined && req.user.role != "admin") {
+      if (value.isActive != undefined && req.user.role != "ADMIN") {
          return res
             .status(403)
             .json({ message: "Not allowed to updated isActive." });
@@ -165,10 +172,6 @@ export async function getBySearch(req, res) {
          }
       }
 
-      if (req.user.role == "user" || req.user.role == "seo") {
-         query.role = "seo";
-      }
-
       let users = await User.findAll({
          where: query,
          limit: take,
@@ -176,11 +179,12 @@ export async function getBySearch(req, res) {
          order: [[sort, order]],
          include: [
             Center,
+            { model: Reception, include: [Center, Filial] },
+            { model: Comment, include: Center },
             Resource,
             Like,
-            Comment,
-            { model: Reception, include: Filial },
          ],
+         attributes: { exclude: ["password"] },
       });
 
       if (!users.length) {
@@ -225,17 +229,18 @@ export async function getAllSeos(req, res) {
          }
       }
 
-      query.role = "seo";
+      query.role = "CEO";
       let users = await User.findAll({
          where: query,
          limit: take,
          offset: skip,
          order: [[sort, order]],
          include: Center,
+         attributes: { exclude: ["password"] },
       });
 
       if (!users.length) {
-         return res.status(404).json({ message: "Not found users." });
+         return res.status(404).json({ message: "Not found ceos." });
       }
 
       res.status(200).json({ data: users });
@@ -249,11 +254,12 @@ export async function getOneSeo(req, res) {
       let { id } = req.params;
 
       let user = await User.findOne({
-         where: { [Op.and]: [{ id }, { role: "seo" }] },
+         where: { [Op.and]: [{ id }, { role: "CEO" }] },
+         attributes: { exclude: ["password"] },
       });
 
       if (!user) {
-         return res.status(404).json({ message: "Not found data." });
+         return res.status(404).json({ message: "Not found ceo." });
       }
 
       res.status(200).json({ data: user });
@@ -272,7 +278,7 @@ export async function getMyData(req, res) {
             Comment,
             Like,
             Resource,
-            { model: Reception, include: Filial },
+            { model: Reception, include: [Center, Filial, Major] },
          ],
       });
 
@@ -292,7 +298,7 @@ export async function getMyCenters(req, res) {
 
       let centers = await Center.findAll({ where: { seoId: id } });
 
-      if (!centers) {
+      if (!centers.length) {
          return res.status(404).json({ message: "Not found centers." });
       }
 
@@ -311,17 +317,21 @@ export async function getStudents(req, res) {
          return res.status(404).json({ message: "Not found data." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "admin") {
+      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
          return res.status(401).json({ message: "Not allowed." });
       }
 
       let receptions = await Reception.findAll({
          where: { centerId },
-         include: [User, Filial, Major],
+         include: [
+            { model: User, attributes: { exclude: ["password"] } },
+            Filial,
+            Major,
+         ],
       });
 
-      if (!receptions) {
-         return res.status(404).json({ message: "Not found receptions." });
+      if (!receptions.length) {
+         return res.status(404).json({ message: "Not found students." });
       }
 
       res.status(200).json({ data: receptions });

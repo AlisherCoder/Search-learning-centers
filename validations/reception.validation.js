@@ -8,5 +8,5 @@ export const ReceptionPOST = Joi.object({
 });
 
 export const ReceptionPATCH = Joi.object({
-   status: Joi.string().valid("pending", "visit", "not visit").required(),
+   status: Joi.string().valid("PENDING", "VISIT", "NOT VISIT").required(),
 });

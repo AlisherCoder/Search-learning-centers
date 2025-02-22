@@ -9,7 +9,6 @@ const resourcePostValid = Joi.object({
 });
 
 const resourcePatchValid = Joi.object({
-  categoryId: Joi.number(),
   name: Joi.string().min(3).max(100),
   description: Joi.string().min(3).max(500),
   media: Joi.string().min(3).max(200),

@@ -3,11 +3,11 @@ import { Sequelize } from "sequelize";
 const sequelize = new Sequelize({
    host: "localhost",
    username: "root",
-   password: "Abduhamid",
+   password: "953901313",
    database: "fullstackexam",
    dialect: "mysql",
+   timezone: "+05:00",
    logging: false,
-   timezone: "+05:00"
 });
 
 export { sequelize };

@@ -9,10 +9,7 @@ likedRouter.get("/query", findBySorted);
 likedRouter.post("/", verifyToken, create);
 likedRouter.delete("/:id", verifyToken, remove);
 
-export default likedRouter
-
-
-
+export default likedRouter;
 
 /**
  * @swagger
@@ -31,12 +28,10 @@ export default likedRouter
  *       200:
  *         description: All Liked
  *       404:
- *         description: Not 
+ *         description: Not
  *       500:
  *         description: Server error
  */
-
-
 
 /**
  * @swagger
@@ -111,7 +106,6 @@ export default likedRouter
  *       500:
  *         description: server error
  */
-
 
 /**
  * @swagger

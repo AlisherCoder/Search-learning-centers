@@ -13,9 +13,9 @@ const regionRoute = Router();
 
 regionRoute.get("/search", findBySearch);
 regionRoute.get("/:id", findOne);
-regionRoute.post("/", verifyToken, rolePolice(["admin"]), create);
-regionRoute.patch("/:id", verifyToken, rolePolice(["admin"]), update);
-regionRoute.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
+regionRoute.post("/", verifyToken, rolePolice(["ADMIN"]), create);
+regionRoute.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
+regionRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
 
 /**
  * @swagger

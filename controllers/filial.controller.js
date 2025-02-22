@@ -42,7 +42,14 @@ export async function findAll(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: [Center, Region, { model: Reception, include: User }],
+         include: [
+            Center,
+            Region,
+            {
+               model: Reception,
+               include: { model: User, attributes: { exclude: ["password"] } },
+            },
+         ],
       });
 
       if (!filials.length) {
@@ -60,8 +67,16 @@ export async function findOne(req, res) {
       let { id } = req.params;
 
       let filial = await Filial.findByPk(id, {
-         include: [Center, Region, { model: Reception, include: User }],
+         include: [
+            Center,
+            Region,
+            {
+               model: Reception,
+               include: { model: User, attributes: { exclude: ["password"] } },
+            },
+         ],
       });
+
       if (!filial) {
          return res.status(404).json({ message: "Not found filial." });
       }
@@ -79,15 +94,27 @@ export async function create(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
 
-      let { centerId } = req.body;
+      let region = await Region.findByPk(value.regionId);
+      if (!region) {
+         return res.status(404).json({ message: "Not found region." });
+      }
 
+      let isExists = await Filial.findOne({ where: { name: value.name } });
+      if (isExists) {
+         return res.status(400).json({ message: "This name already exists." });
+      }
+
+      let { centerId } = req.body;
       let center = await Center.findByPk(centerId);
       if (!center) {
          return res.status(404).json({ message: "Not found learning center." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "admin") {
-         return res.status(401).json({ message: "Not allowed." });
+      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
+         return res.status(401).json({
+            message:
+               "You have no right to create a branch of someone else's training center.",
+         });
       }
 
       let filial = await Filial.create(value);
@@ -109,8 +136,11 @@ export async function remove(req, res) {
 
       let center = await Center.findByPk(filial.centerId);
 
-      if (center.seoId != req.user.id && req.user.role != "admin") {
-         return res.status(401).json({ message: "Not allowed." });
+      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
+         return res.status(401).json({
+            message:
+               "You do not have the right to delete a branch of someone else's training center.",
+         });
       }
 
       await filial.destroy();
@@ -141,8 +171,20 @@ export async function update(req, res) {
 
       let center = await Center.findByPk(filial.centerId);
 
-      if (center.seoId != req.user.id && req.user.role != "admin") {
-         return res.status(401).json({ message: "Not allowed." });
+      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
+         return res.status(401).json({
+            message:
+               "You do not have the right to update a branch of someone else's training center.",
+         });
+      }
+
+      if (value.name) {
+         let isExists = await Filial.findOne({ where: { name: value.name } });
+         if (isExists) {
+            return res
+               .status(400)
+               .json({ message: "This name already exists." });
+         }
       }
 
       if (value.image) {

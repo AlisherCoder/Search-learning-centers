@@ -15,9 +15,9 @@ const fieldRouter = Router();
 fieldRouter.get("/", findAll);
 fieldRouter.get("/query", findBySorted);
 fieldRouter.get("/:id", findOne);
-fieldRouter.post("/", verifyToken, rolePolice(["admin"]), create);
-fieldRouter.patch("/:id", verifyToken, rolePolice(["admin"]), update);
-fieldRouter.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
+fieldRouter.post("/", verifyToken, rolePolice(["ADMIN"]), create);
+fieldRouter.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
+fieldRouter.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
 
 export default fieldRouter;
 
@@ -39,8 +39,8 @@ export default fieldRouter;
  *         description: All Fields
  *       404:
  *         description: Not
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -83,8 +83,8 @@ export default fieldRouter;
  *         description: "data"
  *       404:
  *         description: "Not Fount"
- *       500:
- *         description: "Server error"
+ *       400:
+ *         description: "Bad request"
  */
 
 /**
@@ -107,8 +107,8 @@ export default fieldRouter;
  *         description: data
  *       404:
  *         description: Not Fount
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad request
  */
 
 /**
@@ -138,8 +138,6 @@ export default fieldRouter;
  *         description: Created successfully
  *       400:
  *         description: Invalid request data
- *       500:
- *         description: server error
  */
 
 /**
@@ -175,8 +173,6 @@ export default fieldRouter;
  *         description: Invalid request data
  *       404:
  *         description: Field not found
- *       500:
- *         description: Server error
  */
 
 /**
@@ -199,6 +195,6 @@ export default fieldRouter;
  *         description: delete
  *       404:
  *         description: Not Found filed
- *       500:
- *         description: Server error
+ *       400:
+ *         description: Bad request
  */

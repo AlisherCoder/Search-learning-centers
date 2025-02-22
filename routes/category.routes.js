@@ -13,9 +13,9 @@ const categoryRoute = Router();
 
 categoryRoute.get("/", findAll);
 categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", verifyToken, rolePolice(["admin"]), create);
-categoryRoute.patch("/:id", verifyToken, rolePolice(["admin"]), update);
-categoryRoute.delete("/:id", verifyToken, rolePolice(["admin"]), remove);
+categoryRoute.post("/", verifyToken, rolePolice(["ADMIN"]), create);
+categoryRoute.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
+categoryRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
 
 export default categoryRoute;
 
@@ -73,8 +73,8 @@ export default categoryRoute;
  *                   example: 1
  *       404:
  *         description: Categories not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  */
 
 /**
@@ -100,8 +100,8 @@ export default categoryRoute;
  *               $ref: '#/components/schemas/Category'
  *       404:
  *         description: Category not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: Bad Request
  */
 
 /**
@@ -188,8 +188,8 @@ export default categoryRoute;
  *         description: Unauthorized
  *       404:
  *         description: Category not found
- *       500:
- *         description: Internal server error
+ *       400:
+ *         description: 
  */
 
 /**

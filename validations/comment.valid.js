@@ -7,9 +7,8 @@ const commentPostValid = Joi.object({
 });
 
 const commentPatchtValid = Joi.object({
-   text: Joi.string().min(3).max(500).required(),
-   star: Joi.number().min(0).max(5).required(),
-   centerId: Joi.number().optional()
+   text: Joi.string().min(3).max(500).optional(),
+   star: Joi.number().min(0).max(5).optional(),
 });
 
 export { commentPostValid, commentPatchtValid };

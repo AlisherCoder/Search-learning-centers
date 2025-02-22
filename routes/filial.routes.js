@@ -12,10 +12,10 @@ import rolePolice from "../middleware/rolePolice.js";
 const filialRoute = Router();
 
 filialRoute.get("/", findAll);
-filialRoute.post("/", verifyToken, rolePolice(["admin", "seo"]), create);
 filialRoute.get("/:id", findOne);
-filialRoute.delete("/:id", verifyToken, rolePolice(["admin", "seo"]), remove);
-filialRoute.patch("/:id", verifyToken, rolePolice(["admin", "seo"]), update);
+filialRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO"]), create);
+filialRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "CEO"]), remove);
+filialRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "CEO"]), update);
 
 export default filialRoute;
 
