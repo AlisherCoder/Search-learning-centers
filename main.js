@@ -23,7 +23,7 @@ const options = {
       },
       servers: [
          {
-            url: "http://localhost:4000/",
+            url: "http://3.37.19.181:4000/",
          },
       ],
       components: {
@@ -58,13 +58,13 @@ app.use("/api", mainRoute);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use("/*", (req, res) => {
-   res.status(500).json({ message: "Not found route." });
+   res.status(400).json({ message: "Not found route." });
 });
 
 async function bootstrapt() {
    try {
       await sequelize.authenticate();
-      // await sequelize.sync({force: true});
+      await sequelize.sync();
 
       console.log("Db connected successfully ✅");
       app.listen(PORT, () => console.log("Server started on PORT", PORT));
