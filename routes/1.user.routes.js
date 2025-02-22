@@ -42,7 +42,7 @@ userRoute.get(
    getStudents
 );
 userRoute.get("/mydata", verifyToken, getMyData);
-userRoute.get("/mycenters", verifyToken, rolePolice("ADMIN","CEO"), getMyCenters);
+userRoute.get("/mycenters", verifyToken, rolePolice(["ADMIN","CEO"]), getMyCenters);
 
 userRoute.get("/search", verifyToken, rolePolice(["ADMIN"]), getBySearch);
 userRoute.get("/", verifyToken, rolePolice(["ADMIN"]), findAll);

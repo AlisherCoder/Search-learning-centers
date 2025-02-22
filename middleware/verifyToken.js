@@ -13,12 +13,24 @@ function verifyToken(req, res, next) {
       let accessSecret = process.env.accessKey;
       let data = jwt.verify(token, accessSecret);
 
-      req.user = data;
+      User.findByPk(data.id)
+         .then((user) => {
+            if (!user) {
+               return res.status(401).json({ message: "Not allowed..." });
+            }
 
-      next();
+            req.user = data;
+            next();
+         })
+         .catch((err) => {
+            return res
+               .status(500)
+               .json({ msg: "Server error", error: err.message });
+         });
+
    } catch (error) {
       return res.status(401).send({ msg: "Invalid token" });
    }
 }
 
-export default verifyToken; 
+export default verifyToken;

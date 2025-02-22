@@ -157,13 +157,9 @@ commentRoute.delete("/:id", verifyToken, remove);
  *               star:
  *                 type: number
  *                 description: The updated star rating of the comment
- *               centerId:
- *                 type: number
- *                 description: The updated centerId of the comment
  *             example:
  *               text: "Updated comment text"
  *               star: 4
- *               centerId: 11
  *     responses:
  *       200:
  *         description: Comment updated successfully

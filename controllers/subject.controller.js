@@ -119,7 +119,7 @@ export async function remove(req, res) {
       let { id } = req.params;
       let data = await Subject.findByPk(id);
       if (!data) {
-         return res.status(404).json({ message: "Not Found filed" });
+         return res.status(404).json({ message: "Not Found subject" });
       }
 
       await data.destroy();

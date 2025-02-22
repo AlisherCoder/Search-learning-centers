@@ -24,13 +24,16 @@ async function findAll(req, res) {
       let allItems = await Resource.findAll({
          limit: limit,
          offset: offset,
-         include: [User, Category],
+         include: [
+            { model: User, attributes: { exclude: ["password"] } },
+            Category,
+         ],
          order: [["name", sortOrder]],
       });
 
       let totalCount = await Resource.count();
 
-      if (allItems) {
+      if (allItems.length) {
          res.status(200).json({ data: allItems, total: totalCount });
       } else {
          res.status(404).json({ message: "Resource not found!" });
@@ -44,7 +47,10 @@ async function findOne(req, res) {
    try {
       let { id } = req.params;
       let currentItem = await Resource.findByPk(id, {
-         include: [User, Category],
+         include: [
+            { model: User, attributes: { exclude: ["password"] } },
+            Category,
+         ],
       });
 
       if (currentItem) {
@@ -93,7 +99,10 @@ async function findBySearch(req, res) {
          where: filters,
          limit: limit,
          offset: offset,
-         include: [User, Category],
+         include: [
+            { model: User, attributes: { exclude: ["password"] } },
+            Category,
+         ],
          order: [[sortBy, sortOrder]],
       });
 

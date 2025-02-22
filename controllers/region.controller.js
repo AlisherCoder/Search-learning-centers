@@ -4,35 +4,6 @@ import Center from "../models/center.model.js";
 import Region from "../models/region.model.js";
 import regionValid from "../validations/region.valid.js";
 
-async function findAll(req, res) {
-   try {
-      let { error, value } = queryValid.validate(req.query);
-
-      if (error) {
-         return res.status(422).json({ message: error.details[0].message });
-      }
-      let totalCount = await Region.count();
-
-      const page = value.page || 1;
-      const limit = value.limit || 10;
-      const offset = (page - 1) * limit;
-      const sortOrder = value.sortOrder || "ASC";
-      let allItems = await Region.findAll({
-         limit: limit,
-         offset: offset,
-         include: [Center],
-         order: [["name", sortOrder]],
-      });
-      if (allItems) {
-         res.status(200).json({ date: allItems, total: totalCount });
-      } else {
-         res.status(404).json({ message: "Region not found!" });
-      }
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
-}
-
 async function findOne(req, res) {
    try {
       const { id } = req.params;

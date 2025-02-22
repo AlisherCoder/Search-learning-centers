@@ -6,14 +6,13 @@ import {
    commentPatchtValid,
 } from "../validations/comment.valid.js";
 import Comment from "../models/comment.model.js";
-import { message } from "telegraf/filters";
 
 async function findAll(req, res) {
    try {
       let { error, value } = queryValid.validate(req.query);
 
       if (error) {
-         return res.status(500).json({ data: error.details[0].message });
+         return res.status(422).json({ data: error.details[0].message });
       }
 
       let page = value.page || 1;
@@ -23,12 +22,15 @@ async function findAll(req, res) {
       let allItems = await Comment.findAll({
          limit: limit,
          offset: offset,
-         include: [User, Center],
+         include: [
+            { model: User, attributes: { exclude: ["password"] } },
+            Center,
+         ],
       });
 
       let totalCount = await Comment.count();
 
-      if (allItems) {
+      if (allItems.length) {
          res.status(200).json({ data: allItems, total: totalCount });
       } else {
          res.status(404).json({ message: "Comment not found!" });
@@ -42,7 +44,10 @@ async function findOne(req, res) {
    try {
       let { id } = req.params;
       let currentItem = await Comment.findByPk(id, {
-         include: [User, Center],
+         include: [
+            { model: User, attributes: { exclude: ["password"] } },
+            Center,
+         ],
       });
 
       if (currentItem) {
@@ -60,20 +65,21 @@ async function create(req, res) {
       let { error, value } = commentPostValid.validate(req.body);
 
       if (error) {
-         return res.status(500).json({ message: error.details[0].message });
+         return res.status(422).json({ message: error.details[0].message });
       }
 
       let userId = req.user.id;
 
       let centerId = value.centerId;
+
       let isExistCenter = await Center.findByPk(centerId);
-      if(!isExistCenter){
-         return res.status(404).json({message: "The center not found"})
+      if (!isExistCenter) {
+         return res.status(404).json({ message: "The center not found" });
       }
 
       let currentItem = await Comment.create({
          userId,
-         ...value
+         ...value,
       });
       res.status(201).json({ data: currentItem });
    } catch (error) {
@@ -84,29 +90,25 @@ async function create(req, res) {
 async function update(req, res) {
    try {
       const { id } = req.params;
-      let { error, value } = commentPatchtValid.validate(req.body);
 
+      let { error, value } = commentPatchtValid.validate(req.body);
       if (error) {
-         return res.status(500).json({ message: error.message });
+         return res.status(422).json({ message: error.details[0].message });
       }
 
       let currentItem = await Comment.findByPk(id);
+      if (!currentItem) {
+         return res.status(404).json({ message: "Not found comment." });
+      }
 
       let userId = req.user.id;
-      
-      if(userId != currentItem.userId) {
-         return res.status(400).json({message: "Not alllowed"})
+
+      if (userId != currentItem.userId) {
+         return res.status(401).json({ message: "Not alllowed" });
       }
-      let centerId = value.centerId;
-      let isExistCenter = await Center.findByPk(centerId);
-      if(!isExistCenter){
-         return res.status(404).json({message: "The center not found"})
-      }
+
       await currentItem.update(value);
 
-      if (!currentItem) {
-         return res.status(404).json({ message: "Comment not found!" });
-      }
       res.status(200).json({ data: currentItem });
    } catch (error) {
       res.status(500).json({ message: error.message });

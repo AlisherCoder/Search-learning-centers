@@ -100,10 +100,6 @@ export async function findBySorted(req, res) {
              },
              {
                 model: Center,
-                include: [
-                   { model: Region },
-                   { model: User, attributes: { exclude: ["password", "isActive", "updatedAt", "createdAt"] } }
-                ],
              },
           ],
        });

@@ -56,8 +56,15 @@ export async function findAll(req, res) {
                model: Filial,
                include: Region,
             },
-            { model: Comment, include: User },
-            Like,
+            {
+               model: Comment,
+               include: [
+                  { model: User, attributes: { exclude: ["password"] } },
+               ],
+            },
+            {
+               model: Like,
+            },
          ],
       });
 
@@ -86,7 +93,12 @@ export async function findOne(req, res) {
                model: Filial,
                include: Region,
             },
-            { model: Comment, include: User },
+            {
+               model: Comment,
+               include: [
+                  { model: User, attributes: { exclude: ["password"] } },
+               ],
+            },
             Like,
          ],
       });
@@ -204,89 +216,90 @@ export async function update(req, res) {
    }
 }
 
-
-
 export async function findByLike(req, res) {
-  try {
-    let { error, value } = likeValid.validate(req.query);
+   try {
+      let { error, value } = likeValid.validate(req.query);
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+      if (error) {
+         return res.status(400).json({ message: error.details[0].message });
+      }
 
-    const pageLike = parseInt(value.pageLike) || 1;
-    const limitLike = parseInt(value.limitLike) || 10;
-    const sortOrder = value.sortOrder?.toUpperCase() === "ASC" ? "ASC" : "DESC";
+      const pageLike = parseInt(value.pageLike) || 1;
+      const limitLike = parseInt(value.limitLike) || 10;
+      const sortOrder =
+         value.sortOrder?.toUpperCase() === "ASC" ? "ASC" : "DESC";
 
-    const offset = (pageLike - 1) * limitLike;
+      const offset = (pageLike - 1) * limitLike;
 
-    let centers = await Center.findAll({
-      attributes: [
-        "id",
-        [Sequelize.fn("COUNT", Sequelize.col("likes.id")), "likeCount"],
-        "name", 
-        "phone",
-        "address",
-        "image",
-      ],
-      include: [
-        Region,
-        {
-          model: Like,
-          attributes: [], 
-        },
-      ],
-      group: ["centers.id"], 
-      order: [[Sequelize.literal("likeCount"), sortOrder]], 
-      limit: limitLike,
-      offset: offset,
-      subQuery: false,
-    });
+      let centers = await Center.findAll({
+         attributes: [
+            "id",
+            [Sequelize.fn("COUNT", Sequelize.col("likes.id")), "likeCount"],
+            "name",
+            "phone",
+            "address",
+            "image",
+         ],
+         include: [
+            Region,
+            {
+               model: Like,
+               attributes: [],
+            },
+         ],
+         group: ["centers.id"],
+         order: [[Sequelize.literal("likeCount"), sortOrder]],
+         limit: limitLike,
+         offset: offset,
+         subQuery: false,
+      });
 
-    res.status(200).json(centers);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
-  }
+      res.status(200).json(centers);
+   } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: error.message });
+   }
 }
 
-
 export async function findByStar(req, res) {
-  try {
-    let { error, value } = starValid.validate(req.query);
+   try {
+      let { error, value } = starValid.validate(req.query);
 
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+      if (error) {
+         return res.status(400).json({ message: error.details[0].message });
+      }
 
-    const maxStar = value.maxStar || 5;
-    const minStar = value.minStar || 0;
+      const maxStar = value.maxStar || 5;
+      const minStar = value.minStar || 0;
 
-    let centers = await Center.findAll({
-      include: [
-        Comment,
-        {
-          model: Comment,
-          attributes: [],
-        },
-      ],
-      attributes: {
-        include: [
-          [Sequelize.fn("AVG", Sequelize.col("comments.star")), "averageStar"],
-        ],
-      },
-      group: ["centers.id"], 
-      having: Sequelize.where(
-        Sequelize.fn("AVG", Sequelize.col("comments.star")),
-        {
-          [Op.between]: [minStar, maxStar],
-        }
-      ),
-      order: [[Sequelize.literal("AVG(comments.star)"), "DESC"]], 
-    });
+      let centers = await Center.findAll({
+         include: [
+            Comment,
+            {
+               model: Comment,
+               attributes: [],
+            },
+         ],
+         attributes: {
+            include: [
+               [
+                  Sequelize.fn("AVG", Sequelize.col("comments.star")),
+                  "averageStar",
+               ],
+            ],
+         },
+         group: ["centers.id"],
+         having: Sequelize.where(
+            Sequelize.fn("AVG", Sequelize.col("comments.star")),
+            {
+               [Op.between]: [minStar, maxStar],
+            }
+         ),
+         order: [[Sequelize.literal("AVG(comments.star)"), "DESC"]],
+      });
 
-    res.status(200).json({ centers });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+      res.status(200).json({ centers });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
 }

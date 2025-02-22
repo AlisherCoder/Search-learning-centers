@@ -257,9 +257,6 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *           schema:
  *             type: object
  *             properties:
- *               categoryId:
- *                 type: integer
- *                 description: The updated category of the resource
  *               name:
  *                 type: string
  *                 description: The updated name of the resource
@@ -273,7 +270,6 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *                 type: string
  *                 description: The updated image URL of the resource
  *             example:
- *               categoryId: 3
  *               name: "Updated Resource Name"
  *               description: "Updated resource description"
  *               media: "https://example.com/updated-media.mp4"
@@ -326,9 +322,6 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *         userId:
  *           type: integer
  *           description: The ID of the user who created the resource
- *         categoryId:
- *           type: integer
- *           description: The ID of the category the resource belongs to
  *         name:
  *           type: string
  *           description: The name of the resource

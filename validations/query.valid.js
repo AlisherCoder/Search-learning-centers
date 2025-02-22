@@ -8,6 +8,8 @@ const queryValid = Joi.object({
    min: Joi.number().min(0),
    max: Joi.number().greater(Joi.ref("min")).max(5),
    sortOrder: Joi.string().valid("ASC", "DESC"),
+   userId: Joi.number().positive().optional(),
+   categoryId: Joi.number().positive().optional(),
 });
 
 export default queryValid;

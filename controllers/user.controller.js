@@ -31,8 +31,8 @@ export async function findAll(req, res) {
          order: [[sort, order]],
          include: [
             Center,
-            { model: Reception, include: Filial },
-            Comment,
+            { model: Reception, include: [Center, Filial] },
+            { model: Comment, include: Center },
             Resource,
             Like,
          ],
@@ -56,10 +56,10 @@ export async function findOne(req, res) {
       let user = await User.findByPk(id, {
          include: [
             Center,
+            { model: Reception, include: [Center, Filial] },
+            { model: Comment, include: Center },
             Resource,
             Like,
-            Comment,
-            { model: Reception, include: Filial },
          ],
          attributes: { exclude: ["password"] },
       });
@@ -179,10 +179,10 @@ export async function getBySearch(req, res) {
          order: [[sort, order]],
          include: [
             Center,
+            { model: Reception, include: [Center, Filial] },
+            { model: Comment, include: Center },
             Resource,
             Like,
-            Comment,
-            { model: Reception, include: Filial },
          ],
          attributes: { exclude: ["password"] },
       });
@@ -280,12 +280,12 @@ export async function getMyData(req, res) {
             Resource,
             { model: Reception, include: [Center, Filial, Major] },
          ],
-      }); 
+      });
 
       if (!user) {
          return res.status(404).json({ message: "Not found user." });
       }
-      
+
       res.status(200).json({ data: user });
    } catch (error) {
       res.status(500).json({ message: error.message });
@@ -330,8 +330,8 @@ export async function getStudents(req, res) {
          ],
       });
 
-      if (!receptions) {
-         return res.status(404).json({ message: "Not found receptions." });
+      if (!receptions.length) {
+         return res.status(404).json({ message: "Not found students." });
       }
 
       res.status(200).json({ data: receptions });

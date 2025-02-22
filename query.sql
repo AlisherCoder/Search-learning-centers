@@ -64,6 +64,6 @@ CREATE Table categories (
 DROP Table categories;
 
 
-SELECT * from receptions;
+SELECT * from regions;
 
 UPDATE users set role = "admin"
