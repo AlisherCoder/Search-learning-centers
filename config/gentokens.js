@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 config();
 
-const accessKey = process.env.accessKey;
-const refreshKey = process.env.refreshKey;
+const accessKey = process.env.accessKey || "access-secret";
+const refreshKey = process.env.refreshKey || "refresh-secret";
 
 export function genAccessToken(payload) {
    const token = jwt.sign(payload, accessKey, { expiresIn: "1h" });

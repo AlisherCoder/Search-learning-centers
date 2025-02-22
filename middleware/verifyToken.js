@@ -10,7 +10,7 @@ function verifyToken(req, res, next) {
          return res.status(401).send({ msg: "Empty token" });
       }
 
-      let accessSecret = process.env.accessKey;
+      let accessSecret = process.env.accessKey || "access-secret";
       let data = jwt.verify(token, accessSecret);
 
       User.findByPk(data.id)
