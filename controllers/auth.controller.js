@@ -20,14 +20,6 @@ export async function register(req, res) {
             .status(409)
             .json({ message: "This email address already exists." });
       }
-
-      let foundphone = await User.findOne({ where: { email } });
-      if (foundphone) {
-         return res
-            .status(409)
-            .json({ message: "This phone number already exists." });
-      }
-
       let hashpass = bcrypt.hashSync(password, 10);
       value.password = hashpass;
 
@@ -83,7 +75,7 @@ export async function login(req, res) {
 
 export async function verifyOTP(req, res) {
    try {
-      const sekretKey = process.env.OTPKEY;
+      const sekretKey = process.env.OTPKEY || "otpsecret";
 
       let { email, otp } = req.body;
       let isValid = totp.check(otp, sekretKey + email);
@@ -126,7 +118,7 @@ export async function sendOTP(req, res) {
 
 export async function resetPassword(req, res) {
    try {
-      const sekretKey = process.env.OTPKEY;
+      const sekretKey = process.env.OTPKEY || "otpsecret";
 
       let { email, otp, newPassword } = req.body;
 

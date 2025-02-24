@@ -1,11 +1,12 @@
--- Active: 1737614280833@@127.0.0.1@3306@fullstackexam
+-- Active: 1734330042184@@127.0.0.1@3306@fullstackexam
 
 CREATE DATABASE fullstackexam;
 
 SELECT * FROM users;
 
 use fullstackexam;
-UPDATE users set role = "admin" where id = 1;
+
+UPDATE users SET role = "admin" WHERE id = 3
 
 SHOW TABLES;
 

@@ -12,13 +12,13 @@ const transport = nodemailer.createTransport({
 
 async function sendMail(email) {
    try {
-      const sekretKey = process.env.OTPKEY;
+      const sekretKey = process.env.OTPKEY || "otpsecret";
       let otp = totp.generate(sekretKey + email);
       
       await transport.sendMail({
          to: email,
          subject: "One time password",
-         text: `Code for verify account ${otp}`,
+         html: `<h3>Code for verify account  <h1><b>${otp}</b></h1> </h3>`
       });
 
       return otp;

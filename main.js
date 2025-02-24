@@ -8,7 +8,7 @@ import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
-let PORT = process.env.PORT || 3000;
+let PORT = process.env.PORT || 4000;
 let app = express();
 app.use(express.json());
 
@@ -23,7 +23,7 @@ const options = {
       },
       servers: [
          {
-            url: "http://localhost:4000/",
+            url: "http://localhost:5000/",
          },
       ],
       components: {
@@ -64,7 +64,7 @@ app.use("/*", (req, res) => {
 async function bootstrapt() {
    try {
       await sequelize.authenticate();
-      await sequelize.sync();
+      // await sequelize.sync({force: true});
 
       console.log("Db connected successfully ✅");
       app.listen(PORT, () => console.log("Server started on PORT", PORT));
