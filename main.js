@@ -64,7 +64,7 @@ app.use("/*", (req, res) => {
 async function bootstrapt() {
    try {
       await sequelize.authenticate();
-      await sequelize.sync({force: true});
+      // await sequelize.sync({force: true});
 
       console.log("Db connected successfully ✅");
       app.listen(PORT, () => console.log("Server started on PORT", PORT));
