@@ -42,7 +42,6 @@ const Reception = sequelize.define("receptions", {
          model: Major,
          key: "id",
       },
-      unique: true,
    },
    visitDate: {
       type: DataTypes.DATE,

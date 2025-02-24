@@ -23,8 +23,7 @@ const Like = sequelize.define("likes", {
       references: {
          model: Center,
          key: "id",
-      },
-      unique: true,
+      }
    }
 },
 );
