@@ -4,7 +4,7 @@ export const ReceptionPOST = Joi.object({
    centerId: Joi.number().required(),
    filialId: Joi.number().optional(),
    majorId: Joi.number().required(),
-   visitDate: Joi.date(),
+   visitDate: Joi.date().required(),
 });
 
 export const ReceptionPATCH = Joi.object({
