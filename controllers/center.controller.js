@@ -17,6 +17,7 @@ import Like from "../models/like.model.js";
 import likeValid from "../validations/like.valid.js";
 import starValid from "../validations/star.valid.js";
 import { Sequelize } from "sequelize";
+import Reception from "../models/reseption.model.js";
 
 export async function findAll(req, res) {
    try {
@@ -62,9 +63,8 @@ export async function findAll(req, res) {
                   { model: User, attributes: { exclude: ["password"] } },
                ],
             },
-            {
-               model: Like,
-            },
+            Like,
+            Reception,
          ],
       });
 
@@ -100,6 +100,7 @@ export async function findOne(req, res) {
                ],
             },
             Like,
+            Reception
          ],
       });
 
