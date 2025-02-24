@@ -27,25 +27,41 @@ export async function create(req, res) {
 
       let filials = center.filials.map((filial) => filial.id);
       let majors = center.majors.map((major) => major.id);
-
-      if (!filials.includes(filialId)) {
-         return res.status(404).json({ message: "Not found filial." });
-      }
+      
+      let isExists = null;
 
       if (!majors.includes(majorId)) {
          return res.status(404).json({ message: "Not found major." });
       }
 
-      let isExists = await Reception.findOne({
-         where: {
-            [Op.and]: [
-               { majorId },
-               { filialId },
-               { centerId },
-               { userId: req.user.id },
-            ],
-         },
-      });
+      if (filialId) {
+         if (!filials.includes(filialId)) {
+            return res.status(404).json({ message: "Not found filial." });
+         }
+
+         isExists = await Reception.findOne({
+            where: {
+               [Op.and]: [
+                  { majorId },
+                  { filialId },
+                  { centerId },
+                  { userId: req.user.id },
+               ],
+            },
+         });
+
+         if (isExists) {
+            return res.status(400).json({
+               message: "You have already written in this direction.",
+            });
+         }
+      } else {
+         isExists = await Reception.findOne({
+            where: {
+               [Op.and]: [{ majorId }, { centerId }, { userId: req.user.id }],
+            },
+         });
+      }
 
       if (isExists) {
          return res
@@ -90,7 +106,9 @@ export async function remove(req, res) {
       }
 
       if (data.userId != req.user.id && req.user.role != "ADMIN") {
-         return res.status(401).json({ message: "Not allowed deleted other reception." });
+         return res
+            .status(401)
+            .json({ message: "Not allowed deleted other reception." });
       }
 
       await data.destroy();
