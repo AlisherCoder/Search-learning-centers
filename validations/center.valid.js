@@ -5,7 +5,7 @@ const centerPostValid = joi.object({
       .string()
       .min(2)
       .max(30)
-      .pattern(/^[A-Za-z]+(?:[A-Za-z0-9-]*\s[A-Za-z0-9-]+)*$/)
+      .pattern(/^[A-Za-z']+(?:[A-Za-z0-9'-]*\s[A-Za-z0-9'-]+)*$/)
       .required(),
    regionId: joi.number().positive().required(),
    address: joi.string().required(),
