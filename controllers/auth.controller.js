@@ -49,7 +49,7 @@ export async function login(req, res) {
 
       let founduser = await User.findOne({ where: { email } });
       if (!founduser) {
-         return res.status(404).json({ message: "Not found user." });
+         return res.status(401).json({ message: "Not found user." });
       }
 
       if (!founduser.isActive) {

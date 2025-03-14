@@ -5,7 +5,6 @@ const passwordValid = joi.object({
       .string()
       .min(6)
       .max(16)
-      .pattern(/^(?=.*\d)(?=.*\.)[A-Za-z\d.]+$/)
       .required(),
 });
 
@@ -32,7 +31,6 @@ const userRegValid = joi.object({
       .string()
       .min(6)
       .max(16)
-      .pattern(/^(?=.*\d)(?=.*\.)[A-Za-z\d.]+$/)
       .required(),
    image: joi.string().optional(),
 });

@@ -23,7 +23,7 @@ const options = {
       },
       servers: [
          {
-            url: "http://3.37.19.181:4000/",
+            url: "http://18.141.233.37:4000/",
          },
       ],
       components: {
