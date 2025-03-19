@@ -18,7 +18,7 @@ async function sendMail(email) {
       await transport.sendMail({
          to: email,
          subject: "One time password",
-         text: `Code for verify account <h1>${otp}</h1>`,
+         text: `Code for verify account ${otp}`,
       });
 
       return otp;
