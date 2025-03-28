@@ -26,7 +26,7 @@ async function findBySearch(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
       const page = value.page || 1;
-      const limit = value.limit || 10;
+      const limit = value.limit || 20;
       const offset = (page - 1) * limit;
       const sortOrder = value.sortOrder || "ASC";
 

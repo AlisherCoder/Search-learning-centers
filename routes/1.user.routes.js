@@ -219,7 +219,6 @@ export default userRoute;
  *         name: take
  *         schema:
  *           type: integer
- *           default: 5
  *         description: Number of users to retrieve per page
  *       - in: query
  *         name: page
@@ -380,7 +379,6 @@ export default userRoute;
  *         name: take
  *         schema:
  *           type: integer
- *           default: 5
  *         description: Number of users to retrieve per page
  *       - in: query
  *         name: page

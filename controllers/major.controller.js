@@ -60,7 +60,7 @@ export async function findOne(req, res) {
 
 export async function findBySorted(req, res) {
     try {
-       let { limit = 10, offset = 1, sort, column = "name", search } = req.query;
+       let { limit = 20, offset = 1, sort, column = "name", search } = req.query;
  
        limit = parseInt(limit);
        offset = Math.max(0, (parseInt(offset) - 1) * limit);

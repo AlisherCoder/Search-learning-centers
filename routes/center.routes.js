@@ -278,13 +278,11 @@ export default centerRoute;
  *         name: pageLike
  *         schema:
  *           type: integer
- *           default: 1
  *         description: Page number for pagination
  *       - in: query
  *         name: limitLike
  *         schema:
  *           type: integer
- *           default: 10
  *         description: Number of items per page
  *     responses:
  *       200:

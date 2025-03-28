@@ -26,7 +26,7 @@ export async function findAll(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
 
-      let { take = 5, page, sortBy, sortOrder, ...queries } = value;
+      let { take = 20, page, sortBy, sortOrder, ...queries } = value;
       let sort = sortBy || "name";
       let order = sortOrder || "ASC";
 
@@ -226,7 +226,7 @@ export async function findByLike(req, res) {
       }
 
       const pageLike = parseInt(value.pageLike) || 1;
-      const limitLike = parseInt(value.limitLike) || 10;
+      const limitLike = parseInt(value.limitLike) || 20;
       const sortOrder =
          value.sortOrder?.toUpperCase() === "ASC" ? "ASC" : "DESC";
 

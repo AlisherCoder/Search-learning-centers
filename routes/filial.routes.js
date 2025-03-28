@@ -142,7 +142,6 @@ export default filialRoute;
  *         name: take
  *         schema:
  *           type: integer
- *           default: 5
  *         description: Number of results per page
  *       - in: query
  *         name: page

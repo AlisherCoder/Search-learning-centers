@@ -19,7 +19,7 @@ export async function findAll(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
 
-      let { take = 5, page, sortBy, sortOrder, ...queries } = value;
+      let { take = 20, page, sortBy, sortOrder, ...queries } = value;
       let sort = sortBy || "name";
       let order = sortOrder || "ASC";
 

@@ -16,7 +16,7 @@ async function findAll(req, res) {
       }
 
       let page = value.page || 1;
-      let limit = value.limit || 10;
+      let limit = value.limit || 20;
       let offset = (page - 1) * limit;
 
       let allItems = await Comment.findAll({
