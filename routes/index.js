@@ -34,7 +34,7 @@ mainRoute.use("/regions", regionRoute);
 mainRoute.use("/resources", resourceRoute);
 mainRoute.use("/comments", commentRoute);
 
-mainRoute.use("/upload", verifyToken, upload.single("image"), (req, res) => {
+mainRoute.use("/upload", upload.single("image"), (req, res) => {
    res.status(201).json({ data: req.file.filename });
 });
 
