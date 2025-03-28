@@ -24,7 +24,7 @@ export async function findAll(req, res) {
 export async function findBySorted(req, res) {
    try {
       let {
-         limit = 10,
+         limit = 20,
          offset = 1,
          sort,
          column = "createdAt",

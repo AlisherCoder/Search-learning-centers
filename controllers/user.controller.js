@@ -13,7 +13,7 @@ import Major from "../models/major.model.js";
 
 export async function findAll(req, res) {
    try {
-      let { take = 5, page, sortBy, sortOrder } = req.query;
+      let { take = 20, page, sortBy, sortOrder } = req.query;
       let sort = sortBy || "firstName";
       let order = sortOrder || "ASC";
 
@@ -154,7 +154,7 @@ export async function getBySearch(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
 
-      let { take = 5, page, sortBy, sortOrder, ...queries } = value;
+      let { take = 20, page, sortBy, sortOrder, ...queries } = value;
       let sort = sortBy || "firstName";
       let order = sortOrder || "ASC";
 
@@ -211,7 +211,7 @@ export async function getAllSeos(req, res) {
          return res.status(422).json({ message: error.details[0].message });
       }
 
-      let { take = 5, page, sortBy, sortOrder, ...queries } = value;
+      let { take = 20, page, sortBy, sortOrder, ...queries } = value;
       let sort = sortBy || "firstName";
       let order = sortOrder || "ASC";
 

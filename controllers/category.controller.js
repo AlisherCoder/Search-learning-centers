@@ -25,7 +25,7 @@ async function findAll(req, res) {
       }
 
       const page = value.page || 1;
-      const limit = value.limit || 10;
+      const limit = value.limit || 20;
       const offset = (page - 1) * limit;
       const sortOrder = value.sortOrder || "ASC";
 

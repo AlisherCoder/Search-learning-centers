@@ -17,7 +17,7 @@ async function findAll(req, res) {
       }
 
       let page = value.page || 1;
-      let limit = value.limit || 10;
+      let limit = value.limit || 20;
       let offset = (page - 1) * limit;
       const sortOrder = value.sortOrder || "ASC";
 
@@ -73,7 +73,7 @@ async function findBySearch(req, res) {
       }
 
       const page = value.page || 1;
-      const limit = value.limit || 10;
+      const limit = value.limit || 20;
       const offset = (page - 1) * limit;
       const sortOrder = value.sortOrder || "ASC";
 
