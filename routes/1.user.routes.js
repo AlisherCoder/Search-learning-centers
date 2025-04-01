@@ -1,24 +1,7 @@
 import { Router } from "express";
 import verifyToken from "../middleware/verifyToken.js";
-import {
-   login,
-   register,
-   resetPassword,
-   sendOTP,
-   verifyOTP,
-} from "../controllers/auth.controller.js";
-import {
-   findAll,
-   findOne,
-   getAllSeos,
-   getBySearch,
-   getMyCenters,
-   getMyData,
-   getOneSeo,
-   getStudents,
-   remove,
-   update,
-} from "../controllers/user.controller.js";
+import { createAdmin, login, register, resetPassword, sendOTP, verifyOTP } from "../controllers/auth.controller.js";
+import { findAll, findOne, getAllSeos, getBySearch, getMyCenters, getMyData, getOneSeo, getStudents, remove, update } from "../controllers/user.controller.js";
 import rolePolice from "../middleware/rolePolice.js";
 import selfPolice from "../middleware/selfPolice.js";
 import { getAccessToken } from "../config/gentokens.js";
@@ -31,18 +14,14 @@ userRoute.post("/verify-otp", verifyOTP);
 userRoute.post("/login", login);
 userRoute.post("/reset-password", resetPassword);
 userRoute.post("/refreshToken", getAccessToken);
+userRoute.post("/admin", verifyToken, rolePolice(["ADMIN"]), createAdmin);
 
 userRoute.get("/seos", getAllSeos);
 userRoute.get("/seos/:id", getOneSeo);
 
-userRoute.get(
-   "/students/:centerId",
-   verifyToken,
-   rolePolice(["ADMIN", "CEO"]),
-   getStudents
-);
+userRoute.get("/students/:centerId", verifyToken, rolePolice(["ADMIN", "CEO"]), getStudents);
 userRoute.get("/mydata", verifyToken, getMyData);
-userRoute.get("/mycenters", verifyToken, rolePolice(["ADMIN","CEO"]), getMyCenters);
+userRoute.get("/mycenters", verifyToken, rolePolice(["ADMIN", "CEO"]), getMyCenters);
 
 userRoute.get("/search", verifyToken, rolePolice(["ADMIN"]), getBySearch);
 userRoute.get("/", verifyToken, rolePolice(["ADMIN"]), findAll);
@@ -209,6 +188,27 @@ export default userRoute;
  *         description: Password updated
  *       400:
  *         description: Invalid OTP or email
+ * 
+ * /api/users/admin:
+ *   post:
+ *     tags: [Authentication]
+ *     summary: Create admin
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 format: string
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: OTP sent successfully
+ *       400:
+ *         description: Bad Request
  *
  * /api/users:
  *   get:

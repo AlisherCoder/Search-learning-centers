@@ -1,11 +1,5 @@
 import { Router } from "express";
-import {
-   create,
-   findAll,
-   findOne,
-   remove,
-   update,
-} from "../controllers/category.controller.js";
+import { create, findAll, findOne, remove, update } from "../controllers/category.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import rolePolice from "../middleware/rolePolice.js";
 
@@ -189,7 +183,7 @@ export default categoryRoute;
  *       404:
  *         description: Category not found
  *       400:
- *         description: 
+ *         description:
  */
 
 /**
@@ -213,4 +207,3 @@ export default categoryRoute;
  *       scheme: bearer
  *       bearerFormat: JWT
  */
-
