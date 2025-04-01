@@ -18,13 +18,11 @@ const options = {
       info: {
          title: "Exam-project",
          version: "0.1.0",
-         description:
-            "This is a simple CRUD API application made with Express and documented with Swagger",
+         description: "This is a simple CRUD API application made with Express and documented with Swagger",
       },
       servers: [
          {
-            url: "https://18.141.233.37:4000/",
-            // url: "http://localhost:4000/",
+            url: "https://findcourse.net.uz/",
          },
       ],
       components: {
