@@ -155,7 +155,7 @@ export async function createAdmin(req, res) {
          return res.status(404).json({ message: "Not found user." });
       }
 
-      await User.update({ role: "ADMIN" }, { where: { id: userId } });
+      await User.update({ role: "SUPERADMIN" }, { where: { id: userId } });
 
       res.status(200).json({ message: "Admin created successfully." });
    } catch (error) {

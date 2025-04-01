@@ -1,8 +1,4 @@
-import {
-   filialPatchValid,
-   filialPostValid,
-   SearchValid,
-} from "../validations/filial.valid.js";
+import { filialPatchValid, filialPostValid, SearchValid } from "../validations/filial.valid.js";
 import { Op } from "sequelize";
 import path from "path";
 import fs from "fs";
@@ -110,10 +106,9 @@ export async function create(req, res) {
          return res.status(404).json({ message: "Not found learning center." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
+      if (center.seoId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({
-            message:
-               "You have no right to create a branch of someone else's training center.",
+            message: "You have no right to create a branch of someone else's training center.",
          });
       }
 
@@ -136,10 +131,9 @@ export async function remove(req, res) {
 
       let center = await Center.findByPk(filial.centerId);
 
-      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
+      if (center.seoId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({
-            message:
-               "You do not have the right to delete a branch of someone else's training center.",
+            message: "You do not have the right to delete a branch of someone else's training center.",
          });
       }
 
@@ -173,17 +167,14 @@ export async function update(req, res) {
 
       if (center.seoId != req.user.id && req.user.role != "ADMIN") {
          return res.status(401).json({
-            message:
-               "You do not have the right to update a branch of someone else's training center.",
+            message: "You do not have the right to update a branch of someone else's training center.",
          });
       }
 
       if (value.name) {
          let isExists = await Filial.findOne({ where: { name: value.name } });
          if (isExists) {
-            return res
-               .status(400)
-               .json({ message: "This name already exists." });
+            return res.status(400).json({ message: "This name already exists." });
          }
       }
 

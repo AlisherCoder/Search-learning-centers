@@ -89,9 +89,7 @@ async function update(req, res) {
       if (value.name) {
          let isExists = await Region.findOne({ where: { name: value.name } });
          if (isExists) {
-            return res
-               .status(400)
-               .json({ message: "This name already exists." });
+            return res.status(400).json({ message: "This name already exists." });
          }
       }
 

@@ -23,11 +23,8 @@ function verifyToken(req, res, next) {
             next();
          })
          .catch((err) => {
-            return res
-               .status(500)
-               .json({ msg: "Server error", error: err.message });
+            return res.status(500).json({ msg: "Server error", error: err.message });
          });
-
    } catch (error) {
       return res.status(401).send({ msg: "Invalid token" });
    }

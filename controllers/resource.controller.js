@@ -3,10 +3,7 @@ import Category from "../models/category.model.js";
 import Resource from "../models/resource.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
-import {
-   resourcePatchValid,
-   resourcePostValid,
-} from "../validations/resource.valid.js";
+import { resourcePatchValid, resourcePostValid } from "../validations/resource.valid.js";
 
 async function findAll(req, res) {
    try {
@@ -24,10 +21,7 @@ async function findAll(req, res) {
       let allItems = await Resource.findAll({
          limit: limit,
          offset: offset,
-         include: [
-            { model: User, attributes: { exclude: ["password"] } },
-            Category,
-         ],
+         include: [{ model: User, attributes: { exclude: ["password"] } }, Category],
          order: [["name", sortOrder]],
       });
 
@@ -47,10 +41,7 @@ async function findOne(req, res) {
    try {
       let { id } = req.params;
       let currentItem = await Resource.findByPk(id, {
-         include: [
-            { model: User, attributes: { exclude: ["password"] } },
-            Category,
-         ],
+         include: [{ model: User, attributes: { exclude: ["password"] } }, Category],
       });
 
       if (currentItem) {
@@ -99,10 +90,7 @@ async function findBySearch(req, res) {
          where: filters,
          limit: limit,
          offset: offset,
-         include: [
-            { model: User, attributes: { exclude: ["password"] } },
-            Category,
-         ],
+         include: [{ model: User, attributes: { exclude: ["password"] } }, Category],
          order: [[sortBy, sortOrder]],
       });
 
@@ -159,7 +147,7 @@ async function update(req, res) {
          return res.status(404).json({ message: "Resource not found!" });
       }
 
-      if (currentItem.userId != req.user.id && req.user.role != "ADMIN") {
+      if (currentItem.userId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({ message: "Not allowed." });
       }
       if (value.image) {
@@ -192,7 +180,7 @@ async function remove(req, res) {
          return res.status(404).json({ message: "Resource not found!" });
       }
 
-      if (currentItem.userId != req.user.id && req.user.role != "ADMIN") {
+      if (currentItem.userId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({ message: "Not allowed." });
       }
       try {

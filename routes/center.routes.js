@@ -1,13 +1,5 @@
 import { Router } from "express";
-import {
-   create,
-   findAll,
-   findByLike,
-   findByStar,
-   findOne,
-   remove,
-   update,
-} from "../controllers/center.controller.js";
+import { create, findAll, findByLike, findByStar, findOne, remove, update } from "../controllers/center.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import rolePolice from "../middleware/rolePolice.js";
 
@@ -17,9 +9,9 @@ centerRoute.get("/star", findByStar);
 centerRoute.get("/like", findByLike);
 centerRoute.get("/", findAll);
 centerRoute.get("/:id", findOne);
-centerRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO"]), create);
-centerRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "CEO"]), remove);
-centerRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "CEO"]), update);
+centerRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), create);
+centerRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), remove);
+centerRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), update);
 
 export default centerRoute;
 

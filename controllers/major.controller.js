@@ -59,59 +59,59 @@ export async function findOne(req, res) {
 }
 
 export async function findBySorted(req, res) {
-    try {
-       let { limit = 20, offset = 1, sort, column = "name", search } = req.query;
- 
-       limit = parseInt(limit);
-       offset = Math.max(0, (parseInt(offset) - 1) * limit);
- 
-       let query = { limit, offset };
-       if (sort === "asc" || sort === "desc") {
-          query.order = [[column, sort.toUpperCase()]];
-       }
- 
-       let where = {};
-       let fieldWhere = {};
-       let subjectWhere = {};
- 
-       if (search) {
-          if (column === "fieldId") {
-             fieldWhere.id = search; 
-          } else if (column === "subjectId") {
-             subjectWhere.id = search;
-          } else {
-             where[column] = { [Op.like]: `%${search}%` };
-          }
-       }
- 
-       let data = await Major.findAll({
-          ...query,
-          where,
-          include: [
-             {
-                model: Field,
-                required: Object.keys(fieldWhere).length > 0,
-                where: fieldWhere,
-             },
-             {
-                model: Subject,
-                required: Object.keys(subjectWhere).length > 0,
-                where: subjectWhere,
-             },
-             {
-                model: Center,
-             },
-          ],
-       });
- 
-       if (!data.length) {
-          return res.status(404).json({ message: "Not Found" });
-       }
-       res.status(200).json({ data });
-    } catch (e) {
-       res.status(500).json({ message: e.message });
-    }
- };
+   try {
+      let { limit = 20, offset = 1, sort, column = "name", search } = req.query;
+
+      limit = parseInt(limit);
+      offset = Math.max(0, (parseInt(offset) - 1) * limit);
+
+      let query = { limit, offset };
+      if (sort === "asc" || sort === "desc") {
+         query.order = [[column, sort.toUpperCase()]];
+      }
+
+      let where = {};
+      let fieldWhere = {};
+      let subjectWhere = {};
+
+      if (search) {
+         if (column === "fieldId") {
+            fieldWhere.id = search;
+         } else if (column === "subjectId") {
+            subjectWhere.id = search;
+         } else {
+            where[column] = { [Op.like]: `%${search}%` };
+         }
+      }
+
+      let data = await Major.findAll({
+         ...query,
+         where,
+         include: [
+            {
+               model: Field,
+               required: Object.keys(fieldWhere).length > 0,
+               where: fieldWhere,
+            },
+            {
+               model: Subject,
+               required: Object.keys(subjectWhere).length > 0,
+               where: subjectWhere,
+            },
+            {
+               model: Center,
+            },
+         ],
+      });
+
+      if (!data.length) {
+         return res.status(404).json({ message: "Not Found" });
+      }
+      res.status(200).json({ data });
+   } catch (e) {
+      res.status(500).json({ message: e.message });
+   }
+}
 
 export async function create(req, res) {
    try {
@@ -123,9 +123,7 @@ export async function create(req, res) {
       let { fieldId, subjectId } = value;
 
       if ((fieldId && subjectId) || (!fieldId && !subjectId)) {
-         return res
-            .status(400)
-            .json({ message: "Please send fieldId or subjectId." });
+         return res.status(400).json({ message: "Please send fieldId or subjectId." });
       }
 
       if (fieldId) {
@@ -169,9 +167,7 @@ export async function update(req, res) {
       if (value.name) {
          let isExists = await Major.findOne({ where: { name: value.name } });
          if (isExists) {
-            return res
-               .status(400)
-               .json({ message: "This name already exists." });
+            return res.status(400).json({ message: "This name already exists." });
          }
       }
 

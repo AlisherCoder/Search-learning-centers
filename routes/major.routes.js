@@ -1,12 +1,5 @@
 import { Router } from "express";
-import {
-   findAll,
-   findBySorted,
-   findOne,
-   create,
-   update,
-   remove,
-} from "../controllers/major.controller.js";
+import { findAll, findBySorted, findOne, create, update, remove } from "../controllers/major.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import rolePolice from "../middleware/rolePolice.js";
 
@@ -15,9 +8,9 @@ const mojorRouter = Router();
 mojorRouter.get("/", findAll);
 mojorRouter.get("/query", findBySorted);
 mojorRouter.get("/:id", findOne);
-mojorRouter.post("/", verifyToken, rolePolice(["ADMIN"]), create);
-mojorRouter.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
-mojorRouter.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
+mojorRouter.post("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), create);
+mojorRouter.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
+mojorRouter.delete("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), remove);
 
 export default mojorRouter;
 
@@ -147,7 +140,6 @@ export default mojorRouter;
  *       500:
  *         description: Server error
  */
-
 
 /**
  * @swagger

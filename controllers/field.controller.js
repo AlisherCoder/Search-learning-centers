@@ -1,9 +1,6 @@
 import { Op } from "sequelize";
 import Field from "../models/field.model.js";
-import {
-   ValidationPOST,
-   ValidationPATCH,
-} from "../validations/subjectANDfield.validation.js";
+import { ValidationPOST, ValidationPATCH } from "../validations/subjectANDfield.validation.js";
 import Major from "../models/major.model.js";
 import path from "path";
 import fs from "fs";
@@ -94,9 +91,7 @@ export async function update(req, res) {
       if (value.name) {
          let isExists = await Field.findOne({ where: { name: value.name } });
          if (isExists) {
-            return res
-               .status(400)
-               .json({ message: "This name already exists." });
+            return res.status(400).json({ message: "This name already exists." });
          }
       }
 

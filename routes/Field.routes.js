@@ -1,12 +1,5 @@
 import { Router } from "express";
-import {
-   create,
-   findAll,
-   findBySorted,
-   findOne,
-   remove,
-   update,
-} from "../controllers/field.controller.js";
+import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/field.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import rolePolice from "../middleware/rolePolice.js";
 
@@ -15,9 +8,9 @@ const fieldRouter = Router();
 fieldRouter.get("/", findAll);
 fieldRouter.get("/query", findBySorted);
 fieldRouter.get("/:id", findOne);
-fieldRouter.post("/", verifyToken, rolePolice(["ADMIN"]), create);
-fieldRouter.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
-fieldRouter.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
+fieldRouter.post("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), create);
+fieldRouter.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
+fieldRouter.delete("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), remove);
 
 export default fieldRouter;
 

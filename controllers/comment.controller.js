@@ -1,10 +1,7 @@
 import Center from "../models/center.model.js";
 import User from "../models/user.model.js";
 import queryValid from "../validations/query.valid.js";
-import {
-   commentPostValid,
-   commentPatchtValid,
-} from "../validations/comment.valid.js";
+import { commentPostValid, commentPatchtValid } from "../validations/comment.valid.js";
 import Comment from "../models/comment.model.js";
 
 async function findAll(req, res) {
@@ -22,10 +19,7 @@ async function findAll(req, res) {
       let allItems = await Comment.findAll({
          limit: limit,
          offset: offset,
-         include: [
-            { model: User, attributes: { exclude: ["password"] } },
-            Center,
-         ],
+         include: [{ model: User, attributes: { exclude: ["password"] } }, Center],
       });
 
       let totalCount = await Comment.count();
@@ -44,10 +38,7 @@ async function findOne(req, res) {
    try {
       let { id } = req.params;
       let currentItem = await Comment.findByPk(id, {
-         include: [
-            { model: User, attributes: { exclude: ["password"] } },
-            Center,
-         ],
+         include: [{ model: User, attributes: { exclude: ["password"] } }, Center],
       });
 
       if (currentItem) {
@@ -124,7 +115,7 @@ async function remove(req, res) {
          return res.status(404).json({ message: "Comment not found!" });
       }
 
-      if (currentItem.userId != req.user.id) {
+      if (currentItem.userId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({ message: "Not allowed." });
       }
 
