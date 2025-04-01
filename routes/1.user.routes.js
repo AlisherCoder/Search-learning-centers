@@ -206,7 +206,7 @@ export default userRoute;
  *                 example: 1
  *     responses:
  *       200:
- *         description: OTP sent successfully
+ *         description: Created admin successfully
  *       400:
  *         description: Bad Request
  *
