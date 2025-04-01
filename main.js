@@ -23,14 +23,14 @@ const options = {
       },
       servers: [
          {
-            url: "http://18.141.233.37:4000/",
+            url: "https://18.141.233.37:4000/",
             // url: "http://localhost:4000/",
          },
       ],
       components: {
          securitySchemes: {
             bearerAuth: {
-               type: "http",
+               type: "https",
                scheme: "bearer",
                bearerFormat: "JWT",
             },
