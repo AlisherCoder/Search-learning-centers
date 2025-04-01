@@ -19,15 +19,15 @@ userRoute.post("/admin", verifyToken, rolePolice(["ADMIN"]), createAdmin);
 userRoute.get("/seos", getAllSeos);
 userRoute.get("/seos/:id", getOneSeo);
 
-userRoute.get("/students/:centerId", verifyToken, rolePolice(["ADMIN", "CEO"]), getStudents);
+userRoute.get("/students/:centerId", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), getStudents);
 userRoute.get("/mydata", verifyToken, getMyData);
-userRoute.get("/mycenters", verifyToken, rolePolice(["ADMIN", "CEO"]), getMyCenters);
+userRoute.get("/mycenters", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), getMyCenters);
 
-userRoute.get("/search", verifyToken, rolePolice(["ADMIN"]), getBySearch);
-userRoute.get("/", verifyToken, rolePolice(["ADMIN"]), findAll);
-userRoute.get("/:id", verifyToken, selfPolice(["ADMIN"]), findOne);
-userRoute.delete("/:id", verifyToken, selfPolice(["ADMIN"]), remove);
-userRoute.patch("/:id", verifyToken, selfPolice(["ADMIN"]), update);
+userRoute.get("/search", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), getBySearch);
+userRoute.get("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), findAll);
+userRoute.get("/:id", verifyToken, selfPolice(["ADMIN", "SUPERADMIN"]), findOne);
+userRoute.delete("/:id", verifyToken, selfPolice(["ADMIN", "SUPERADMIN"]), remove);
+userRoute.patch("/:id", verifyToken, selfPolice(["ADMIN", "SUPERADMIN"]), update);
 
 export default userRoute;
 
@@ -206,7 +206,7 @@ export default userRoute;
  *                 example: 1
  *     responses:
  *       200:
- *         description: Admin created successfully
+ *         description: Created admin successfully
  *       400:
  *         description: Bad Request
  *

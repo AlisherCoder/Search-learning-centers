@@ -7,10 +7,7 @@ import { LikedsPOST } from "../validations/likeds.validation.js";
 export async function findAll(req, res) {
    try {
       let data = await Like.findAll({
-         include: [
-            { model: User, attributes: { exclude: ["password"] } },
-            { model: Center },
-         ],
+         include: [{ model: User, attributes: { exclude: ["password"] } }, { model: Center }],
       });
       if (data.length == 0) {
          return res.status(404).json({ message: "Not Fount" });
@@ -23,13 +20,7 @@ export async function findAll(req, res) {
 
 export async function findBySorted(req, res) {
    try {
-      let {
-         limit = 20,
-         offset = 1,
-         sort,
-         column = "createdAt",
-         dey,
-      } = req.query;
+      let { limit = 20, offset = 1, sort, column = "createdAt", dey } = req.query;
 
       limit = parseInt(limit);
       offset = Math.max(0, (parseInt(offset) - 1) * limit);

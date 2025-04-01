@@ -2,10 +2,7 @@ import Center from "../models/center.model.js";
 import Filial from "../models/filial.model.js";
 import Major from "../models/major.model.js";
 import Reception from "../models/reseption.model.js";
-import {
-   ReceptionPOST,
-   ReceptionPATCH,
-} from "../validations/reception.validation.js";
+import { ReceptionPOST, ReceptionPATCH } from "../validations/reception.validation.js";
 import { Op } from "sequelize";
 
 export async function create(req, res) {
@@ -27,7 +24,7 @@ export async function create(req, res) {
 
       let filials = center.filials.map((filial) => filial.id);
       let majors = center.majors.map((major) => major.id);
-      
+
       let isExists = null;
 
       if (!majors.includes(majorId)) {
@@ -41,12 +38,7 @@ export async function create(req, res) {
 
          isExists = await Reception.findOne({
             where: {
-               [Op.and]: [
-                  { majorId },
-                  { filialId },
-                  { centerId },
-                  { userId: req.user.id },
-               ],
+               [Op.and]: [{ majorId }, { filialId }, { centerId }, { userId: req.user.id }],
             },
          });
 
@@ -64,9 +56,7 @@ export async function create(req, res) {
       }
 
       if (isExists) {
-         return res
-            .status(400)
-            .json({ message: "You have already written in this direction." });
+         return res.status(400).json({ message: "You have already written in this direction." });
       }
 
       let data = await Reception.create({ ...value, userId: req.user.id });
@@ -105,10 +95,8 @@ export async function remove(req, res) {
          return res.status(404).json({ message: "Not Found reception" });
       }
 
-      if (data.userId != req.user.id && req.user.role != "ADMIN") {
-         return res
-            .status(401)
-            .json({ message: "Not allowed deleted other reception." });
+      if (data.userId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
+         return res.status(401).json({ message: "Not allowed deleted other reception." });
       }
 
       await data.destroy();

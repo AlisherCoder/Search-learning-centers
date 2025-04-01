@@ -1,12 +1,5 @@
 import { Router } from "express";
-import {
-   create,
-   findAll,
-   findBySearch,
-   findOne,
-   remove,
-   update,
-} from "../controllers/resource.controller.js";
+import { create, findAll, findBySearch, findOne, remove, update } from "../controllers/resource.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 
 const resourceRoute = Router();
@@ -156,7 +149,6 @@ resourceRoute.delete("/:id", verifyToken, remove);
  *                 message:
  *                   type: string
  */
-
 
 /**
  * @swagger

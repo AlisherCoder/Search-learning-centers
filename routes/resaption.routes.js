@@ -6,7 +6,7 @@ import rolePolice from "../middleware/rolePolice.js";
 const reseptionRouter = Router();
 
 reseptionRouter.post("/", verifyToken, create);
-reseptionRouter.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
+reseptionRouter.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
 reseptionRouter.delete("/:id", verifyToken, remove);
 
 export default reseptionRouter;

@@ -7,9 +7,9 @@ const categoryRoute = Router();
 
 categoryRoute.get("/", findAll);
 categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", verifyToken, rolePolice(["ADMIN"]), create);
-categoryRoute.patch("/:id", verifyToken, rolePolice(["ADMIN"]), update);
-categoryRoute.delete("/:id", verifyToken, rolePolice(["ADMIN"]), remove);
+categoryRoute.post("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), create);
+categoryRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
+categoryRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), remove);
 
 export default categoryRoute;
 

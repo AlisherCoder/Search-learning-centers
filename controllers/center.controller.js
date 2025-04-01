@@ -1,8 +1,4 @@
-import {
-   centerPatchValid,
-   centerPostValid,
-   Searchvalid,
-} from "../validations/center.valid.js";
+import { centerPatchValid, centerPostValid, Searchvalid } from "../validations/center.valid.js";
 import MajorItem from "../models/majorItem.model.js";
 import Center from "../models/center.model.js";
 import Major from "../models/major.model.js";
@@ -59,9 +55,7 @@ export async function findAll(req, res) {
             },
             {
                model: Comment,
-               include: [
-                  { model: User, attributes: { exclude: ["password"] } },
-               ],
+               include: [{ model: User, attributes: { exclude: ["password"] } }],
             },
             Like,
             Reception,
@@ -69,9 +63,7 @@ export async function findAll(req, res) {
       });
 
       if (!centers.length) {
-         return res
-            .status(404)
-            .json({ message: "Not found learning centers." });
+         return res.status(404).json({ message: "Not found learning centers." });
       }
 
       res.status(200).json({ data: centers });
@@ -95,12 +87,10 @@ export async function findOne(req, res) {
             },
             {
                model: Comment,
-               include: [
-                  { model: User, attributes: { exclude: ["password"] } },
-               ],
+               include: [{ model: User, attributes: { exclude: ["password"] } }],
             },
             Like,
-            Reception
+            Reception,
          ],
       });
 
@@ -140,9 +130,7 @@ export async function create(req, res) {
       }
 
       let created = await Center.create({ ...value, seoId: req.user.id });
-      let majoritem = await MajorItem.bulkCreate(
-         majorsId.map((id) => ({ majorId: id, centerId: created.id }))
-      );
+      let majoritem = await MajorItem.bulkCreate(majorsId.map((id) => ({ majorId: id, centerId: created.id })));
 
       res.status(200).json({ data: created });
    } catch (error) {
@@ -159,7 +147,7 @@ export async function remove(req, res) {
          return res.status(404).json({ message: "Not found learning center." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
+      if (center.seoId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({ message: "Not allowed." });
       }
 
@@ -189,16 +177,14 @@ export async function update(req, res) {
          return res.status(404).json({ message: "Not found learning center." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
+      if (center.seoId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({ message: "Not allowed." });
       }
 
       if (value.name) {
          let isExists = await Center.findOne({ where: { name: value.name } });
          if (isExists) {
-            return res
-               .status(400)
-               .json({ message: "This name already exists." });
+            return res.status(400).json({ message: "This name already exists." });
          }
       }
 
@@ -227,20 +213,12 @@ export async function findByLike(req, res) {
 
       const pageLike = parseInt(value.pageLike) || 1;
       const limitLike = parseInt(value.limitLike) || 20;
-      const sortOrder =
-         value.sortOrder?.toUpperCase() === "ASC" ? "ASC" : "DESC";
+      const sortOrder = value.sortOrder?.toUpperCase() === "ASC" ? "ASC" : "DESC";
 
       const offset = (pageLike - 1) * limitLike;
 
       let centers = await Center.findAll({
-         attributes: [
-            "id",
-            [Sequelize.fn("COUNT", Sequelize.col("likes.id")), "likeCount"],
-            "name",
-            "phone",
-            "address",
-            "image",
-         ],
+         attributes: ["id", [Sequelize.fn("COUNT", Sequelize.col("likes.id")), "likeCount"], "name", "phone", "address", "image"],
          include: [
             Region,
             {
@@ -282,20 +260,12 @@ export async function findByStar(req, res) {
             },
          ],
          attributes: {
-            include: [
-               [
-                  Sequelize.fn("AVG", Sequelize.col("comments.star")),
-                  "averageStar",
-               ],
-            ],
+            include: [[Sequelize.fn("AVG", Sequelize.col("comments.star")), "averageStar"]],
          },
          group: ["centers.id"],
-         having: Sequelize.where(
-            Sequelize.fn("AVG", Sequelize.col("comments.star")),
-            {
-               [Op.between]: [minStar, maxStar],
-            }
-         ),
+         having: Sequelize.where(Sequelize.fn("AVG", Sequelize.col("comments.star")), {
+            [Op.between]: [minStar, maxStar],
+         }),
          order: [[Sequelize.literal("AVG(comments.star)"), "DESC"]],
       });
 

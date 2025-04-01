@@ -33,9 +33,7 @@ export async function create(req, res) {
             where: { [Op.and]: [{ centerId }, { majorId: id }] },
          });
          if (majorItem) {
-            return res
-               .status(400)
-               .json({ message: "This major already exists." });
+            return res.status(400).json({ message: "This major already exists." });
          }
       }
 
@@ -63,7 +61,7 @@ export async function remove(req, res) {
          return res.status(404).json({ message: "Not found centerId." });
       }
 
-      if (center.seoId != req.user.id && req.user.role != "admin") {
+      if (center.seoId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
          return res.status(401).json({ message: "Not allowed." });
       }
 
@@ -72,9 +70,7 @@ export async function remove(req, res) {
             where: { [Op.and]: [{ centerId }, { majorId }] },
          });
          if (!del) {
-            return res
-               .status(404)
-               .json({ message: "Not found majorId in center." });
+            return res.status(404).json({ message: "Not found majorId in center." });
          }
       }
 

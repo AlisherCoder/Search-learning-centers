@@ -2,10 +2,7 @@ import { Op } from "sequelize";
 import Resource from "../models/resource.model.js";
 import Category from "../models/category.model.js";
 import queryValid from "../validations/query.valid.js";
-import {
-   categoryPatchValid,
-   categoryValid,
-} from "../validations/category.valid.js";
+import { categoryPatchValid, categoryValid } from "../validations/category.valid.js";
 import fs from "fs";
 import path from "path";
 
@@ -101,9 +98,7 @@ async function update(req, res) {
             where: { name },
          });
          if (isExist) {
-            return res
-               .status(400)
-               .json({ message: "This name already exist!" });
+            return res.status(400).json({ message: "This name already exist!" });
          }
       }
 

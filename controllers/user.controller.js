@@ -29,13 +29,7 @@ export async function findAll(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: [
-            Center,
-            { model: Reception, include: [Center, Filial] },
-            { model: Comment, include: Center },
-            Resource,
-            Like,
-         ],
+         include: [Center, { model: Reception, include: [Center, Filial] }, { model: Comment, include: Center }, Resource, Like],
          attributes: { exclude: ["password"] },
       });
 
@@ -54,13 +48,7 @@ export async function findOne(req, res) {
       let { id } = req.params;
 
       let user = await User.findByPk(id, {
-         include: [
-            Center,
-            { model: Reception, include: [Center, Filial] },
-            { model: Comment, include: Center },
-            Resource,
-            Like,
-         ],
+         include: [Center, { model: Reception, include: [Center, Filial] }, { model: Comment, include: Center }, Resource, Like],
          attributes: { exclude: ["password"] },
       });
       if (!user) {
@@ -114,15 +102,11 @@ export async function update(req, res) {
       }
 
       if (value.role) {
-         return res
-            .status(403)
-            .json({ message: "Not allowed to updated role." });
+         return res.status(403).json({ message: "Not allowed to updated role." });
       }
 
-      if (value.isActive != undefined && req.user.role != "ADMIN") {
-         return res
-            .status(403)
-            .json({ message: "Not allowed to updated isActive." });
+      if (value.isActive != undefined && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
+         return res.status(403).json({ message: "Not allowed to updated isActive." });
       }
 
       if (value.image) {
@@ -177,13 +161,7 @@ export async function getBySearch(req, res) {
          limit: take,
          offset: skip,
          order: [[sort, order]],
-         include: [
-            Center,
-            { model: Reception, include: [Center, Filial] },
-            { model: Comment, include: Center },
-            Resource,
-            Like,
-         ],
+         include: [Center, { model: Reception, include: [Center, Filial] }, { model: Comment, include: Center }, Resource, Like],
          attributes: { exclude: ["password"] },
       });
 
@@ -274,12 +252,7 @@ export async function getMyData(req, res) {
 
       let user = await User.findOne({
          where: { id },
-         include: [
-            Comment,
-            Like,
-            Resource,
-            { model: Reception, include: [Center, Filial, Major] },
-         ],
+         include: [Comment, Like, Resource, { model: Reception, include: [Center, Filial, Major] }],
       });
 
       if (!user) {
@@ -323,11 +296,7 @@ export async function getStudents(req, res) {
 
       let receptions = await Reception.findAll({
          where: { centerId },
-         include: [
-            { model: User, attributes: { exclude: ["password"] } },
-            Filial,
-            Major,
-         ],
+         include: [{ model: User, attributes: { exclude: ["password"] } }, Filial, Major],
       });
 
       if (!receptions.length) {

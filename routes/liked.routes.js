@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { findAll, findBySorted, create ,remove} from "../controllers/likeds.controller.js";
+import { findAll, findBySorted, create, remove } from "../controllers/likeds.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 
 const likedRouter = Router();
@@ -77,8 +77,6 @@ export default likedRouter;
  *       500:
  *         description: "Server error"
  */
-
-
 
 /**
  * @swagger

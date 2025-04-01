@@ -5,8 +5,8 @@ import rolePolice from "../middleware/rolePolice.js";
 
 const majorItemRoute = Router();
 
-majorItemRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO"]), create);
-majorItemRoute.delete("/", verifyToken, rolePolice(["ADMIN", "CEO"]), remove);
+majorItemRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), create);
+majorItemRoute.delete("/", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), remove);
 
 export default majorItemRoute;
 
