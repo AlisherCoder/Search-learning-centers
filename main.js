@@ -18,19 +18,17 @@ const options = {
       info: {
          title: "Exam-project",
          version: "0.1.0",
-         description:
-            "This is a simple CRUD API application made with Express and documented with Swagger",
+         description: "This is a simple CRUD API application made with Express and documented with Swagger",
       },
       servers: [
          {
-            url: "http://18.141.233.37:4000/",
-            // url: "http://localhost:4000/",
+            url: "https://findcourse.net.uz/",
          },
       ],
       components: {
          securitySchemes: {
             bearerAuth: {
-               type: "http",
+               type: "https",
                scheme: "bearer",
                bearerFormat: "JWT",
             },
@@ -52,6 +50,7 @@ app.use(
       origin: "*",
       methods: "GET,POST,PATCH,DELETE",
       allowedHeaders: "Content-Type,Authorization",
+      credentials: true,
    })
 );
 
