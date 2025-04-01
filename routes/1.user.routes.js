@@ -192,7 +192,7 @@ export default userRoute;
  * /api/users/superadmin:
  *   post:
  *     tags: [Authentication]
- *     summary: Create admin
+ *     summary: Create superadmin
  *     requestBody:
  *       required: true
  *       content:
@@ -201,8 +201,8 @@ export default userRoute;
  *             type: object
  *             properties:
  *               userId:
- *                 type: string
- *                 format: string
+ *                 type: integer
+ *                 format: integer
  *                 example: 1
  *     responses:
  *       200:
