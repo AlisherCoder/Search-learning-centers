@@ -15,7 +15,6 @@ import categoryRoute from "./category.routes.js";
 import regionRoute from "./region.routes.js";
 import resourceRoute from "./resource.routes.js";
 import commentRoute from "./comment.routes.js";
-import verifyToken from "../middleware/verifyToken.js";
 
 const mainRoute = Router();
 

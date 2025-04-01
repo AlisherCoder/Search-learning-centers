@@ -1,11 +1,11 @@
 import joi from "joi";
 
 const passwordValid = joi.object({
-   newPassword: joi
-      .string()
-      .min(6)
-      .max(16)
-      .required(),
+   newPassword: joi.string().min(6).max(16).required(),
+});
+
+const createAdminValid = joi.object({
+   userId: joi.number().required(),
 });
 
 const userRegValid = joi.object({
@@ -27,11 +27,7 @@ const userRegValid = joi.object({
       .pattern(/^(?:\+998|998)?\d{9}$/)
       .required(),
    role: joi.string().valid("USER", "CEO").required(),
-   password: joi
-      .string()
-      .min(6)
-      .max(16)
-      .required(),
+   password: joi.string().min(6).max(16).required(),
    image: joi.string().optional(),
 });
 
@@ -64,4 +60,4 @@ const SearchValid = joi.object({
    sortBy: joi.string(),
 });
 
-export { userRegValid, userPatchValid, SearchValid, passwordValid };
+export { userRegValid, userPatchValid, SearchValid, passwordValid, createAdminValid };
