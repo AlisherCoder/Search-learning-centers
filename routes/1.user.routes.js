@@ -14,7 +14,7 @@ userRoute.post("/verify-otp", verifyOTP);
 userRoute.post("/login", login);
 userRoute.post("/reset-password", resetPassword);
 userRoute.post("/refreshToken", getAccessToken);
-userRoute.post("/admin", verifyToken, rolePolice(["ADMIN"]), createAdmin);
+userRoute.post("/superadmin", verifyToken, rolePolice(["ADMIN"]), createAdmin);
 
 userRoute.get("/seos", getAllSeos);
 userRoute.get("/seos/:id", getOneSeo);
@@ -189,7 +189,7 @@ export default userRoute;
  *       400:
  *         description: Invalid OTP or email
  * 
- * /api/users/admin:
+ * /api/users/superadmin:
  *   post:
  *     tags: [Authentication]
  *     summary: Create admin
@@ -206,7 +206,7 @@ export default userRoute;
  *                 example: 1
  *     responses:
  *       200:
- *         description: Created admin successfully
+ *         description: Created superadmin successfully
  *       400:
  *         description: Bad Request
  *
