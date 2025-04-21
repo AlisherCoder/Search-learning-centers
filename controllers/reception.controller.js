@@ -2,8 +2,66 @@ import Center from "../models/center.model.js";
 import Filial from "../models/filial.model.js";
 import Major from "../models/major.model.js";
 import Reception from "../models/reseption.model.js";
+import User from "../models/user.model.js";
+import { Paging } from "../validations/center.valid.js";
 import { ReceptionPOST, ReceptionPATCH } from "../validations/reception.validation.js";
 import { Op } from "sequelize";
+
+export async function findAll(req, res) {
+   try {
+      let { error, value } = Paging.validate(req.query);
+      if (error) {
+         return res.status(422).json({ message: error.details[0].message });
+      }
+
+      let { take = 20, page } = value;
+
+      let skip = 0;
+      if (page) {
+         skip = (page - 1) * take;
+      }
+
+      let receptions = await Reception.findAll({
+         limit: take,
+         offset: skip,
+         include: [User],
+      });
+
+      res.status(200).json({ data: receptions });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export async function findOne(req, res) {
+   try {
+      let { id } = req.params;
+
+      let reception = await Reception.findByPk(id, {
+         include: [
+            Center,
+            Filial,
+            Major,
+            {
+               model: User,
+               attributes: { exclude: ["password"] },
+            },
+         ],
+      });
+
+      if (!reception) {
+         return res.status(404).json({ message: "Not found reception." });
+      }
+
+      if (reception.userId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
+         return res.status(401).json({ message: "Not allowed." });
+      }
+
+      res.status(200).json({ data: reception });
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
 
 export async function create(req, res) {
    try {
