@@ -22,7 +22,7 @@ export default reseptionRouter;
 
 /**
  * @swagger
- * /api/reception:
+ * /api/reseption:
  *   get:
  *     summary: Get all Receptions
  *     tags: [Reseption]
@@ -50,7 +50,7 @@ export default reseptionRouter;
 
 /**
  * @swagger
- * /api/reception/{id}:
+ * /api/reseption/{id}:
  *   get:
  *     tags: [Reseption]
  *     summary: Get a single Reception by ID
