@@ -147,7 +147,7 @@ export async function remove(req, res) {
          return res.status(404).json({ message: "Not found learning center." });
       }
 
-      if (center.seoId != req.user.id && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
+      if (center.seoId != req.user.id && !["ADMIN", "SUPERADMIN"].includes(req.user.role)) {
          return res.status(401).json({ message: "Not allowed." });
       }
 
