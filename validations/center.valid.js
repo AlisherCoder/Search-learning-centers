@@ -10,12 +10,7 @@ const centerPostValid = joi.object({
    regionId: joi.number().positive().required(),
    address: joi.string().required(),
    image: joi.string().required(),
-   majorsId: joi
-      .array()
-      .items(joi.number().required())
-      .unique()
-      .min(1)
-      .required(),
+   majorsId: joi.array().items(joi.number().required()).unique().min(1).required(),
    phone: joi
       .string()
       .pattern(/^(?:\+998|998)?\d{9}$/)
@@ -43,4 +38,10 @@ const Searchvalid = joi.object({
    sortOrder: joi.string(),
    sortBy: joi.string(),
 });
-export { centerPostValid, centerPatchValid, Searchvalid };
+
+const Paging = joi.object({
+   take: joi.number(),
+   page: joi.number(),
+});
+
+export { centerPostValid, centerPatchValid, Searchvalid, Paging };

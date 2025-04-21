@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { create, remove, update } from "../controllers/reception.controller.js";
+import { create, findAll, findOne, remove, update } from "../controllers/reception.controller.js";
 import verifyToken from "../middleware/verifyToken.js";
 import rolePolice from "../middleware/rolePolice.js";
 
 const reseptionRouter = Router();
 
+reseptionRouter.get("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), findAll);
+reseptionRouter.get("/:id", verifyToken, findOne);
 reseptionRouter.post("/", verifyToken, create);
 reseptionRouter.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
 reseptionRouter.delete("/:id", verifyToken, remove);
@@ -16,6 +18,56 @@ export default reseptionRouter;
  * tags:
  *   name: Reseption
  *   description: reseption management endpoints
+ */
+
+/**
+ * @swagger
+ * /api/reception:
+ *   get:
+ *     summary: Get all Receptions
+ *     tags: [Reseption]
+ *     parameters:
+ *       - in: query
+ *         name: take
+ *         schema:
+ *           type: integer
+ *         description: Number of Reception to retrieve per page
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *     responses:
+ *       200:
+ *         description: All Reception
+ *       404:
+ *         description: Not Found Reception
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /api/reception/{id}:
+ *   get:
+ *     tags: [Reseption]
+ *     summary: Get a single Reception by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the Reception
+ *     responses:
+ *       200:
+ *         description: Reception details
+ *       404:
+ *         description: Not found Reception
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -98,7 +150,7 @@ export default reseptionRouter;
  * @swagger
  * /api/reseption/{id}:
  *   delete:
- *     summary: Get one Reseption
+ *     summary: Delete one Reseption
  *     tags: [Reseption]
  *     security:
  *       - bearerAuth: []
