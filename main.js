@@ -1,10 +1,10 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import { sequelize } from "./config/db.js";
-import mainRoute from "./routes/index.js";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import { sequelize } from './config/db.js';
+import mainRoute from './routes/index.js';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 dotenv.config();
 
@@ -13,63 +13,65 @@ let app = express();
 app.use(express.json());
 
 const options = {
-   definition: {
-      openapi: "3.1.0",
-      info: {
-         title: "Exam-project",
-         version: "0.1.0",
-         description: "This is a simple CRUD API application made with Express and documented with Swagger",
+  definition: {
+    openapi: '3.1.0',
+    info: {
+      title: 'Exam-project',
+      version: '0.1.0',
+      description:
+        'This is a simple CRUD API application made with Express and documented with Swagger',
+    },
+    servers: [
+      {
+        // url: "https://findcourse.net.uz/",
+        url: 'http://localhost:3000/',
       },
-      servers: [
-         {
-            url: "https://findcourse.net.uz/",
-         },
-      ],
-      components: {
-         securitySchemes: {
-            bearerAuth: {
-               type: "https",
-               scheme: "bearer",
-               bearerFormat: "JWT",
-            },
-         },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'https',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
       },
-      security: [
-         {
-            bearerAuth: [],
-         },
-      ],
-   },
-   apis: ["./routes/*.js"],
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+  },
+  apis: ['./routes/*.js'],
 };
 
 const specs = swaggerJSDoc(options);
 
 app.use(
-   cors({
-      origin: "*",
-      methods: "GET,POST,PATCH,DELETE",
-      allowedHeaders: "Content-Type,Authorization",
-      credentials: true,
-   })
+  cors({
+    origin: '*',
+    methods: 'GET,POST,PATCH,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true,
+  }),
 );
 
-app.use("/api", mainRoute);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/api', mainRoute);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use("/*", (req, res) => {
-   res.status(400).json({ message: "Not found route." });
+app.use('/*', (req, res) => {
+  res.status(400).json({ message: 'Not found route.' });
 });
 
 async function bootstrapt() {
-   try {
-      await sequelize.authenticate();
-      // await sequelize.sync({force: true});
+  try {
+    await sequelize.authenticate();
+    //  await sequelize.sync({ force: true });
 
-      console.log("Db connected successfully ✅");
-      app.listen(PORT, () => console.log("Server started on PORT", PORT));
-   } catch (error) {
-      console.log(error.message);
-   }
+    console.log('Db connected successfully ✅');
+    app.listen(PORT, () => console.log('Server started on PORT', PORT));
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 bootstrapt();

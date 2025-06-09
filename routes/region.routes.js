@@ -1,15 +1,31 @@
-import { Router } from "express";
-import { create, findBySearch, findOne, remove, update } from "../controllers/region.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
-import rolePolice from "../middleware/rolePolice.js";
+import { Router } from 'express';
+import {
+  create,
+  findBySearch,
+  findOne,
+  remove,
+  update,
+} from '../controllers/region.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
+import rolePolice from '../middleware/rolePolice.js';
 
 const regionRoute = Router();
 
-regionRoute.get("/search", findBySearch);
-regionRoute.get("/:id", findOne);
-regionRoute.post("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), create);
-regionRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
-regionRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), remove);
+regionRoute.get('/search', findBySearch);
+regionRoute.get('/:id', findOne);
+regionRoute.post('/', verifyToken, rolePolice(['ADMIN', 'SUPERADMIN']), create);
+regionRoute.patch(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  update,
+);
+regionRoute.delete(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  remove,
+);
 
 /**
  * @swagger

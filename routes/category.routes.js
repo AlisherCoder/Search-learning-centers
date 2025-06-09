@@ -1,15 +1,36 @@
-import { Router } from "express";
-import { create, findAll, findOne, remove, update } from "../controllers/category.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
-import rolePolice from "../middleware/rolePolice.js";
+import { Router } from 'express';
+import {
+  create,
+  findAll,
+  findOne,
+  remove,
+  update,
+} from '../controllers/category.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
+import rolePolice from '../middleware/rolePolice.js';
 
 const categoryRoute = Router();
 
-categoryRoute.get("/", findAll);
-categoryRoute.get("/:id", findOne);
-categoryRoute.post("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), create);
-categoryRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
-categoryRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), remove);
+categoryRoute.get('/', findAll);
+categoryRoute.get('/:id', findOne);
+categoryRoute.post(
+  '/',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  create,
+);
+categoryRoute.patch(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  update,
+);
+categoryRoute.delete(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  remove,
+);
 
 export default categoryRoute;
 
@@ -113,6 +134,8 @@ export default categoryRoute;
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Category'
+ *             required:
+ *              - name
  *     responses:
  *       201:
  *         description: Category created successfully

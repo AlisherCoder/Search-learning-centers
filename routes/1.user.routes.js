@@ -1,33 +1,81 @@
-import { Router } from "express";
-import verifyToken from "../middleware/verifyToken.js";
-import { createAdmin, login, register, resetPassword, sendOTP, verifyOTP } from "../controllers/auth.controller.js";
-import { findAll, findOne, getAllSeos, getBySearch, getMyCenters, getMyData, getOneSeo, getStudents, remove, update } from "../controllers/user.controller.js";
-import rolePolice from "../middleware/rolePolice.js";
-import selfPolice from "../middleware/selfPolice.js";
-import { getAccessToken } from "../config/gentokens.js";
+import { Router } from 'express';
+import verifyToken from '../middleware/verifyToken.js';
+import {
+  createAdmin,
+  login,
+  register,
+  resetPassword,
+  sendOTP,
+  verifyOTP,
+} from '../controllers/auth.controller.js';
+import {
+  findAll,
+  findOne,
+  getAllSeos,
+  getBySearch,
+  getMyCenters,
+  getMyData,
+  getOneSeo,
+  getStudents,
+  remove,
+  update,
+} from '../controllers/user.controller.js';
+import rolePolice from '../middleware/rolePolice.js';
+import selfPolice from '../middleware/selfPolice.js';
+import { getAccessToken } from '../config/gentokens.js';
 
 const userRoute = Router();
 
-userRoute.post("/register", register);
-userRoute.post("/send-otp", sendOTP);
-userRoute.post("/verify-otp", verifyOTP);
-userRoute.post("/login", login);
-userRoute.post("/reset-password", resetPassword);
-userRoute.post("/refreshToken", getAccessToken);
-userRoute.post("/superadmin", verifyToken, rolePolice(["ADMIN"]), createAdmin);
+userRoute.post('/register', register);
+userRoute.post('/send-otp', sendOTP);
+userRoute.post('/verify-otp', verifyOTP);
+userRoute.post('/login', login);
+userRoute.post('/reset-password', resetPassword);
+userRoute.post('/refreshToken', getAccessToken);
+userRoute.post('/superadmin', verifyToken, rolePolice(['ADMIN']), createAdmin);
 
-userRoute.get("/seos", getAllSeos);
-userRoute.get("/seos/:id", getOneSeo);
+userRoute.get('/seos', getAllSeos);
+userRoute.get('/seos/:id', getOneSeo);
 
-userRoute.get("/students/:centerId", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), getStudents);
-userRoute.get("/mydata", verifyToken, getMyData);
-userRoute.get("/mycenters", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), getMyCenters);
+userRoute.get(
+  '/students/:centerId',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  getStudents,
+);
+userRoute.get('/mydata', verifyToken, getMyData);
+userRoute.get(
+  '/mycenters',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  getMyCenters,
+);
 
-userRoute.get("/search", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), getBySearch);
-userRoute.get("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), findAll);
-userRoute.get("/:id", verifyToken, selfPolice(["ADMIN", "SUPERADMIN"]), findOne);
-userRoute.delete("/:id", verifyToken, selfPolice(["ADMIN", "SUPERADMIN"]), remove);
-userRoute.patch("/:id", verifyToken, selfPolice(["ADMIN", "SUPERADMIN"]), update);
+userRoute.get(
+  '/search',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  getBySearch,
+);
+userRoute.get('/', verifyToken, rolePolice(['ADMIN', 'SUPERADMIN']), findAll);
+userRoute.get(
+  '/:id',
+  verifyToken,
+  selfPolice(['ADMIN', 'SUPERADMIN']),
+  findOne,
+);
+userRoute.delete(
+  '/:id',
+  verifyToken,
+  selfPolice(['ADMIN', 'SUPERADMIN']),
+  remove,
+);
+userRoute.patch(
+  '/:id',
+  verifyToken,
+  selfPolice(['ADMIN', 'SUPERADMIN']),
+  update,
+);
 
 export default userRoute;
 
@@ -188,7 +236,7 @@ export default userRoute;
  *         description: Password updated
  *       400:
  *         description: Invalid OTP or email
- * 
+ *
  * /api/users/superadmin:
  *   post:
  *     tags: [Authentication]
@@ -362,6 +410,26 @@ export default userRoute;
  *         application/json:
  *           schema:
  *             type: object
+ *             properties:
+ *              firstName:
+ *                  type: string
+ *                  minLength: 2
+ *                  maxLength: 20
+ *                  pattern: "^[A-Za-z]+$"
+ *              lastName:
+ *                  type: string
+ *                  minLength: 2
+ *                  maxLength: 20
+ *                  pattern: "^[A-Za-z]+$"
+ *              phone:
+ *                  type: string
+ *                  pattern: "^(?:\\+998|998)?\\d{9}$"
+ *              image:
+ *                  type: string
+ *                  nullable: true
+ *              isActive:
+ *                  type: boolean
+ *           required: []
  *     responses:
  *       200:
  *         description: User updated

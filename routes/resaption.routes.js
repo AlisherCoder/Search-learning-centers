@@ -1,15 +1,31 @@
-import { Router } from "express";
-import { create, findAll, findOne, remove, update } from "../controllers/reception.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
-import rolePolice from "../middleware/rolePolice.js";
+import { Router } from 'express';
+import {
+  create,
+  findAll,
+  findOne,
+  remove,
+  update,
+} from '../controllers/reception.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
+import rolePolice from '../middleware/rolePolice.js';
 
 const reseptionRouter = Router();
 
-reseptionRouter.get("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), findAll);
-reseptionRouter.get("/:id", verifyToken, findOne);
-reseptionRouter.post("/", verifyToken, create);
-reseptionRouter.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
-reseptionRouter.delete("/:id", verifyToken, remove);
+reseptionRouter.get(
+  '/',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  findAll,
+);
+reseptionRouter.get('/:id', verifyToken, findOne);
+reseptionRouter.post('/', verifyToken, create);
+reseptionRouter.patch(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  update,
+);
+reseptionRouter.delete('/:id', verifyToken, remove);
 
 export default reseptionRouter;
 

@@ -1,15 +1,22 @@
-import { Router } from "express";
-import { create, findAll, findBySearch, findOne, remove, update } from "../controllers/resource.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
+import { Router } from 'express';
+import {
+  create,
+  findAll,
+  findBySearch,
+  findOne,
+  remove,
+  update,
+} from '../controllers/resource.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
 
 const resourceRoute = Router();
 
-resourceRoute.get("/", findAll);
-resourceRoute.get("/search", findBySearch);
-resourceRoute.get("/:id", findOne);
-resourceRoute.post("/", verifyToken, create);
-resourceRoute.patch("/:id", verifyToken, update);
-resourceRoute.delete("/:id", verifyToken, remove);
+resourceRoute.get('/', findAll);
+resourceRoute.get('/search', findBySearch);
+resourceRoute.get('/:id', findOne);
+resourceRoute.post('/', verifyToken, create);
+resourceRoute.patch('/:id', verifyToken, update);
+resourceRoute.delete('/:id', verifyToken, remove);
 
 /**
  * @swagger

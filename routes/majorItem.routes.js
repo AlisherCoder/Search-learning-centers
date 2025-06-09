@@ -1,12 +1,22 @@
-import { Router } from "express";
-import { create, remove } from "../controllers/majorItem.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
-import rolePolice from "../middleware/rolePolice.js";
+import { Router } from 'express';
+import { create, remove } from '../controllers/majorItem.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
+import rolePolice from '../middleware/rolePolice.js';
 
 const majorItemRoute = Router();
 
-majorItemRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), create);
-majorItemRoute.delete("/", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), remove);
+majorItemRoute.post(
+  '/',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  create,
+);
+majorItemRoute.delete(
+  '/',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  remove,
+);
 
 export default majorItemRoute;
 

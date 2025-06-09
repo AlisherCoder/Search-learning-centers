@@ -1,14 +1,20 @@
-import { Router } from "express";
-import { create, findAll, findOne, remove, update } from "../controllers/comment.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
+import { Router } from 'express';
+import {
+  create,
+  findAll,
+  findOne,
+  remove,
+  update,
+} from '../controllers/comment.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
 
 const commentRoute = Router();
 
-commentRoute.get("/", findAll);
-commentRoute.get("/:id", findOne);
-commentRoute.post("/", verifyToken, create);
-commentRoute.patch("/:id", verifyToken, update);
-commentRoute.delete("/:id", verifyToken, remove);
+commentRoute.get('/', findAll);
+commentRoute.get('/:id', findOne);
+commentRoute.post('/', verifyToken, create);
+commentRoute.patch('/:id', verifyToken, update);
+commentRoute.delete('/:id', verifyToken, remove);
 
 /**
  * @swagger

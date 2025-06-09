@@ -1,15 +1,36 @@
-import { Router } from "express";
-import { create, findAll, findOne, remove, update } from "../controllers/filial.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
-import rolePolice from "../middleware/rolePolice.js";
+import { Router } from 'express';
+import {
+  create,
+  findAll,
+  findOne,
+  remove,
+  update,
+} from '../controllers/filial.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
+import rolePolice from '../middleware/rolePolice.js';
 
 const filialRoute = Router();
 
-filialRoute.get("/", findAll);
-filialRoute.get("/:id", findOne);
-filialRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), create);
-filialRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), remove);
-filialRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), update);
+filialRoute.get('/', findAll);
+filialRoute.get('/:id', findOne);
+filialRoute.post(
+  '/',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  create,
+);
+filialRoute.delete(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  remove,
+);
+filialRoute.patch(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  update,
+);
 
 export default filialRoute;
 

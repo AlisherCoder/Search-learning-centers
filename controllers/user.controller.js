@@ -1,310 +1,322 @@
-import { userPatchValid, SearchValid } from "../validations/user.valid.js";
-import Center from "../models/center.model.js";
-import User from "../models/user.model.js";
-import { Op } from "sequelize";
-import path from "path";
-import fs from "fs";
-import Reception from "../models/reseption.model.js";
-import Resource from "../models/resource.model.js";
-import Like from "../models/like.model.js";
-import Comment from "../models/comment.model.js";
-import Filial from "../models/filial.model.js";
-import Major from "../models/major.model.js";
+import { userPatchValid, SearchValid } from '../validations/user.valid.js';
+import Center from '../models/center.model.js';
+import User from '../models/user.model.js';
+import { Op } from 'sequelize';
+import path from 'path';
+import fs from 'fs';
+import Reception from '../models/reseption.model.js';
+import Resource from '../models/resource.model.js';
+import Like from '../models/like.model.js';
+import Comment from '../models/comment.model.js';
+import Filial from '../models/filial.model.js';
+import Major from '../models/major.model.js';
 
 export async function findAll(req, res) {
-   try {
-      let { take = 20, page, sortBy, sortOrder } = req.query;
-      let sort = sortBy || "firstName";
-      let order = sortOrder || "ASC";
+  try {
+    let { take = 20, page, sortBy, sortOrder } = req.query;
+    let sort = sortBy || 'firstName';
+    let order = sortOrder || 'ASC';
 
-      let skip = 0;
-      if (page) {
-         skip = (page - 1) * take;
-      }
+    let skip = 0;
+    if (page) {
+      skip = (page - 1) * take;
+    }
 
-      skip = JSON.parse(skip);
-      take = JSON.parse(take);
+    skip = JSON.parse(skip);
+    take = JSON.parse(take);
 
-      let users = await User.findAll({
-         limit: take,
-         offset: skip,
-         order: [[sort, order]],
-         include: [Center, { model: Reception, include: [Center, Filial] }, { model: Comment, include: Center }, Resource, Like],
-         attributes: { exclude: ["password"] },
-      });
+    let users = await User.findAll({
+      limit: take,
+      offset: skip,
+      order: [[sort, order]],
+      include: [
+        Center,
+        { model: Reception, include: [Center, Filial] },
+        { model: Comment, include: Center },
+        Resource,
+        Like,
+      ],
+      attributes: { exclude: ['password'] },
+    });
 
-      if (!users.length) {
-         return res.status(200).json({ message: "Not found users." });
-      }
-
-      res.status(200).json({ data: users });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: users, total: users.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function findOne(req, res) {
-   try {
-      let { id } = req.params;
+  try {
+    let { id } = req.params;
 
-      let user = await User.findByPk(id, {
-         include: [Center, { model: Reception, include: [Center, Filial] }, { model: Comment, include: Center }, Resource, Like],
-         attributes: { exclude: ["password"] },
-      });
-      if (!user) {
-         return res.status(404).json({ message: "Not found user." });
-      }
+    let user = await User.findByPk(id, {
+      include: [
+        Center,
+        { model: Reception, include: [Center, Filial] },
+        { model: Comment, include: Center },
+        Resource,
+        Like,
+      ],
+      attributes: { exclude: ['password'] },
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'Not found user.' });
+    }
 
-      res.status(200).json({ data: user });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function remove(req, res) {
-   try {
-      let { id } = req.params;
+  try {
+    let { id } = req.params;
 
-      let user = await User.findByPk(id, {
-         attributes: { exclude: ["password"] },
-      });
+    let user = await User.findByPk(id, {
+      attributes: { exclude: ['password'] },
+    });
 
-      if (!user) {
-         return res.status(404).json({ message: "Not found user." });
-      }
+    if (!user) {
+      return res.status(404).json({ message: 'Not found user.' });
+    }
 
-      await user.destroy();
-      try {
-         let filepath = path.join("uploads", user.image);
-         fs.unlinkSync(filepath);
-      } catch (error) {}
+    await user.destroy();
+    try {
+      let filepath = path.join('uploads', user.image);
+      fs.unlinkSync(filepath);
+    } catch (error) {}
 
-      res.status(200).json({ data: user });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function update(req, res) {
-   try {
-      let { error, value } = userPatchValid.validate(req.body);
-      if (error) {
-         return res.status(422).json({ message: error.details[0].message });
-      }
+  try {
+    let { error, value } = userPatchValid.validate(req.body);
+    if (error) {
+      return res.status(422).json({ message: error.details[0].message });
+    }
 
-      let { id } = req.params;
-      let user = await User.findByPk(id, {
-         attributes: { exclude: ["password"] },
-      });
+    let { id } = req.params;
+    let user = await User.findByPk(id, {
+      attributes: { exclude: ['password'] },
+    });
 
-      if (!user) {
-         return res.status(404).json({ message: "Not found user." });
-      }
+    if (!user) {
+      return res.status(404).json({ message: 'Not found user.' });
+    }
 
-      if (value.role) {
-         return res.status(403).json({ message: "Not allowed to updated role." });
-      }
+    if (value.role) {
+      return res.status(403).json({ message: 'Not allowed to updated role.' });
+    }
 
-      if (value.isActive != undefined && (req.user.role != "ADMIN" || req.user.role != "SUPERADMIN")) {
-         return res.status(403).json({ message: "Not allowed to updated isActive." });
-      }
+    if (
+      value.isActive != undefined &&
+      (req.user.role != 'ADMIN' || req.user.role != 'SUPERADMIN')
+    ) {
+      return res
+        .status(403)
+        .json({ message: 'Not allowed to updated isActive.' });
+    }
 
-      if (value.image) {
-         try {
-            let filepath = path.join("uploads", user.image);
-            fs.unlinkSync(filepath);
-         } catch (error) {}
-      }
+    if (value.image) {
+      try {
+        let filepath = path.join('uploads', user.image);
+        fs.unlinkSync(filepath);
+      } catch (error) {}
+    }
 
-      await user.update(value);
+    await user.update(value);
 
-      res.status(200).json({ data: user });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function getBySearch(req, res) {
-   try {
-      let query = {};
-      for (let [key, value] of Object.entries(req.query)) {
-         if (value) {
-            query[key] = value;
-         }
+  try {
+    let query = {};
+    for (let [key, value] of Object.entries(req.query)) {
+      if (value) {
+        query[key] = value;
       }
+    }
 
-      let { error, value } = SearchValid.validate(query);
-      if (error) {
-         return res.status(422).json({ message: error.details[0].message });
+    let { error, value } = SearchValid.validate(query);
+    if (error) {
+      return res.status(422).json({ message: error.details[0].message });
+    }
+
+    let { take = 20, page, sortBy, sortOrder, ...queries } = value;
+    let sort = sortBy || 'firstName';
+    let order = sortOrder || 'ASC';
+
+    let skip = 0;
+    if (page) {
+      skip = (page - 1) * take;
+    }
+
+    query = {};
+    for (let [key, val] of Object.entries(queries)) {
+      if (typeof val != 'boolean') {
+        query[key] = { [Op.substring]: `%${val}%` };
+      } else {
+        query[key] = val;
       }
+    }
 
-      let { take = 20, page, sortBy, sortOrder, ...queries } = value;
-      let sort = sortBy || "firstName";
-      let order = sortOrder || "ASC";
+    let users = await User.findAll({
+      where: query,
+      limit: take,
+      offset: skip,
+      order: [[sort, order]],
+      include: [
+        Center,
+        { model: Reception, include: [Center, Filial] },
+        { model: Comment, include: Center },
+        Resource,
+        Like,
+      ],
+      attributes: { exclude: ['password'] },
+    });
 
-      let skip = 0;
-      if (page) {
-         skip = (page - 1) * take;
-      }
-
-      query = {};
-      for (let [key, val] of Object.entries(queries)) {
-         if (typeof val != "boolean") {
-            query[key] = { [Op.substring]: `%${val}%` };
-         } else {
-            query[key] = val;
-         }
-      }
-
-      let users = await User.findAll({
-         where: query,
-         limit: take,
-         offset: skip,
-         order: [[sort, order]],
-         include: [Center, { model: Reception, include: [Center, Filial] }, { model: Comment, include: Center }, Resource, Like],
-         attributes: { exclude: ["password"] },
-      });
-
-      if (!users.length) {
-         return res.status(404).json({ message: "Not found users." });
-      }
-
-      res.status(200).json({ data: users });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: users, total: users.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function getAllSeos(req, res) {
-   try {
-      let query = {};
-      for (let [key, value] of Object.entries(req.query)) {
-         if (value) {
-            query[key] = value;
-         }
+  try {
+    let query = {};
+    for (let [key, value] of Object.entries(req.query)) {
+      if (value) {
+        query[key] = value;
       }
+    }
 
-      let { error, value } = SearchValid.validate(query);
-      if (error) {
-         return res.status(422).json({ message: error.details[0].message });
+    let { error, value } = SearchValid.validate(query);
+    if (error) {
+      return res.status(422).json({ message: error.details[0].message });
+    }
+
+    let { take = 20, page, sortBy, sortOrder, ...queries } = value;
+    let sort = sortBy || 'firstName';
+    let order = sortOrder || 'ASC';
+
+    let skip = 0;
+    if (page) {
+      skip = (page - 1) * take;
+    }
+
+    query = {};
+    for (let [key, val] of Object.entries(queries)) {
+      if (typeof val != 'boolean') {
+        query[key] = { [Op.substring]: `%${val}%` };
+      } else {
+        query[key] = val;
       }
+    }
 
-      let { take = 20, page, sortBy, sortOrder, ...queries } = value;
-      let sort = sortBy || "firstName";
-      let order = sortOrder || "ASC";
+    query.role = 'CEO';
+    let users = await User.findAll({
+      where: query,
+      limit: take,
+      offset: skip,
+      order: [[sort, order]],
+      include: Center,
+      attributes: { exclude: ['password'] },
+    });
 
-      let skip = 0;
-      if (page) {
-         skip = (page - 1) * take;
-      }
-
-      query = {};
-      for (let [key, val] of Object.entries(queries)) {
-         if (typeof val != "boolean") {
-            query[key] = { [Op.substring]: `%${val}%` };
-         } else {
-            query[key] = val;
-         }
-      }
-
-      query.role = "CEO";
-      let users = await User.findAll({
-         where: query,
-         limit: take,
-         offset: skip,
-         order: [[sort, order]],
-         include: Center,
-         attributes: { exclude: ["password"] },
-      });
-
-      if (!users.length) {
-         return res.status(404).json({ message: "Not found ceos." });
-      }
-
-      res.status(200).json({ data: users });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: users, total: users.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function getOneSeo(req, res) {
-   try {
-      let { id } = req.params;
+  try {
+    let { id } = req.params;
 
-      let user = await User.findOne({
-         where: { [Op.and]: [{ id }, { role: "CEO" }] },
-         attributes: { exclude: ["password"] },
-      });
+    let user = await User.findOne({
+      where: { [Op.and]: [{ id }, { role: 'CEO' }] },
+      attributes: { exclude: ['password'] },
+    });
 
-      if (!user) {
-         return res.status(404).json({ message: "Not found ceo." });
-      }
+    if (!user) {
+      return res.status(404).json({ message: 'Not found ceo.' });
+    }
 
-      res.status(200).json({ data: user });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function getMyData(req, res) {
-   try {
-      let { id } = req.user;
+  try {
+    let { id } = req.user;
 
-      let user = await User.findOne({
-         where: { id },
-         include: [Comment, Like, Resource, { model: Reception, include: [Center, Filial, Major] }],
-      });
+    let user = await User.findOne({
+      where: { id },
+      include: [
+        Comment,
+        Like,
+        Resource,
+        { model: Reception, include: [Center, Filial, Major] },
+      ],
+    });
 
-      if (!user) {
-         return res.status(404).json({ message: "Not found user." });
-      }
+    if (!user) {
+      return res.status(404).json({ message: 'Not found user.' });
+    }
 
-      res.status(200).json({ data: user });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function getMyCenters(req, res) {
-   try {
-      let { id } = req.user;
+  try {
+    let { id } = req.user;
 
-      let centers = await Center.findAll({ where: { seoId: id } });
+    let centers = await Center.findAll({ where: { seoId: id } });
 
-      if (!centers.length) {
-         return res.status(404).json({ message: "Not found centers." });
-      }
-
-      res.status(200).json({ data: centers });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: centers, total: centers.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 export async function getStudents(req, res) {
-   try {
-      let { centerId } = req.params;
+  try {
+    let { centerId } = req.params;
 
-      let center = await Center.findByPk(centerId);
-      if (!center) {
-         return res.status(404).json({ message: "Not found data." });
-      }
+    let center = await Center.findByPk(centerId);
+    if (!center) {
+      return res.status(404).json({ message: 'Not found data.' });
+    }
 
-      if (center.seoId != req.user.id && req.user.role != "ADMIN") {
-         return res.status(401).json({ message: "Not allowed." });
-      }
+    if (center.seoId != req.user.id && req.user.role != 'ADMIN') {
+      return res.status(401).json({ message: 'Not allowed.' });
+    }
 
-      let receptions = await Reception.findAll({
-         where: { centerId },
-         include: [{ model: User, attributes: { exclude: ["password"] } }, Filial, Major],
-      });
+    let receptions = await Reception.findAll({
+      where: { centerId },
+      include: [
+        { model: User, attributes: { exclude: ['password'] } },
+        Filial,
+        Major,
+      ],
+    });
 
-      if (!receptions.length) {
-         return res.status(404).json({ message: "Not found students." });
-      }
-
-      res.status(200).json({ data: receptions });
-   } catch (error) {
-      res.status(500).json({ message: error.message });
-   }
+    res.status(200).json({ data: receptions, total: receptions.length });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }

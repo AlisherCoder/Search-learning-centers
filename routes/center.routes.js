@@ -1,17 +1,40 @@
-import { Router } from "express";
-import { create, findAll, findByLike, findByStar, findOne, remove, update } from "../controllers/center.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
-import rolePolice from "../middleware/rolePolice.js";
+import { Router } from 'express';
+import {
+  create,
+  findAll,
+  findByLike,
+  findByStar,
+  findOne,
+  remove,
+  update,
+} from '../controllers/center.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
+import rolePolice from '../middleware/rolePolice.js';
 
 const centerRoute = Router();
 
-centerRoute.get("/star", findByStar);
-centerRoute.get("/like", findByLike);
-centerRoute.get("/", findAll);
-centerRoute.get("/:id", findOne);
-centerRoute.post("/", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), create);
-centerRoute.delete("/:id", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), remove);
-centerRoute.patch("/:id", verifyToken, rolePolice(["ADMIN", "CEO", "SUPERADMIN"]), update);
+centerRoute.get('/star', findByStar);
+centerRoute.get('/like', findByLike);
+centerRoute.get('/', findAll);
+centerRoute.get('/:id', findOne);
+centerRoute.post(
+  '/',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  create,
+);
+centerRoute.delete(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  remove,
+);
+centerRoute.patch(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'CEO', 'SUPERADMIN']),
+  update,
+);
 
 export default centerRoute;
 

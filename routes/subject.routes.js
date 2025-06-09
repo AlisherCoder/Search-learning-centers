@@ -1,16 +1,38 @@
-import { Router } from "express";
-import { create, findAll, findBySorted, findOne, remove, update } from "../controllers/subject.controller.js";
-import verifyToken from "../middleware/verifyToken.js";
-import rolePolice from "../middleware/rolePolice.js";
+import { Router } from 'express';
+import {
+  create,
+  findAll,
+  findBySorted,
+  findOne,
+  remove,
+  update,
+} from '../controllers/subject.controller.js';
+import verifyToken from '../middleware/verifyToken.js';
+import rolePolice from '../middleware/rolePolice.js';
 
 const subjectRouter = Router();
 
-subjectRouter.get("/", findAll);
-subjectRouter.get("/query", findBySorted);
-subjectRouter.get("/:id", findOne);
-subjectRouter.post("/", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), create);
-subjectRouter.patch("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), update);
-subjectRouter.delete("/:id", verifyToken, rolePolice(["ADMIN", "SUPERADMIN"]), remove);
+subjectRouter.get('/', findAll);
+subjectRouter.get('/query', findBySorted);
+subjectRouter.get('/:id', findOne);
+subjectRouter.post(
+  '/',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  create,
+);
+subjectRouter.patch(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  update,
+);
+subjectRouter.delete(
+  '/:id',
+  verifyToken,
+  rolePolice(['ADMIN', 'SUPERADMIN']),
+  remove,
+);
 
 export default subjectRouter;
 
