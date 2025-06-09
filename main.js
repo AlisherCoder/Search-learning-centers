@@ -23,8 +23,8 @@ const options = {
     },
     servers: [
       {
-        // url: "https://findcourse.net.uz/",
-        url: 'http://localhost:3000/',
+        url: "https://findcourse.net.uz/",
+        // url: 'http://localhost:3000/',
       },
     ],
     components: {
